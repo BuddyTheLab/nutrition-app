@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Training Cards">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
+<title>Training Cards — Dwight Clarke — v2026-09-04</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#161d18; --surface:#1f2a22; --surface2:#26332a; --line: rgba(237,232,220,0.12);
+    --ivory:#EDE8DC; --ivory-dim: rgba(237,232,220,0.62);
+    --brass:#C9A24B; --brass-dim: rgba(201,162,75,0.35);
+    --sage:#7C9473; --pos:#8FB08A; --neg:#C1725A; --warn:#D9A25C;
+  }
+  body[data-theme="shade"]{
+    --bg:#E4E1D4; --surface:#F1EFE4; --surface2:#DAD6C6; --line: rgba(20,24,18,0.16);
+    --ivory:#20241C; --ivory-dim: rgba(32,36,28,0.66);
+    --brass:#8A6415; --brass-dim: rgba(138,100,21,0.38);
+    --sage:#3E6B41; --pos:#256B31; --neg:#A6371F; --warn:#9A6A17;
+  }
+  body[data-theme="sun"]{
+    --bg:#FAFAF5; --surface:#FFFFFF; --surface2:#EFEDE2; --line: rgba(20,24,18,0.2);
+    --ivory:#0F120C; --ivory-dim: rgba(15,18,12,0.72);
+    --brass:#7A5A10; --brass-dim: rgba(122,90,16,0.42);
+    --sage:#245A28; --pos:#166622; --neg:#8F2E19; --warn:#8A5A0E;
+  }
+  body[data-theme="shade"] .chip.active, body[data-theme="sun"] .chip.active{ color:#fff; }
+  body[data-theme="shade"] .btn:not(.secondary):not(.ghost), body[data-theme="sun"] .btn:not(.secondary):not(.ghost){ color:#fff; }
+  *{box-sizing:border-box;}
+  html{width:100%; height:100%;}
+  html,body{margin:0;padding:0;}
+  body{ background:var(--bg); color:var(--ivory); font-family:'Inter',sans-serif; min-height:100vh; width:100%; -webkit-tap-highlight-color: transparent; padding-bottom:24px; transition:background 0.15s,color 0.15s;}
+  .wrap{max-width:560px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px 40px;}
+  h1,h2,h3{font-family:'Fraunces',serif; margin:0; letter-spacing:0.01em;}
+  .brand{display:flex; align-items:center; justify-content:space-between; padding:6px 2px 16px; border-bottom:1px solid var(--line); margin-bottom:16px;}
+  .brand h1{font-size:21px; font-weight:600;}
+  .brand .sub{font-size:12px; color:var(--ivory-dim); margin-top:2px;}
+  .num{font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums;}
+  .board{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px 12px; margin-bottom:16px;}
+  .board h4{font-size:14px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ivory-dim); font-family:'Inter',sans-serif; margin-bottom:8px;}
+  .cat-row{display:grid; grid-template-columns:1fr auto auto; gap:2px 10px; font-size:16px; padding:6px 0; align-items:baseline; border-bottom:1px solid var(--line);}
+  .cat-row:last-child{border-bottom:none;}
+  .cat-row .cname{color:var(--ivory-dim);}
+  .cat-row .cval{font-size:18px; font-weight:600;}
+  .cat-row .ctarget{font-size:13px; color:var(--ivory-dim);}
+  .pos{color:var(--pos);} .neg{color:var(--neg);} .zero{color:var(--ivory-dim);} .warn{color:var(--warn);}
+  .btn{display:block; width:100%; text-align:center; background:var(--brass); color:#1a1408; border:none; border-radius:9px; font-family:'Inter',sans-serif; font-weight:600; font-size:19px; padding:17px 18px; cursor:pointer; margin-top:10px;}
+  .btn:active{opacity:0.85;}
+  .btn.secondary{background:transparent; color:var(--ivory); border:1px solid var(--line);}
+  .btn.ghost{background:transparent; color:var(--brass); border:1px solid var(--brass-dim); padding:12px; font-size:16px;}
+  .btn.small{padding:10px 12px; font-size:15px; margin-top:0;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:14px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ivory-dim); margin-bottom:6px;}
+  .field input[type=text], .field input[type=number]{ width:100%; background:var(--surface2); border:1px solid var(--line); color:var(--ivory); border-radius:8px; padding:13px 12px; font-size:18px; font-family:'IBM Plex Mono',monospace;}
+  .field .hint{font-size:13px; color:var(--ivory-dim); margin-top:5px;}
+  .chip-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{flex:1 1 auto; min-width:60px; text-align:center; padding:13px 10px; border-radius:8px; border:1px solid var(--line); background:var(--surface2); color:var(--ivory-dim); font-size:16px; font-weight:600; cursor:pointer;}
+  .chip.active{background:var(--sage); border-color:var(--sage);}
+  .togglechip{padding:11px 14px; text-align:center; border-radius:8px; border:1px solid var(--line); background:var(--surface2); color:var(--ivory-dim); font-size:15px; font-weight:700; cursor:pointer;}
+  .togglechip.active{background:var(--sage); border-color:var(--sage); color:#fff;}
+  .themebtn{cursor:pointer; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; border:1px solid var(--line); border-radius:20px; padding:6px 11px; color:var(--ivory-dim); white-space:nowrap;}
+  .empty{text-align:center; padding:36px 10px; color:var(--ivory-dim); font-size:16px; line-height:1.6;}
+  .note{font-size:14px; color:var(--ivory-dim); line-height:1.6; margin-top:14px;}
+  .home-round{display:flex; justify-content:space-between; align-items:center; padding:14px 4px; border-bottom:1px solid var(--line); cursor:pointer;}
+  .home-round .meta{font-size:13px; color:var(--ivory-dim); margin-top:2px;}
+  .home-round .rval{font-size:19px; font-weight:700;}
+  .tag{display:inline-block; font-size:12px; letter-spacing:0.06em; padding:3px 8px; border-radius:20px; border:1px solid var(--brass-dim); color:var(--brass); margin-left:8px;}
+  .card-pick{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin-bottom:10px; cursor:pointer;}
+  .card-pick .cp-top{display:flex; justify-content:space-between; align-items:baseline;}
+  .card-pick .cp-name{font-family:'Fraunces',serif; font-size:18px; font-weight:600;}
+  .card-pick .cp-num{font-family:'IBM Plex Mono',monospace; color:var(--brass); font-size:14px;}
+  .card-pick .cp-focus{font-size:13px; color:var(--ivory-dim); margin-top:3px;}
+  .card-pick .cp-meta{font-size:12px; color:var(--ivory-dim); margin-top:6px;}
+  .exwrap{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px; margin-bottom:12px;}
+  .exwrap.done{border-color:var(--sage);}
+  .ex-top{display:flex; justify-content:space-between; align-items:flex-start; gap:10px;}
+  .ex-name{font-family:'Fraunces',serif; font-size:17px; font-weight:600;}
+  .ex-presc{font-size:13px; color:var(--brass); margin-top:2px; font-family:'IBM Plex Mono',monospace;}
+  .ex-cue{font-size:14px; color:var(--ivory-dim); line-height:1.5; margin-top:8px;}
+  .ex-last{font-size:12.5px; color:var(--ivory-dim); margin-top:8px; padding-top:8px; border-top:1px solid var(--line);}
+  .check{flex-shrink:0; width:30px; height:30px; border-radius:50%; border:2px solid var(--line); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; color:transparent;}
+  .check.on{background:var(--sage); border-color:var(--sage); color:#fff;}
+  .setrow{display:grid; grid-template-columns:1fr 1fr auto; gap:8px; margin-top:8px; align-items:center;}
+  .setrow input{background:var(--surface2); border:1px solid var(--line); color:var(--ivory); border-radius:7px; padding:9px 8px; font-size:15px; font-family:'IBM Plex Mono',monospace; width:100%;}
+  .setrow .rm{color:var(--neg); font-size:13px; text-align:center; cursor:pointer; padding:6px;}
+  .logtoggle{margin-top:10px; font-size:13px; color:var(--brass); cursor:pointer; display:inline-block;}
+  .sidenote{margin-top:8px;}
+  .sidenote input{width:100%; background:var(--surface2); border:1px solid var(--line); color:var(--ivory); border-radius:7px; padding:8px 10px; font-size:14px; font-family:'Inter',sans-serif;}
+  .golden{background:var(--surface2); border-left:3px solid var(--brass); border-radius:6px; padding:12px 14px; font-size:14px; line-height:1.55; margin:14px 0; color:var(--ivory);}
+  .golden b{color:var(--brass); font-weight:700;}
+  .slider-row{display:flex; gap:6px; margin-top:8px;}
+  .slider-row .sn{flex:1; text-align:center; padding:10px 0; border-radius:7px; border:1px solid var(--line); background:var(--surface2); color:var(--ivory-dim); font-family:'IBM Plex Mono',monospace; font-size:14px; cursor:pointer;}
+  .slider-row .sn.active{background:var(--brass); color:#1a1408; border-color:var(--brass); font-weight:700;}
+  .banner{background:rgba(217,162,92,0.14); border:1px solid var(--warn); border-radius:9px; padding:12px 14px; font-size:14px; line-height:1.5; margin-bottom:16px; color:var(--ivory);}
+  .banner b{color:var(--warn);}
+  .section-label{font-size:14px; letter-spacing:0.06em; color:var(--ivory-dim); font-family:'Inter',sans-serif; margin:18px 0 8px;}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* Standalone companion to the Nutrition & Workout Log app — same visual
+   system, separate localStorage keys, runs entirely in-browser. */
+
+const CARD0 = [
+  {key:'vest', name:'20 lb Weighted Vest Walk', presc:'20–45 min · 4 of 7 days, fasted'},
+  {key:'crossover', name:'Crossover Symmetry', presc:'2 sessions — pre- and post-workout'},
+  {key:'halo', name:'KB Alternating Halo + Clean', presc:'25 reps/side'},
+  {key:'carry', name:'Single-Arm KB Suitcase Carry, Fwd + Back', presc:'1 lap each direction, switch hands'},
+];
+
+const CARDS = {
+  '1': {name:'Upper Body A', num:'1', focus:'Chest / Triceps / Delts', meta:'~45 min · Upper push & lateral delts',
+    deloadable:true,
+    golden:'3-1-1-0 tempo (3-sec down) on presses. Hit top reps on all sets → add 2.5–5 lb next time. Pull-up bottom block is maintenance volume — don\u2019t let it creep up; Card 4\u2019s top block is where your reps are actually being won.',
+    exercises:[
+      {name:'Scap Pull-Ups', presc:'2 × 10 · rest 45s', cue:'Hang at full extension, depress and retract the shoulder blades only — no elbow bend. Warm-up primer.'},
+      {name:'Arching Active Hang', presc:'2 × 3 (hold 3–5s) · rest 60s', cue:'From a dead hang, pull the chest slightly forward/up, extend through the upper back. Trains the lat under length.'},
+      {name:'Bottom-Quarter Pull-Up', presc:'1 × 3 · rest 90s', cue:'Pull from dead hang to just past bottom quarter, lower under control. Kept light on purpose — upkeep, not priority.'},
+      {name:'Incline Dumbbell / Barbell Press', presc:'3 × 8–12 · rest 2–3 min', cue:'Tuck shoulder blades into back pockets; 1-sec stretch pause at bottom.'},
+      {name:'Inverted Bodyweight Skull Crushers', presc:'3 × 10–12 · rest 90s', cue:'Strict elbow bend; keep body rigid as a plank.'},
+      {name:'Deficit Push-Ups (Myo-Reps)', presc:'1×12–15 to 1RIR → rest 15s → 3–4 mini-sets × 3–5', cue:'Deep stretch below hands; stop mini-sets when rep speed drops.'},
+      {name:'Dumbbell Lateral Raises', presc:'3 × 12–15 · rest 60s', cue:'Lean 15° forward, lead with elbows to isolate side delts.'},
+      {name:'Incline Dumbbell Flye', presc:'2 × 12–15 · rest 60s', cue:'Light-moderate load, full stretch at bottom, soft elbow bend. Finisher only.'},
+    ]},
+  '2': {name:'Lower Body A', num:'2', focus:'Quads / Glutes / Calves', meta:'~40 min · Quad VMO & lead-leg ground force',
+    deloadable:true,
+    golden:'Spine-sparing posture throughout. Hit top reps on all sets → add 5–10 lb next time.',
+    exercises:[
+      {name:'Single-Arm KB Clean & Press', presc:'3 × 6–8/side · rest 90s', cue:'Hip-drive clean to rack, press straight overhead — no rib flare or lean-back. Brace hard; resist the sideways pull.'},
+      {name:'Heel-Elevated Goblet / Safety Bar Squat', presc:'3 × 8–10 · rest 2–3 min', cue:'Full VMO knees-over-toes travel, stay vertical in torso. Feet hip-width, toes forward.'},
+      {name:'Romanian Deadlifts', presc:'3 × 8–10 · rest 2 min', cue:'Push hips back to mid-shin; lock out with glutes, never arch the low back. Feet hip-width, toes forward to very slightly out.'},
+      {name:'Dumbbell Split Squats', presc:'2 × 10–12/leg · rest 90s', cue:'Constant tension; deep hip/ankle stretch at bottom for lead-leg golf posting. Front foot toes forward, split on one rail.'},
+      {name:'Kettlebell Swings', presc:'3 × 10 · rest 90s', cue:'Hip-snap power, not a squat — hinge and \u2018pop\u2019 with glutes. Feet just outside shoulder-width, toes forward to slightly out.'},
+      {name:'Standing Calf Raises (Myo-Reps)', presc:'1 × 15 → 4 mini-sets × 4', cue:'Hold a 2-sec stretch at the bottom of every rep to remove Achilles bounce.'},
+    ]},
+  '3': {name:'Rotational Power & ATG Bulletproofing', num:'3', focus:'Joint resilience, T-spine, core & swing speed', meta:'~40 min · Swap trigger: heavy travel, golf, outdoor days',
+    deloadable:false,
+    golden:'Do the rotational throw FIRST, while fresh — power work always leads, mobility work always follows. Second half is the McGill Big Three (spinal stiffness, not spinal fatigue — holds, not reps to burn out).',
+    exercises:[
+      {name:'Standing Rotational Med Ball Throw', presc:'3 × 5/side · full recovery', cue:'Athletic stance, ball at hip. Drive from the ground — hips/legs first, torso follows, throw \u2018through the wall.\u2019 Stop the moment throws lose speed.'},
+      {name:'Half-Kneeling Med Ball Chop or Lift', presc:'2 × 6/side · rest 60s', cue:'Slow and controlled — trains anti-rotation control, a different job from the throw above.'},
+      {name:'Turkish Get-Up (Half)', presc:'2 × 3/side · light or bodyweight', cue:'Stop at the elbow-post; don\u2019t stand up until that shoulder-packed position feels completely solid.'},
+      {name:'Tibialis Raise', presc:'3 × 20', cue:'Wall lean, pull toes to knees, hold top 1 sec.'},
+      {name:'Patrick Step-Up', presc:'3 × 15/leg', cue:'VMO & lead-knee stability.'},
+      {name:'Elephant Walk', presc:'3 × 30 total', cue:'Hamstring & lower-back relief.'},
+      {name:'T-Spine Open Books', presc:'2 × 10/side', cue:'Essential for golf swing turn.'},
+      {name:'Couch Stretch', presc:'2 × 60s/side', cue:'Hip flexor release.'},
+      {name:'McGill Curl-Up', presc:'5-3-1 pyramid · 10s holds', cue:'Hands under low back, one knee bent. Small lift only — low back never rounds off the floor.'},
+      {name:'McGill Side Plank', presc:'5-3-1 pyramid · 10s holds', cue:'Straight line shoulder to ankle — hips level, not sagging. Elbow stacked under shoulder.'},
+      {name:'McGill Bird-Dog', presc:'5-3-1 pyramid · 10s holds', cue:'Opposite arm/leg extend together, spine stays neutral — no rotation or side-bend.'},
+    ]},
+  '4': {name:'Upper Body B', num:'4', focus:'Back / Chest / Rear Delts / Forearms', meta:'~50 min · Back density & clubface grip control',
+    deloadable:true,
+    golden:'Hold a 1-sec squeeze at the top of all pulls. Hit top reps → add 2.5–5 lb next time. Pull-up Top Block gets first priority if short on time — the highest-leverage 10 minutes in this card right now.',
+    exercises:[
+      {name:'Incline Bench Press', presc:'3 × 8–10 · rest 2 min', cue:'Lower under control; drive up through palms.'},
+      {name:'Inverted Bodyweight Rows', presc:'3 × 10–12 · rest 90s', cue:'Pull chest to bar; hold 1-sec squeeze at top. Also covers pull-up Middle-Block horizontal-pull work.'},
+      {name:'Sticking-Point Negative (Middle Block)', presc:'3 × 5 · rest 2 min', cue:'Start from chin-over. Lower the first quarter extra slow (5–6s), then normal pace the rest — overloads your actual failure point.'},
+      {name:'Top-Quarter Partial Pull-Up (Top Block · priority)', presc:'3 × 3–5 · rest 2 min', cue:'Box/jump to 3/4 up, pull only the final quarter to chin-over, hold briefly at top before lowering.'},
+      {name:'Chin-Over-Bar Iso Hold', presc:'3 × max hold · rest 90s', cue:'Jump/step to full lockout, chin clearly over bar, hold with control. Fine to push closer to true failure here.'},
+      {name:'Sticking-Point Iso Hold', presc:'2–3 × 15–20s · rest 90s', cue:'Hold isometrically at your actual stall position (~3/4 up). Light band or box-assist only if needed.'},
+      {name:'Med Ball Rotational Chest Pass', presc:'2 × 6/side · rest 90s', cue:'Explosive push from the chest, not the arms — the quality that correlates with club speed.'},
+      {name:'Cable Rope Face Pull', presc:'3 × 12–15 · rest 60s', cue:'Pull to face, finish hands wide/thumbs back — external rotation at end range is the job. High elbow throughout.'},
+      {name:'Wide-Grip Cable Pulldown', presc:'3 × 10–12 · rest 90s', cue:'Loadable vertical pull independent of your pull-up ceiling. Elbows down and back, control the negative.'},
+      {name:'Dumbbell Hammer Curls', presc:'3 × 10–12 · rest 60s', cue:'3-sec lowering for forearm/brachioradialis control & clubface stability.'},
+    ]},
+  '5': {name:'Lower Body B', num:'5', focus:'Hamstrings / Glutes / Unilateral Power', meta:'~40 min · Posterior chain & unilateral power',
+    deloadable:true,
+    golden:'If knees are tender, lean on RDLs and calf work. Top reps hit → add 5–10 lb next time.',
+    exercises:[
+      {name:'Single-Arm KB Clean & Press', presc:'3 × 6–8/side · rest 90s', cue:'Hip-drive clean to rack, press straight overhead — no rib flare or lean-back. Brace hard through the midline.'},
+      {name:'Romanian Deadlifts', presc:'3 × 6–8 · rest 2–3 min', cue:'Heavy hip hinge; bar tight to shins, squeeze glutes at lockout. Feet hip-width, toes forward to slightly out.'},
+      {name:'Dumbbell Walking Lunges or Step-Ups', presc:'3 × 10/leg · rest 90s', cue:'Drive through front heel; upright posture. Toes forward, feet on one rail.'},
+      {name:'Seated / Single-Leg Hamstring Curls', presc:'3 × 10–12 · rest 60s', cue:'Smooth contraction; slow 3-sec eccentric.'},
+      {name:'Standing Calf Raises', presc:'3 × 12–15 · rest 60s', cue:'Full stretch at bottom, explosive drive up onto big toe.'},
+    ]},
+  '6': {name:'Zone 2 Aerobic & Active Recovery', num:'6', focus:'Cardiovascular base & golf movement', meta:'40+ min · Weekly floor 150–180 min total',
+    deloadable:false,
+    golden:'Your daily vest walks (Card 0) likely already cover this. Log total Zone 2 minutes for the week — 150–180 min is the target regardless of which days it comes from.',
+    exercises:[
+      {name:'60-Min Weighted Vest Walk OR Golf Round', presc:'Steady pace', cue:'Nose-breathing effort — you should be able to hold a conversation the whole time.'},
+      {name:'McGill Big Three, Endurance Dose', presc:'10s holds, 5-3-1 pyramid/side', cue:'Same form as Card 3\u2019s back panel — quality of the hold still matters more than getting through it.'},
+      {name:'Light Mobility', presc:'Elephant Walk 30 total + Couch Stretch 60s/side', cue:'Keep it easy — this slot is recovery, not more training.'},
+      {name:'Optional — Pull-Up Skill Touch', presc:'2 easy sets each, well short of failure', cue:'Top-Quarter Partials + Chin-Over Holds. A third light exposure, not a third training session — skip if it isn\u2019t easy today.'},
+    ]},
+  '7': {name:'Full Rest & Spinal Decompression', num:'7', focus:'Total nervous system reset', meta:'15–20 min · Full rest, travel, or post-competition',
+    deloadable:false,
+    golden:'Rate joints 1–10 before this session (10 = fresh). Below a 6 for two days in a row means the next lifting day should be a Card 3 swap, not a push.',
+    exercises:[
+      {name:'Passive Hanging / Decompression', presc:'2–3 min total, accumulated', cue:'Let shoulders relax, spine lengthen — grip only as hard as needed to hang, don\u2019t actively pull or shrug.'},
+      {name:'Couch Stretch', presc:'2 min/side', cue:'Deep hip flexor & quad release.'},
+      {name:'McGill Big Three (light)', presc:'1 round, 3 reps each, 10s holds', cue:'Curl-Up, Side Plank, Bird-Dog. Baseline spinal stiffness only, nothing hard today.'},
+    ]},
+  '9': {name:'ATG Knee Ability Zero — Part 1', num:'9', focus:'Ankle, shin & calf', meta:'3x/week (e.g. Mon/Wed/Fri) · Ben Patrick program',
+    deloadable:false, pairKey:'10',
+    golden:'Never push into joint pain — scale depth/elevation to 0/10 pain. 3-1-1 tempo throughout. Weaker leg always goes first, match reps on the strong side.',
+    exercises:[
+      {name:'Warm-Up: Backward Walking', presc:'5–10 min continuous', cue:'Drives blood into the patellar tendons without impact. Usually already covered by the backward KB carry lap on Card 0.'},
+      {name:'Tibialis Raise', presc:'1 × 25', cue:'Heels 1–2 ft from wall. Pull forefeet up toward shins, hold 1s, lower 3s. Start at 6" from wall, progress to 18"+.'},
+      {name:'FHL Calf Raise', presc:'1 × 25', cue:'Toes up on a slant block, heels on floor. Press through the big toe joint to a full peak raise, pause 1s.'},
+      {name:'KOT Calf Raise', presc:'1 × 25', cue:'Slight knee bend (20–30°) locked in place throughout. Push through the balls of the feet; heels rise while the knee angle holds.'},
+      {name:'Patrick Step', presc:'1 × 25/leg', cue:'Working knee drives forward over toes; other leg reaches forward to tap heel, then drive back up through quad/VMO. Weaker leg first.'},
+    ]},
+  '10': {name:'ATG Knee Ability Zero — Part 2', num:'10', focus:'Hip, posterior chain & core', meta:'Same days as Part 1',
+    deloadable:false, pairKey:'9',
+    golden:'Drink Shake 1 (already on your nutrition schedule) within 60 min after this session.',
+    exercises:[
+      {name:'ATG Split Squat', presc:'5 × 5/leg', cue:'Front heel free to rise as the knee presses forward. Lower 3s until the front hamstring covers the calf, hold 1s, press back. Toes forward throughout.'},
+      {name:'Elephant Walk', presc:'1 × 30/leg', cue:'Hinge forward, hands down. Alternately extend one knee to full lock, flexing the quad on the other side to deepen the stretch.'},
+      {name:'L-Sit (Pike Progression)', presc:'3 × 15s holds', cue:'Palms down beside hips, press to lift hips/legs, pull toes toward you. Start with seated pike leg lifts.'},
+      {name:'Couch Stretch', presc:'60s/leg', cue:'Back knee in wall corner, shin flush to wall, front leg out at 90°. Squeeze back glute, torso upright.'},
+    ]},
+};
+const CARD_ORDER = ['1','2','3','4','5','6','7','9','10'];
+const DELOAD_NOTE = 'Deload Week active: cut to 2 sets per movement at ~60% of your usual top-set load. Bar speed should feel easy and fast on every rep.';
+const ZONE2_TARGET = [150,180];
+
+/* ================= State & storage ================= */
+let sessions = [], dailyLogs = [];
+const SESS_KEY='training_sessions_v1', DAILY_KEY='training_daily_v1', THEME_KEY='training_theme_v1';
+
+async function loadState(){
+  try{ const s = localStorage.getItem(SESS_KEY); sessions = s? JSON.parse(s):[]; }catch(e){ sessions=[]; }
+  try{ const d = localStorage.getItem(DAILY_KEY); dailyLogs = d? JSON.parse(d):[]; }catch(e){ dailyLogs=[]; }
+}
+async function saveSessions(){ try{ localStorage.setItem(SESS_KEY, JSON.stringify(sessions)); }catch(e){} }
+async function saveDaily(){ try{ localStorage.setItem(DAILY_KEY, JSON.stringify(dailyLogs)); }catch(e){} }
+async function loadTheme(){
+  try{
+    const t = localStorage.getItem(THEME_KEY);
+    const parsed = t? JSON.parse(t):null;
+    document.body.setAttribute('data-theme', (parsed&&parsed.mode)||'sun');
+  }catch(e){ document.body.setAttribute('data-theme','sun'); }
+}
+async function cycleTheme(){
+  const order=['sun','shade','dark'];
+  const cur = document.body.getAttribute('data-theme')||'sun';
+  const next = order[(order.indexOf(cur)+1)%order.length];
+  document.body.setAttribute('data-theme', next);
+  try{ localStorage.setItem(THEME_KEY, JSON.stringify({mode:next})); }catch(e){}
+  render();
+}
+function themeToggleBtn(){
+  const cur = document.body.getAttribute('data-theme')||'sun';
+  const labels = {dark:'☾ Dusk', shade:'⛅ Shade', sun:'☀ Bright Sun'};
+  return `<span onclick="cycleTheme()" class="themebtn">${labels[cur]}</span>`;
+}
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+
+/* ================= Derived stats ================= */
+function daysAgo(dateStr, n){
+  const d = new Date(dateStr+'T00:00:00');
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-n);
+  return d >= cutoff;
+}
+function weeklyZone2(){
+  let mins = 0;
+  sessions.filter(s=>daysAgo(s.date,7)).forEach(s=>{ if(s.zone2Min) mins += Number(s.zone2Min); });
+  dailyLogs.filter(d=>daysAgo(d.date,7)).forEach(d=>{ if(d.zone2Min) mins += Number(d.zone2Min); });
+  return mins;
+}
+function recentReadiness(){
+  const withReadiness = sessions.filter(s=>s.readiness!=null).slice().sort((a,b)=>b.date.localeCompare(a.date)||b.ts-a.ts);
+  return withReadiness.slice(0,3);
+}
+function shouldSwapToCard3(){
+  const recent = recentReadiness().slice(0,2);
+  return recent.length>=2 && recent.every(s=>s.readiness<6);
+}
+function lastSessionForCard(key){
+  return sessions.filter(s=>s.cardKey===key).sort((a,b)=>b.ts-a.ts)[0] || null;
+}
+function lastLoggedSets(exName){
+  // Cross-card: a repeated exercise (e.g. Single-Arm KB Clean & Press on Cards 2 & 5)
+  // is tracked as one continuous progression, not reset per card.
+  const past = sessions.slice().sort((a,b)=>b.ts-a.ts);
+  for(const s of past){
+    const ex = (s.exercises||[]).find(e=>e.name===exName);
+    if(ex && ex.sets && ex.sets.length && ex.sets.some(st=>st.weight)) return {sets:ex.sets, date:s.date, cardKey:s.cardKey};
+  }
+  return null;
+}
+function firstSessionDate(){
+  const dates = sessions.map(s=>s.date).sort();
+  return dates.length? dates[0] : todayStr();
+}
+function currentTrainingWeek(){
+  const first = new Date(firstSessionDate()+'T00:00:00');
+  const today = new Date(todayStr()+'T00:00:00');
+  const days = Math.floor((today-first)/(1000*60*60*24));
+  return Math.floor(days/7)+1;
+}
+function isAutoDeloadWeek(){
+  if(sessions.length===0) return false;
+  return currentTrainingWeek()%5===0;
+}
+function openPicker(){ pickDeload = isAutoDeloadWeek(); view='pick'; render(); }
+function last7DaysSessionCount(){ return sessions.filter(s=>daysAgo(s.date,7)).length; }
+
+/* ================= Render ================= */
+const app = document.getElementById('app');
+let view='home', pickDeload=false, active=null; // active session in progress
+
+function render(){
+  if(view==='home') return renderHome();
+  if(view==='pick') return renderPick();
+  if(view==='session') return renderSession();
+  if(view==='daily') return renderDaily();
+  if(view==='detail') return renderDetail();
+  if(view==='help') return renderHelp();
+}
+
+function renderHome(){
+  let html = `<div class="brand"><div><h1>Training Cards</h1><div class="sub">10-card resistance program</div></div>${themeToggleBtn()}</div>`;
+
+  if(shouldSwapToCard3()){
+    html += `<div class="banner"><b>Card 7 rule triggered:</b> joint readiness has been below 6 for two sessions in a row. Next lifting day should be a Card 3 swap, not a push.</div>`;
+  }
+
+  html += `<button class="btn" onclick="openPicker()">Start Card Session</button>`;
+  html += `<button class="btn secondary" onclick="goto('daily')">Log Daily Foundation (Card 0)</button>`;
+  html += `<button class="btn secondary" onclick="goto('help')">How to Use</button>`;
+
+  const z = weeklyZone2();
+  html += `<div class="board" style="margin-top:22px;">
+    <h4>Zone 2 — Last 7 Days</h4>
+    <div class="cat-row"><span class="cname">Minutes</span><span class="cval num ${z>=ZONE2_TARGET[0]?'pos':'zero'}">${z} min</span><span class="ctarget">target ${ZONE2_TARGET[0]}–${ZONE2_TARGET[1]}</span></div>
+  </div>`;
+
+  const readiness = recentReadiness();
+  if(readiness.length){
+    html += `<div class="board">
+      <h4>Joint Readiness</h4>
+      <div class="cat-row"><span class="cname">Latest</span><span class="cval num ${readiness[0].readiness<6?'warn':'zero'}">${readiness[0].readiness}/10</span><span class="ctarget">${readiness[0].date}</span></div>
+    </div>`;
+  }
+
+  html += `<div class="board">
+    <h4>Last 7 Days</h4>
+    <div class="cat-row"><span class="cname">Sessions Logged</span><span class="cval num zero">${last7DaysSessionCount()}</span><span class="ctarget"></span></div>
+  </div>`;
+
+  html += `<h3 class="section-label">Past Sessions</h3>`;
+  const allEntries = [
+    ...sessions.map(s=>({...s, _type:'session'})),
+    ...dailyLogs.map(d=>({...d, _type:'daily'}))
+  ].sort((a,b)=>b.date.localeCompare(a.date)||(b.ts-a.ts));
+  if(allEntries.length===0){ html += `<div class="empty">Nothing logged yet.</div>`; }
+  else{
+    allEntries.slice(0,25).forEach(e=>{
+      if(e._type==='session'){
+        const c = CARDS[e.cardKey];
+        html += `<div class="home-round" onclick="viewDetail('${e.id}','session')"><div><div>Card ${c.num} — ${c.name}${e.deload?' <span class="tag">Deload</span>':''}</div><div class="meta">${e.date}</div></div><div class="rval num">${e.readiness!=null?e.readiness+'/10':''}</div></div>`;
+      } else {
+        html += `<div class="home-round" onclick="viewDetail('${e.id}','daily')"><div><div>Daily Foundation</div><div class="meta">${e.date}</div></div><div class="rval num">${(e.items||[]).filter(Boolean).length}/4</div></div>`;
+      }
+    });
+  }
+  app.innerHTML = html;
+}
+
+function renderPick(){
+  let html = `<div class="brand"><h1>Start Session</h1>${themeToggleBtn()}</div>`;
+  const wk = currentTrainingWeek(), nextAuto = Math.ceil(wk/5)*5;
+  html += `<div class="board"><h4>Deload Week</h4><div class="togglechip ${pickDeload?'active':''}" style="display:inline-block;" onclick="pickDeload=!pickDeload; render();">${pickDeload?'✓ Deload Active — 2 sets @ ~60%':'Normal Load'}</div><div class="hint" style="margin-top:8px;">Training week ${wk} — ${isAutoDeloadWeek()?'auto-flagged as a deload week (every 5th week). Toggle off if you\u2019d rather push through.':'auto-flag kicks in at week '+nextAuto+'. Toggle on any time you want one sooner.'}</div></div>`;
+  CARD_ORDER.forEach(key=>{
+    const c = CARDS[key];
+    const last = lastSessionForCard(key);
+    html += `<div class="card-pick" onclick="startSession('${key}')">
+      <div class="cp-top"><span class="cp-name">${c.name}</span><span class="cp-num">CARD ${c.num}</span></div>
+      <div class="cp-focus">${c.focus}</div>
+      <div class="cp-meta">${c.meta}${last?' · last done '+last.date:''}</div>
+    </div>`;
+  });
+  html += `<button class="btn secondary" onclick="goto('home')">Cancel</button>`;
+  app.innerHTML = html;
+}
+
+function startSession(key){
+  const c = CARDS[key];
+  active = {
+    id:'s'+Date.now(), ts:Date.now(), date:todayStr(), cardKey:key, deload:pickDeload,
+    exercises:c.exercises.map(e=>({name:e.name, done:false, sets:[], note:'', logOpen:false})),
+    readiness:null, zone2Min:'', notes:''
+  };
+  pickDeload=false;
+  view='session'; render();
+}
+
+function renderSession(){
+  const c = CARDS[active.cardKey];
+  let html = `<div class="brand"><div><h1>Card ${c.num}</h1><div class="sub">${c.name}${active.deload?' · Deload':''}</div></div>${themeToggleBtn()}</div>`;
+
+  if(active.deload && c.deloadable){
+    html += `<div class="banner"><b>Deload:</b> ${DELOAD_NOTE}</div>`;
+  }
+  if(!c.deloadable && active.deload){
+    html += `<div class="banner">This card isn\u2019t adjusted for deload weeks — run it as normal.</div>`;
+  }
+
+  active.exercises.forEach((ex,i)=>{
+    const last = lastLoggedSets(ex.name);
+    html += `<div class="exwrap ${ex.done?'done':''}">
+      <div class="ex-top">
+        <div>
+          <div class="ex-name">${ex.name}</div>
+          <div class="ex-presc">${c.exercises[i].presc}</div>
+        </div>
+        <div class="check ${ex.done?'on':''}" onclick="toggleExDone(${i})">${ex.done?'✓':''}</div>
+      </div>
+      <div class="ex-cue">${c.exercises[i].cue}</div>
+      ${last?`<div class="ex-last">Last time (${last.date}${last.cardKey!==active.cardKey?', Card '+CARDS[last.cardKey].num:''}): ${last.sets.map(s=>`${s.weight||'?'}${typeof s.weight==='number'||!isNaN(parseFloat(s.weight))?' lb':''} × ${s.reps||'?'}`).join(', ')}</div>`:''}
+      <span class="logtoggle" onclick="toggleLog(${i})">${ex.logOpen?'– hide weight log':'+ log weight / reps'}</span>
+      ${ex.logOpen?renderSetRows(i,ex):''}
+      <div class="sidenote"><input type="text" placeholder="L/R or form note (optional)" value="${ex.note}" oninput="active.exercises[${i}].note=this.value"></div>
+    </div>`;
+  });
+
+  html += `<div class="golden"><b>Golden Rule.</b> ${c.golden}</div>`;
+
+  html += `<div class="board"><h4>Joint Readiness (before/after)</h4><div class="slider-row">${[...Array(10)].map((_,n)=>`<div class="sn ${active.readiness===n+1?'active':''}" onclick="setReadiness(${n+1})">${n+1}</div>`).join('')}</div><div class="hint" style="margin-top:8px;">1 = beat up, 10 = fresh. Below 6 two sessions running → swap next lifting day to Card 3.</div></div>`;
+
+  html += `<div class="field"><label>Zone 2 Minutes Today (optional)</label><input type="number" inputmode="numeric" value="${active.zone2Min}" placeholder="e.g. 45" oninput="active.zone2Min=this.value"></div>`;
+  html += `<div class="field"><label>Session Notes (optional)</label><input type="text" value="${active.notes}" oninput="active.notes=this.value"></div>`;
+
+  html += `<button class="btn" onclick="saveSession()">Save Session</button>`;
+  html += `<button class="btn secondary" onclick="cancelSession()">Cancel</button>`;
+  app.innerHTML = html;
+}
+function renderSetRows(i,ex){
+  let h = `<div>`;
+  ex.sets.forEach((s,j)=>{
+    h += `<div class="setrow">
+      <input type="number" inputmode="decimal" placeholder="lb" value="${s.weight}" oninput="active.exercises[${i}].sets[${j}].weight=this.value">
+      <input type="number" inputmode="numeric" placeholder="reps" value="${s.reps}" oninput="active.exercises[${i}].sets[${j}].reps=this.value">
+      <div class="rm" onclick="removeSet(${i},${j})">✕</div>
+    </div>`;
+  });
+  h += `<button class="btn ghost small" style="margin-top:8px;" onclick="addSet(${i})">+ Add Set</button></div>`;
+  return h;
+}
+function toggleExDone(i){ active.exercises[i].done = !active.exercises[i].done; render(); }
+function toggleLog(i){ active.exercises[i].logOpen = !active.exercises[i].logOpen; if(active.exercises[i].logOpen && active.exercises[i].sets.length===0) active.exercises[i].sets.push({weight:'',reps:''}); render(); }
+function addSet(i){ active.exercises[i].sets.push({weight:'',reps:''}); render(); }
+function removeSet(i,j){ active.exercises[i].sets.splice(j,1); render(); }
+function setReadiness(n){ active.readiness = n; render(); }
+function cancelSession(){ active=null; goto('home'); }
+async function saveSession(){
+  sessions.push(active);
+  active = null;
+  await saveSessions();
+  goto('home');
+}
+
+function renderDaily(){
+  const today = todayStr();
+  window._dailyDraft = window._dailyDraft || {date:today, items:[false,false,false,false], zone2Min:''};
+  const d = window._dailyDraft;
+  let html = `<div class="brand"><h1>Daily Foundation</h1>${themeToggleBtn()}</div>`;
+  html += `<div class="field"><label>Date</label><input type="text" value="${d.date}" oninput="window._dailyDraft.date=this.value"></div>`;
+  html += `<div class="board"><h4>Card 0 — Runs Every Day</h4>`;
+  CARD0.forEach((b,i)=>{
+    html += `<div class="blockrow" style="display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line);"><div><div style="font-size:16px;">${b.name}</div><div style="font-size:13px; color:var(--ivory-dim);">${b.presc}</div></div><div class="togglechip ${d.items[i]?'active':''}" onclick="toggleDailyItem(${i})">${d.items[i]?'✓ Yes':'No'}</div></div>`;
+  });
+  html += `</div>`;
+  html += `<div class="field"><label>Zone 2 Minutes Today (optional)</label><input type="number" inputmode="numeric" value="${d.zone2Min}" placeholder="e.g. 30" oninput="window._dailyDraft.zone2Min=this.value"></div>`;
+  html += `<button class="btn" onclick="saveDailyEntry()">Save</button>`;
+  html += `<button class="btn secondary" onclick="cancelDaily()">Cancel</button>`;
+  app.innerHTML = html;
+}
+function toggleDailyItem(i){ window._dailyDraft.items[i] = !window._dailyDraft.items[i]; render(); }
+function cancelDaily(){ window._dailyDraft=null; goto('home'); }
+async function saveDailyEntry(){
+  const d = window._dailyDraft;
+  dailyLogs.push({id:'d'+Date.now(), ts:Date.now(), date:(d.date||todayStr()).trim(), items:[...d.items], zone2Min:d.zone2Min});
+  window._dailyDraft = null;
+  await saveDaily();
+  goto('home');
+}
+
+function viewDetail(id, type){ window._detailId=id; window._detailType=type; view='detail'; render(); }
+function renderDetail(){
+  const id = window._detailId, type = window._detailType;
+  let html = `<div class="brand"><h1>Entry Detail</h1>${themeToggleBtn()}</div>`;
+  if(type==='session'){
+    const s = sessions.find(x=>x.id===id);
+    const c = CARDS[s.cardKey];
+    html += `<div class="note" style="margin-top:-10px;">${s.date} · Card ${c.num} — ${c.name}${s.deload?' · Deload':''}</div>`;
+    s.exercises.forEach(ex=>{
+      html += `<div class="exwrap ${ex.done?'done':''}"><div class="ex-name">${ex.name}${ex.done?' ✓':''}</div>`;
+      if(ex.sets && ex.sets.length && ex.sets.some(st=>st.weight||st.reps)){
+        html += `<div class="ex-last" style="border-top:none; padding-top:4px;">${ex.sets.map(st=>`${st.weight||'?'} lb × ${st.reps||'?'}`).join(', ')}</div>`;
+      }
+      if(ex.note){ html += `<div class="ex-last">Note: ${ex.note}</div>`; }
+      html += `</div>`;
+    });
+    if(s.readiness!=null) html += `<div class="board"><div class="cat-row"><span class="cname">Joint Readiness</span><span class="cval num ${s.readiness<6?'warn':'zero'}">${s.readiness}/10</span><span class="ctarget"></span></div></div>`;
+    if(s.zone2Min) html += `<div class="board"><div class="cat-row"><span class="cname">Zone 2 Minutes</span><span class="cval num zero">${s.zone2Min}</span><span class="ctarget"></span></div></div>`;
+    if(s.notes) html += `<div class="note">${s.notes}</div>`;
+  } else {
+    const d = dailyLogs.find(x=>x.id===id);
+    html += `<div class="note" style="margin-top:-10px;">${d.date} · Daily Foundation</div>`;
+    html += `<div class="board">${CARD0.map((b,i)=>`<div class="cat-row"><span class="cname">${b.name}</span><span class="cval num zero" style="font-size:15px;">${d.items[i]?'✓ Yes':'No'}</span><span class="ctarget"></span></div>`).join('')}</div>`;
+    if(d.zone2Min) html += `<div class="board"><div class="cat-row"><span class="cname">Zone 2 Minutes</span><span class="cval num zero">${d.zone2Min}</span><span class="ctarget"></span></div></div>`;
+  }
+  html += `<button class="btn secondary" onclick="goto('home')" style="margin-top:16px;">Back to Home</button>`;
+  app.innerHTML = html;
+}
+
+function renderHelp(){
+  const step = (n,title,body) => `<div class="board" style="padding:12px 14px;">
+    <div style="display:flex; gap:10px; align-items:baseline; margin-bottom:6px;">
+      <span class="num" style="color:var(--brass); font-weight:700; font-size:17px;">${n}</span>
+      <span style="font-weight:600; font-size:16px;">${title}</span>
+    </div>
+    <div style="font-size:15px; color:var(--ivory-dim); line-height:1.55;">${body}</div>
+  </div>`;
+  let html = `<div class="brand"><h1>How to Use</h1>${themeToggleBtn()}</div>`;
+  html += step('1','Card 0, once a day','Log Daily Foundation covers the vest walk, Crossover Symmetry, halos, and suitcase carry — the four things that run underneath whichever numbered card you\u2019re on. Log it once per day, separate from your numbered session.');
+  html += step('2','Numbered sessions','Start Card Session, pick a card, and work through the exercise list top to bottom. Tap the circle when an exercise is done. Tap "+ log weight / reps" to record actual sets — that\u2019s what powers the "last time" hint on your next visit. Repeated exercises (like Single-Arm KB Clean & Press on Cards 2 & 5) are tracked as one continuous progression across cards, not reset per card.');
+  html += step('3','Deload weeks','The picker auto-flags Deload Active every 5th training week, counted from your first logged session — toggle it off any time you\u2019d rather push through, or on early if you want one sooner. It only changes guidance on Cards 1, 2, 4, and 5 (2 sets @ ~60%) — Card 3\u2019s rotational throws and Card 6\u2019s Zone 2 stay as normal, per the program.');
+  html += step('4','Joint readiness & Card 3 swap','Rate joints 1–10 in any session, especially before Card 7. If your last two ratings are both under 6, the home screen will flag that your next lifting day should swap to Card 3 instead of pushing through.');
+  html += step('5','Zone 2 tally','Minutes logged in sessions and in Daily Foundation both count toward the rolling 7-day total shown on the home screen, against the 150–180 min weekly target.');
+  html += `<button class="btn secondary" onclick="goto('home')" style="margin-top:10px;">Back to Home</button>`;
+  app.innerHTML = html;
+}
+
+function goto(v){ view=v; render(); }
+loadTheme().then(()=>loadState().then(render));
+</script>
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!-- Post Round Log — version 2026-09-04 (renamed from Round_Log; new checked-scorecard icon) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
+<meta name="apple-mobile-web-app-title" content="Post Round Log">
+<title>Post Round Log — Dwight Clarke</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#161d18; --surface:#1f2a22; --surface2:#26332a; --line: rgba(237,232,220,0.12);
+    --ivory:#EDE8DC; --ivory-dim: rgba(237,232,220,0.62);
+    --brass:#C9A24B; --brass-dim: rgba(201,162,75,0.35);
+    --sage:#7C9473; --pos:#8FB08A; --neg:#C1725A;
+  }
+  body[data-theme="shade"]{
+    --bg:#E4E1D4; --surface:#F1EFE4; --surface2:#DAD6C6; --line: rgba(20,24,18,0.16);
+    --ivory:#20241C; --ivory-dim: rgba(32,36,28,0.66);
+    --brass:#8A6415; --brass-dim: rgba(138,100,21,0.38);
+    --sage:#3E6B41; --pos:#256B31; --neg:#A6371F;
+  }
+  body[data-theme="sun"]{
+    --bg:#FAFAF5; --surface:#FFFFFF; --surface2:#EFEDE2; --line: rgba(20,24,18,0.2);
+    --ivory:#0F120C; --ivory-dim: rgba(15,18,12,0.72);
+    --brass:#7A5A10; --brass-dim: rgba(122,90,16,0.42);
+    --sage:#245A28; --pos:#166622; --neg:#8F2E19;
+  }
+  body[data-theme="shade"] .chip.active, body[data-theme="sun"] .chip.active{ color:#fff; }
+  body[data-theme="shade"] .btn:not(.secondary):not(.ghost), body[data-theme="sun"] .btn:not(.secondary):not(.ghost){ color:#fff; }
+  *{box-sizing:border-box;}
+  html{width:100%; height:100%;}
+  html,body{margin:0;padding:0;}
+  body{ background:var(--bg); color:var(--ivory); font-family:'Inter',sans-serif; min-height:100vh; width:100%; -webkit-tap-highlight-color: transparent; padding-bottom:24px; transition:background 0.15s,color 0.15s;}
+  .wrap{max-width:560px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px 40px;}
+  h1,h2,h3{font-family:'Fraunces',serif; margin:0; letter-spacing:0.01em;}
+  .brand{display:flex; align-items:center; justify-content:space-between; padding:6px 2px 16px; border-bottom:1px solid var(--line); margin-bottom:16px;}
+  .brand h1{font-size:22px; font-weight:600;}
+  .num{font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums;}
+  .board{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px 12px; margin-bottom:16px;}
+  .board-total{display:flex; align-items:baseline; justify-content:space-between; padding-bottom:10px; margin-bottom:10px; border-bottom:1px solid var(--line);}
+  .board-total .label{font-size:15px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ivory-dim);}
+  .board-total .val{font-size:40px; font-weight:700;}
+  .cat-row{display:grid; grid-template-columns:1fr auto auto; gap:2px 10px; font-size:16px; padding:5px 0; align-items:baseline;}
+  .cat-row .cname{color:var(--ivory-dim);}
+  .cat-row .cval{font-size:17px; font-weight:600;}
+  .cat-row .ctarget{font-size:13px; color:var(--ivory-dim);}
+  .pos{color:var(--pos);} .neg{color:var(--neg);} .zero{color:var(--ivory-dim);}
+  .btn{display:block; width:100%; text-align:center; background:var(--brass); color:#1a1408; border:none; border-radius:9px; font-family:'Inter',sans-serif; font-weight:600; font-size:19px; padding:17px 18px; cursor:pointer; margin-top:10px;}
+  .btn:active{opacity:0.85;}
+  .btn.secondary{background:transparent; color:var(--ivory); border:1px solid var(--line);}
+  .btn.ghost{background:transparent; color:var(--brass); border:1px solid var(--brass-dim); padding:12px; font-size:17px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:15px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ivory-dim); margin-bottom:6px;}
+  .field input[type=text], .field input[type=number], .field select{ width:100%; background:var(--surface2); border:1px solid var(--line); color:var(--ivory); border-radius:8px; padding:14px 12px; font-size:19px; font-family:'IBM Plex Mono',monospace;}
+  .field input::placeholder{color:rgba(150,150,140,0.6); font-family:'Inter',sans-serif;}
+  .chip-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{flex:1 1 auto; min-width:60px; text-align:center; padding:13px 10px; border-radius:8px; border:1px solid var(--line); background:var(--surface2); color:var(--ivory-dim); font-size:16px; font-weight:600; cursor:pointer;}
+  .chip.active{background:var(--sage); border-color:var(--sage);}
+  .themebtn{cursor:pointer; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; border:1px solid var(--line); border-radius:20px; padding:6px 11px; color:var(--ivory-dim); white-space:nowrap;}
+  .empty{text-align:center; padding:36px 10px; color:var(--ivory-dim); font-size:16px; line-height:1.6;}
+  .note{font-size:14px; color:var(--ivory-dim); line-height:1.6; margin-top:14px;}
+  .home-round{display:flex; justify-content:space-between; align-items:center; padding:14px 4px; border-bottom:1px solid var(--line); cursor:pointer;}
+  .home-round .meta{font-size:13px; color:var(--ivory-dim); margin-top:2px;}
+  .home-round .rscore{font-size:22px; font-weight:700;}
+
+  /* ---- hole entry rows ---- */
+  .holecard{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:12px; margin-bottom:10px;}
+  .holecard-top{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;}
+  .holecard-top .hname{font-family:'Fraunces',serif; font-size:19px; font-weight:600;}
+  .parchips{display:flex; gap:5px;}
+  .parchip{width:34px; height:34px; line-height:34px; text-align:center; border-radius:7px; border:1px solid var(--line); background:var(--surface2); color:var(--ivory-dim); font-size:14px; font-weight:700; cursor:pointer;}
+  .parchip.active{background:var(--brass); border-color:var(--brass); color:#1a1408;}
+  body[data-theme="shade"] .parchip.active, body[data-theme="sun"] .parchip.active{ color:#fff; }
+  .inputgrid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:10px;}
+  .inputgrid .fld label{display:block; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ivory-dim); margin-bottom:4px; text-align:center;}
+  .inputgrid .fld input{width:100%; text-align:center; background:var(--surface2); border:1px solid var(--line); color:var(--ivory); border-radius:8px; padding:11px 4px; font-size:19px; font-family:'IBM Plex Mono',monospace;}
+  .firrow{display:flex; gap:6px;}
+  .firchip{flex:1; text-align:center; padding:9px 2px; border-radius:7px; border:1px solid var(--line); background:var(--surface2); color:var(--ivory-dim); font-size:13px; font-weight:700; cursor:pointer;}
+  .firchip.active{background:var(--sage); border-color:var(--sage); color:#fff;}
+  .firrow.dim{opacity:0.35; pointer-events:none;}
+  .firlabel{font-size:12px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ivory-dim); margin-bottom:4px;}
+  .holecard.done{border-color:var(--sage);}
+  .tag{display:inline-block; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; padding:3px 8px; border-radius:20px; border:1px solid var(--brass-dim); color:var(--brass);}
+
+  /* ---- summary table ---- */
+  table.dbtable{width:100%; border-collapse:collapse; margin-top:6px; font-size:15px;}
+  table.dbtable th{text-align:left; color:var(--ivory-dim); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; padding:7px 4px; border-bottom:1px solid var(--line);}
+  table.dbtable td{padding:7px 4px; border-bottom:1px solid var(--line); font-family:'IBM Plex Mono',monospace;}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* Uses the browser's own localStorage — this file runs standalone in Safari,
+   outside Claude's environment, so persistence has to live on-device via
+   the browser itself rather than any external storage API. Same pattern
+   as the Strokes Gained tracker. */
+
+/* ================= 12-Cap benchmark targets (Master On-Course Strategy Manual, 3.3) ================= */
+const TARGETS = {
+  score: {label:'Score', target:84, dir:'lte', fmt:v=>v==null?'—':v},
+  fir: {label:'Fairways (FIR)', target:0.50, dir:'gte', fmt:pct},
+  gir: {label:'Greens (GIR)', target:0.35, dir:'gte', fmt:pct},
+  scrambling: {label:'Scrambling', target:0.35, dir:'gte', fmt:pct},
+  penalties: {label:'Penalty Balls', target:0, dir:'lte', fmt:v=>v==null?'—':v},
+  putts3: {label:'3-Putts', target:1, dir:'lte', fmt:v=>v==null?'—':v},
+};
+function pct(v){ return v==null ? '—' : Math.round(v*100)+'%'; }
+function hitTarget(key, v, targetOverride){
+  if(v==null) return 'zero';
+  const t = TARGETS[key];
+  const target = targetOverride!=null ? targetOverride : t.target;
+  const ok = t.dir==='lte' ? v<=target : v>=target;
+  return ok ? 'pos' : 'neg';
+}
+
+/* ================= State & storage ================= */
+let rounds = [], active = null;
+const STORE_KEY='roundlog_rounds_v1', ACTIVE_KEY='roundlog_active_v1', THEME_KEY='roundlog_theme_v1';
+async function loadState(){
+  try{ const r = localStorage.getItem(STORE_KEY); rounds = r? JSON.parse(r):[]; }catch(e){ rounds=[]; }
+  try{ const a = localStorage.getItem(ACTIVE_KEY); active = a? JSON.parse(a):null; }catch(e){ active=null; }
+}
+async function saveRounds(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(rounds)); }catch(e){} }
+async function saveActive(){ try{ localStorage.setItem(ACTIVE_KEY, active? JSON.stringify(active):'null'); }catch(e){} }
+async function loadTheme(){
+  try{
+    const t = localStorage.getItem(THEME_KEY);
+    const parsed = t? JSON.parse(t):null;
+    document.body.setAttribute('data-theme', (parsed&&parsed.mode)||'sun');
+  }catch(e){ document.body.setAttribute('data-theme','sun'); }
+}
+async function cycleTheme(){
+  const order=['sun','shade','dark'];
+  const cur = document.body.getAttribute('data-theme')||'sun';
+  const next = order[(order.indexOf(cur)+1)%order.length];
+  document.body.setAttribute('data-theme', next);
+  try{ localStorage.setItem(THEME_KEY, JSON.stringify({mode:next})); }catch(e){}
+  render();
+}
+function themeToggleBtn(){
+  const cur = document.body.getAttribute('data-theme')||'sun';
+  const labels = {dark:'☾ Dusk', shade:'⛅ Shade', sun:'☀ Bright Sun'};
+  return `<span onclick="cycleTheme()" class="themebtn">${labels[cur]}</span>`;
+}
+
+/* ================= Stats — derives GIR / 3-putts / scrambling / DB root cause ================= */
+/* Scrambling uses the standard definition: par-or-better after missing the green in regulation. */
+function computeRoundStats(round){
+  let score=null, firYes=0, firTotal=0, girYes=0, girTotal=0, scrYes=0, scrTotal=0, putts3=0, penalties=0;
+  const dbTags=[];
+  let anyComplete=false;
+  round.holes.forEach(h=>{
+    if(h.score==null || h.putts==null || h.score==='' || h.putts===''){ return; }
+    anyComplete=true;
+    const s=Number(h.score), p=Number(h.putts), par=Number(h.par)||4, pen=Number(h.penalty)||0;
+    score = (score||0) + s;
+    penalties += pen;
+    if(p>=3) putts3++;
+    const toGreen = s - p;
+    const gir = toGreen <= (par-2);
+    girTotal++; if(gir) girYes++;
+    if(par!==3 && h.fir){ firTotal++; if(h.fir==='Y') firYes++; }
+    if(!gir){ scrTotal++; if(s<=par) scrYes++; }
+    if(s >= par+2){ dbTags.push({hole:h.n, tag: pen>0?'P':(p>=3?'3P':'H')}); }
+  });
+  return {
+    score: anyComplete?score:null,
+    fir: firTotal? firYes/firTotal : null,
+    gir: girTotal? girYes/girTotal : null,
+    scrambling: scrTotal? scrYes/scrTotal : null,
+    putts3: anyComplete?putts3:null,
+    penalties: anyComplete?penalties:null,
+    dbTags
+  };
+}
+function averageStats(list){
+  const keys=['fir','gir','scrambling'];
+  const out={};
+  keys.forEach(k=>{
+    const vals = list.map(r=>computeRoundStats(r)[k]).filter(v=>v!=null);
+    out[k] = vals.length ? vals.reduce((a,b)=>a+b,0)/vals.length : null;
+  });
+  // Score only averages across rounds matching the most recent round's hole count,
+  // so a 9-hole league night doesn't silently skew an 18-hole average (or vice versa).
+  const holesCount = list.length ? list[list.length-1].holesCount : 18;
+  const scores = list.filter(r=>r.holesCount===holesCount).map(r=>computeRoundStats(r).score).filter(v=>v!=null);
+  out.score = scores.length ? Math.round(10*scores.reduce((a,b)=>a+b,0)/scores.length)/10 : null;
+  out.holesCount = holesCount;
+  const p3 = list.map(r=>computeRoundStats(r).putts3).filter(v=>v!=null);
+  out.putts3 = p3.length ? Math.round(10*p3.reduce((a,b)=>a+b,0)/p3.length)/10 : null;
+  const pen = list.map(r=>computeRoundStats(r).penalties).filter(v=>v!=null);
+  out.penalties = pen.length ? Math.round(10*pen.reduce((a,b)=>a+b,0)/pen.length)/10 : null;
+  return out;
+}
+function fmt(n){ return (n>0?'+':'')+n.toFixed(2); }
+
+/* ================= Render ================= */
+const app = document.getElementById('app');
+let view='home', detailId=null;
+
+function render(){
+  if(view==='home') return renderHome();
+  if(view==='new') return renderNew();
+  if(view==='log') return renderLog();
+  if(view==='detail') return renderDetail(rounds.find(r=>r.id===detailId));
+  if(view==='help') return renderHelp();
+}
+
+function statBoard(stats, showTargets, holesCount){
+  const hc = holesCount||18;
+  const scoreTarget = Math.round(84 * hc/18);
+  const rows = ['score','fir','gir','scrambling','penalties','putts3'].map(k=>{
+    const t = TARGETS[k];
+    const target = (k==='score') ? scoreTarget : t.target;
+    const label = (k==='score') ? `${hc}-Hole Score` : t.label;
+    const cls = showTargets ? hitTarget(k, stats[k], target) : 'zero';
+    return `<div class="cat-row"><span class="cname">${label}</span><span class="cval num ${cls}">${t.fmt(stats[k])}</span><span class="ctarget">${t.dir==='lte'?'≤':'≥'}${k==='score'?target:(k==='putts3'||k==='penalties'?target:pct(target))}</span></div>`;
+  }).join('');
+  return `<div class="board">${rows}</div>`;
+}
+
+function renderHome(){
+  let html = `<div class="brand"><h1>Post Round Log</h1>${themeToggleBtn()}</div>`;
+  if(active){
+    html += `<button class="btn" onclick="resumeRound()">Resume — ${active.course||'Round'}</button>`;
+  }
+  html += `<button class="btn ${active?'secondary':''}" onclick="goto('new')">New Round</button>`;
+  html += `<button class="btn secondary" onclick="goto('help')">How to Use</button>`;
+
+  if(rounds.length>0){
+    html += `<h3 style="margin-top:26px; font-size:15px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ivory-dim); font-family:'Inter',sans-serif;">Trend — Last ${Math.min(5,rounds.length)} Rounds</h3>`;
+    const trend = averageStats(rounds.slice(-5));
+    html += statBoard(trend, true, trend.holesCount);
+  }
+
+  html += `<h3 style="margin-top:26px; font-size:15px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ivory-dim); font-family:'Inter',sans-serif;">Past Rounds</h3>`;
+  if(rounds.length===0){ html += `<div class="empty">No rounds logged yet.<br>Fill one in after your next round.</div>`; }
+  else{
+    rounds.slice().reverse().forEach(r=>{
+      const s = computeRoundStats(r);
+      html += `<div class="home-round" onclick="viewDetail('${r.id}')"><div><div>${r.course||'Round'}</div><div class="meta">${r.date}${r.holesCount?' · '+r.holesCount+' holes':''}</div></div><div class="rscore num">${s.score==null?'—':s.score}</div></div>`;
+    });
+  }
+  app.innerHTML = html;
+}
+
+function renderNew(){
+  window._nHoles = window._nHoles || 18;
+  const today = new Date().toISOString().slice(0,10);
+  app.innerHTML = `
+    <div class="brand"><h1>New Round Log</h1>${themeToggleBtn()}</div>
+    <div class="field"><label>Course</label>
+      <input type="text" id="courseInput" list="courseList" placeholder="Course name">
+      <datalist id="courseList">${[...new Set(rounds.map(r=>r.course).filter(Boolean))].map(c=>`<option value="${c}">`).join('')}</datalist>
+    </div>
+    <div class="field"><label>Date</label><input type="text" id="dateInput" value="${today}"></div>
+    <div class="field"><label>Holes</label>
+      <div class="chip-row">
+        <div class="chip ${window._nHoles===9?'active':''}" onclick="pickHoles(9)">9</div>
+        <div class="chip ${window._nHoles===18?'active':''}" onclick="pickHoles(18)">18</div>
+      </div>
+    </div>
+    <button class="btn" onclick="startLog()">Start Log</button>
+    <button class="btn secondary" onclick="goto('home')">Cancel</button>
+  `;
+}
+function pickHoles(n){ window._nHoles=n; render(); }
+async function startLog(){
+  const course = document.getElementById('courseInput').value.trim();
+  const date = document.getElementById('dateInput').value.trim();
+  const n = window._nHoles || 18;
+  const holes = [];
+  for(let i=1;i<=n;i++){ holes.push({n:i, par:4, score:null, putts:null, fir:null, penalty:0}); }
+  active = { id:'rl'+Date.now(), course, date, holesCount:n, holes };
+  await saveActive();
+  view='log'; render();
+}
+function resumeRound(){ view='log'; render(); }
+
+function renderLog(){
+  const stats = computeRoundStats(active);
+  let html = `<div class="brand"><h1>${active.course||'Round'}</h1>${themeToggleBtn()}</div>
+  <div class="note" style="margin-top:-10px; margin-bottom:16px;">${active.date} · ${active.holesCount} holes</div>`;
+  html += statBoard(stats, true, active.holesCount);
+
+  active.holes.forEach(h=>{
+    const complete = h.score!=null && h.score!=='' && h.putts!=null && h.putts!=='';
+    html += `<div class="holecard ${complete?'done':''}">
+      <div class="holecard-top">
+        <span class="hname">Hole ${h.n}</span>
+        <div class="parchips">${[3,4,5].map(p=>`<div class="parchip ${h.par===p?'active':''}" onclick="setPar(${h.n},${p})">${p}</div>`).join('')}</div>
+      </div>
+      <div class="inputgrid">
+        <div class="fld"><label>Score</label><input type="number" inputmode="numeric" value="${h.score==null?'':h.score}" oninput="setHoleVal(${h.n},'score',this.value)"></div>
+        <div class="fld"><label>Putts</label><input type="number" inputmode="numeric" value="${h.putts==null?'':h.putts}" oninput="setHoleVal(${h.n},'putts',this.value)"></div>
+        <div class="fld"><label>Penalty</label><input type="number" inputmode="numeric" value="${h.penalty||0}" oninput="setHoleVal(${h.n},'penalty',this.value)"></div>
+      </div>
+      <div class="firlabel">Fairway${h.par===3?' (n/a — par 3)':''}</div>
+      <div class="firrow ${h.par===3?'dim':''}">${['Y','L','R','T'].map(f=>`<div class="firchip ${h.fir===f?'active':''}" onclick="setFir(${h.n},'${f}')">${f}</div>`).join('')}</div>
+    </div>`;
+  });
+
+  html += `<button class="btn" onclick="finishLog()">Save Round</button>
+  <button class="btn ghost" onclick="goto('home')" style="margin-top:8px;">Save &amp; Exit to Home</button>`;
+  app.innerHTML = html;
+}
+function findHole(n){ return active.holes.find(h=>h.n===n); }
+async function setPar(n,p){ findHole(n).par=p; await saveActive(); render(); }
+async function setFir(n,f){ const h=findHole(n); h.fir = (h.fir===f)?null:f; await saveActive(); render(); }
+async function setHoleVal(n,key,val){
+  const h = findHole(n);
+  h[key] = val===''? null : Number(val);
+  await saveActive();
+  // light-touch: only refresh the top stat board + done-state, not the whole scroll position
+  const statsHtml = document.querySelector('.board');
+  if(statsHtml) statsHtml.outerHTML = statBoard(computeRoundStats(active), true, active.holesCount);
+}
+async function finishLog(){
+  rounds.push(active);
+  await saveRounds();
+  active = null; await saveActive();
+  view='home'; render();
+}
+
+function dbTable(stats){
+  if(stats.dbTags.length===0) return '';
+  const rows = stats.dbTags.map(t=>`<tr><td>Hole ${t.hole}</td><td>${t.tag==='P'?'Penalty':t.tag==='3P'?'3-Putt':'Other / recovery'}</td></tr>`).join('');
+  return `<h3 style="margin-top:22px; font-size:15px;">Double-Bogey+ Root Cause</h3>
+  <table class="dbtable"><thead><tr><th>Hole</th><th>Cause</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function renderDetail(round){
+  const stats = computeRoundStats(round);
+  let html = `<div class="brand"><h1>${round.course||'Round'}</h1>${themeToggleBtn()}</div>
+  <div class="note" style="margin-top:-10px;">${round.date} · ${round.holesCount} holes</div>`;
+  html += statBoard(stats, true, round.holesCount);
+  html += dbTable(stats);
+  html += `<button class="btn secondary" onclick="goto('home')" style="margin-top:16px;">Back to Home</button>`;
+  app.innerHTML = html;
+}
+function viewDetail(id){ detailId=id; view='detail'; render(); }
+
+function renderHelp(){
+  const step = (n,title,body) => `<div class="board" style="padding:12px 14px;">
+    <div style="display:flex; gap:10px; align-items:baseline; margin-bottom:6px;">
+      <span class="num" style="color:var(--brass); font-weight:700; font-size:17px;">${n}</span>
+      <span style="font-weight:600; font-size:16px;">${title}</span>
+    </div>
+    <div style="font-size:15px; color:var(--ivory-dim); line-height:1.55;">${body}</div>
+  </div>`;
+  let html = `<div class="brand"><h1>How to Use</h1>${themeToggleBtn()}</div>`;
+  html += step('1','After the round','Home → New Round Log. Type the course, date, and pick 9 or 18 holes.');
+  html += step('2','Transcribe from your backup card','For each hole: Score and Putts (you already have these), Penalty strokes if any, and Fairway — Y (hit), L/R (missed left/right rough), or T (trees). Skip Fairway on par 3s, it is not counted there.');
+  html += step('3','Everything else is automatic','GIR, 3-putts, Scrambling %, and the double-bogey root cause (Penalty / 3-Putt / Other) are all computed from what you typed — nothing extra to tag.');
+  html += step('4','Save','Tap Save Round. It joins Past Rounds and folds into the 5-round trend on the home screen.');
+  html += step('5','Reading the numbers','Green = at or better than the 12-cap target from the On-Course Card. Red = short of it. Watch the trend over rounds, not any single one.');
+  html += `<button class="btn secondary" onclick="goto('home')" style="margin-top:10px;">Back to Home</button>`;
+  app.innerHTML = html;
+}
+
+function goto(v){ view=v; render(); }
+loadTheme().then(()=>loadState().then(render));
+</script>
+</body>
+</html>
