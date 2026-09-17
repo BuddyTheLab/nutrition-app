@@ -29,6 +29,12 @@
     --brass:#7A5A10; --brass-dim: rgba(122,90,16,0.42);
     --sage:#245A28; --pos:#166622; --neg:#8F2E19;
   }
+  body[data-theme="hc"]{
+    --bg:#000000; --surface:#0D0D0D; --surface2:#1A1A1A; --line: rgba(255,255,255,0.4);
+    --ivory:#FFFFFF; --ivory-dim: rgba(255,255,255,0.92);
+    --brass:#FFC72C; --brass-dim: rgba(255,199,44,0.55);
+    --sage:#4ADE80; --pos:#4ADE80; --neg:#FF6B5C;
+  }
   body[data-theme="shade"] .chip.active, body[data-theme="sun"] .chip.active{ color:#fff; }
   body[data-theme="shade"] .btn:not(.secondary):not(.ghost), body[data-theme="sun"] .btn:not(.secondary):not(.ghost){ color:#fff; }
   *{box-sizing:border-box;}
@@ -108,6 +114,32 @@ const TRAINING_CARDS = [
   {key:'7', label:'7', name:'Full Rest'},
   {key:'9-10', label:'9&10', name:'ATG Knee'},
 ];
+// Weekly Rotation — mirrors the master reference card in Training Cards — Gym.
+// Indexed by JS Date.getDay(): 0=Sun, 1=Mon, ... 6=Sat.
+const WEEKLY_ROTATION = [
+  { cards:['7'],      note:'Full Rest & Spinal Decompression — full nervous system reset before the week starts over.' },           // Sun
+  { cards:['1','9-10'], note:'Upper A + ATG — pull-up Bottom Block starts the week fresh.' },                                        // Mon
+  { cards:['2'],      note:'Lower A — Single-Arm Clean & Press, squat/hinge work.' },                                                 // Tue
+  { cards:['3','9-10'], note:'Rotational/ATG + ATG — a lighter CNS day between two heavy lifting days.' },                            // Wed
+  { cards:['4'],      note:'Upper B — pull-up Middle + Top Block, your priority range.' },                                            // Thu
+  { cards:['5','9-10'], note:'Lower B + ATG — completes ATG\'s 3x/week target on schedule.' },                                        // Fri
+  { cards:['6'],      note:'Zone 2 / Golf — optional pull-up skill touch here, only if fresh.' },                                     // Sat
+];
+function todaysRotation(dateStr){
+  // dateStr expected as YYYY-MM-DD (local); falls back to real today if unparseable.
+  let d;
+  if(dateStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)){
+    const [y,m,day] = dateStr.split('-').map(Number);
+    d = new Date(y, m-1, day);
+  } else {
+    d = new Date();
+  }
+  return WEEKLY_ROTATION[d.getDay()];
+}
+function rotationCardLabel(key){
+  const c = TRAINING_CARDS.find(x=>x.key===key);
+  return c ? `${c.label} (${c.name})` : key;
+}
 
 /* ================= State & storage ================= */
 let dailyLogs = [], checkpoints = [];
@@ -134,7 +166,7 @@ async function loadTheme(){
   }catch(e){ document.body.setAttribute('data-theme','sun'); }
 }
 async function cycleTheme(){
-  const order=['sun','shade','dark'];
+  const order=['sun','shade','dark','hc'];
   const cur = document.body.getAttribute('data-theme')||'sun';
   const next = order[(order.indexOf(cur)+1)%order.length];
   document.body.setAttribute('data-theme', next);
@@ -143,7 +175,7 @@ async function cycleTheme(){
 }
 function themeToggleBtn(){
   const cur = document.body.getAttribute('data-theme')||'sun';
-  const labels = {dark:'☾ Dusk', shade:'⛅ Shade', sun:'☀ Bright Sun'};
+  const labels = {dark:'☾ Dusk', shade:'⛅ Shade', sun:'☀ Bright Sun', hc:'◐ High Contrast'};
   return `<span onclick="cycleTheme()" class="themebtn">${labels[cur]}</span>`;
 }
 
@@ -208,6 +240,15 @@ function renderHome(){
   html += `<button class="btn secondary" onclick="goto('new-check')">Log DEXA / Body-Comp Checkpoint</button>`;
   html += `<button class="btn secondary" onclick="goto('help')">How to Use</button>`;
 
+  // Today's rotation
+  const rot = todaysRotation();
+  const rotNames = rot.cards.map(rotationCardLabel).join('  +  ');
+  html += `<div class="board" style="margin-top:22px; border-color: var(--brass-dim);">
+    <h4>Today's Card — Weekly Rotation</h4>
+    <div class="cat-row"><span class="cname">Suggested</span><span class="cval num zero" style="font-size:16px;">${rotNames}</span><span class="ctarget"></span></div>
+    <div class="note" style="margin-top:2px;">${rot.note} Card 0 runs today regardless, as always.</div>
+  </div>`;
+
   // Body comp trend
   const ct = checkpointTrend();
   if(ct){
@@ -269,7 +310,7 @@ function renderHome(){
 function renderNewDaily(){
   const today = new Date().toISOString().slice(0,10);
   editBlocks = editBlocks || {fasted:false, collagen:false, hydration:false, shake1:false, meal1:false, meal2:false, night:false, d3:false};
-  editDaily = editDaily || {date:today, weight:'', fluidOz:'', cards:[], deload:false};
+  editDaily = editDaily || {date:today, weight:'', fluidOz:'', cards:[...todaysRotation(today).cards], deload:false};
   app.innerHTML = `
     <div class="brand"><h1>Log Today</h1>${themeToggleBtn()}</div>
     <div class="field"><label>Date</label><input type="text" id="dateInput" value="${editDaily.date}" oninput="editDaily.date=this.value"></div>
@@ -284,6 +325,7 @@ function renderNewDaily(){
     </div>
     <div class="board">
       <h4>Training — Card(s) Done Today</h4>
+      <div class="hint" style="margin-bottom:10px;">Rotation for ${editDaily.date}: ${todaysRotation(editDaily.date).cards.map(rotationCardLabel).join('  +  ')} — pre-checked below, adjust if your day went differently.</div>
       <div class="chip-row">${TRAINING_CARDS.map(c=>`<div class="chip ${editDaily.cards.includes(c.key)?'active':''}" onclick="toggleCard('${c.key}')">${c.label}<br><span style="font-size:11px; font-weight:400;">${c.name}</span></div>`).join('')}</div>
       <div class="blockrow" style="margin-top:8px;"><div><span class="bname">Deload Week</span></div><div class="togglechip ${editDaily.deload?'active':''}" onclick="toggleDeload()">${editDaily.deload?'✓ Yes':'No'}</div></div>
     </div>
@@ -384,6 +426,21 @@ function renderHelp(){
   html += step('2','DEXA / body-comp checkpoints','Whenever you get a new scan, log DEXA / Body-Comp with the numbers straight off the report. Waist:height computes itself from a waist measurement — height is fixed at 5\'10" per the protocol.');
   html += step('3','What the colors mean','Lean Mass and Waist:Height are colored against the protocol\'s own stated goals — lean mass trending up, waist:height under 0.50. Everything else (weight, fat mass, body fat %, fluid, block count) is shown for reference only, no judgment attached — this app tracks the numbers, it does not interpret them.');
   html += step('4','Baseline entries','The 7/14/26 DEXA scan and the most recent logged weight from the protocol doc are pre-loaded as a starting point, tagged "baseline" so they are never mistaken for something you logged yourself.');
+
+  const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const rotationGrid = WEEKLY_ROTATION.map((r,i)=>{
+    const names = r.cards.map(rotationCardLabel).join(' + ');
+    return `<div class="cat-row"><span class="cname">${DOW[i]}</span><span class="cval num zero" style="font-size:15px;">${names}</span><span class="ctarget"></span></div>`;
+  }).join('');
+  const step5Body = `
+    <div style="margin-bottom:10px;">Home shows today's card automatically; Log Today pre-checks it. Full reasoning is on the Weekly Rotation reference card in Training Cards — Gym.</div>
+    <div class="board" style="margin:0 0 10px; padding:8px 10px; background:var(--surface2);">${rotationGrid}</div>
+    <div style="display:flex; flex-wrap:wrap; gap:8px;">
+      <span class="tag">Card 0 · daily, no exceptions</span>
+      <span class="tag">Card 8 · every 5th week, replaces 1/2/4/5</span>
+    </div>
+  `;
+  html += step('5','Weekly Rotation', step5Body);
   html += `<button class="btn secondary" onclick="goto('home')" style="margin-top:10px;">Back to Home</button>`;
   app.innerHTML = html;
 }

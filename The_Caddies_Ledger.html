@@ -1,0 +1,536 @@
+<!-- The Caddie's Ledger — version 2026-09-04 (consolidated from Strokes_Gained_Tracker + Dwight_s_Golf_Strokes_and_Tracker; added shot-strike tracking, readability pass, new ledger icon) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
+<meta name="apple-mobile-web-app-title" content="Caddie's Ledger">
+<title>The Caddie's Ledger — Dwight Clarke</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#161d18; --surface:#1f2a22; --surface2:#26332a; --line: rgba(237,232,220,0.12);
+    --ivory:#EDE8DC; --ivory-dim: rgba(237,232,220,0.62);
+    --brass:#C9A24B; --brass-dim: rgba(201,162,75,0.35);
+    --sage:#7C9473; --pos:#8FB08A; --neg:#C1725A;
+  }
+  body[data-theme="shade"]{
+    --bg:#E4E1D4; --surface:#F1EFE4; --surface2:#DAD6C6; --line: rgba(20,24,18,0.16);
+    --ivory:#20241C; --ivory-dim: rgba(32,36,28,0.66);
+    --brass:#8A6415; --brass-dim: rgba(138,100,21,0.38);
+    --sage:#3E6B41; --pos:#256B31; --neg:#A6371F;
+  }
+  body[data-theme="sun"]{
+    --bg:#FAFAF5; --surface:#FFFFFF; --surface2:#EFEDE2; --line: rgba(20,24,18,0.2);
+    --ivory:#0F120C; --ivory-dim: rgba(15,18,12,0.72);
+    --brass:#7A5A10; --brass-dim: rgba(122,90,16,0.42);
+    --sage:#245A28; --pos:#166622; --neg:#8F2E19;
+  }
+  body[data-theme="hc"]{
+    --bg:#000000; --surface:#0D0D0D; --surface2:#1A1A1A; --line: rgba(255,255,255,0.4);
+    --ivory:#FFFFFF; --ivory-dim: rgba(255,255,255,0.92);
+    --brass:#FFC72C; --brass-dim: rgba(255,199,44,0.55);
+    --sage:#4ADE80; --pos:#4ADE80; --neg:#FF6B5C;
+  }
+  body[data-theme="shade"] .chip.active, body[data-theme="sun"] .chip.active{ color:#fff; }
+  body[data-theme="shade"] .btn:not(.secondary):not(.ghost), body[data-theme="sun"] .btn:not(.secondary):not(.ghost){ color:#fff; }
+  *{box-sizing:border-box;}
+  html{width:100%; height:100%;}
+  html,body{margin:0;padding:0;}
+  body{ background:var(--bg); color:var(--ivory); font-family:'Inter',sans-serif; min-height:100vh; width:100%; -webkit-tap-highlight-color: transparent; padding-bottom:24px; transition:background 0.15s,color 0.15s;}
+  .wrap{max-width:520px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px 40px;}
+  h1,h2,h3{font-family:'Fraunces',serif; margin:0; letter-spacing:0.01em;}
+  .brand{display:flex; align-items:center; justify-content:space-between; padding:6px 2px 16px; border-bottom:1px solid var(--line); margin-bottom:16px;}
+  .brand h1{font-size:25px; font-weight:600;}
+  .num{font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums;}
+  .board{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px 12px; margin-bottom:16px;}
+  .board-total{display:flex; align-items:baseline; justify-content:space-between; padding-bottom:10px; margin-bottom:10px; border-bottom:1px solid var(--line);}
+  .board-total .label{font-size:15px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ivory-dim);}
+  .board-total .val{font-size:40px; font-weight:700;}
+  .cat-row{display:grid; grid-template-columns:1fr auto; gap:2px 10px; font-size:17px; padding:3px 0;}
+  .cat-row .cname{color:var(--ivory-dim);}
+  .cat-row .cval{font-size:18px; font-weight:600;}
+  .pos{color:var(--pos);} .neg{color:var(--neg);} .zero{color:var(--ivory-dim);}
+  .btn{display:block; width:100%; text-align:center; background:var(--brass); color:#1a1408; border:none; border-radius:9px; font-family:'Inter',sans-serif; font-weight:600; font-size:19px; padding:17px 18px; cursor:pointer; margin-top:10px;}
+  .btn:active{opacity:0.85;}
+  .btn.secondary{background:transparent; color:var(--ivory); border:1px solid var(--line);}
+  .btn.ghost{background:transparent; color:var(--brass); border:1px solid var(--brass-dim); padding:12px; font-size:17px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-size:14px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ivory-dim); margin-bottom:6px;}
+  .field input[type=text], .field input[type=number], .field select{ width:100%; background:var(--surface2); border:1px solid var(--line); color:var(--ivory); border-radius:8px; padding:14px 12px; font-size:19px; font-family:'IBM Plex Mono',monospace;}
+  .field input::placeholder{color:rgba(150,150,140,0.6); font-family:'Inter',sans-serif;}
+  .chip-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .chip{flex:1 1 auto; min-width:60px; text-align:center; padding:13px 10px; border-radius:8px; border:1px solid var(--line); background:var(--surface2); color:var(--ivory-dim); font-size:16px; font-weight:600; cursor:pointer;}
+  .chip.active{background:var(--sage); border-color:var(--sage);}
+  .chip.disabled{opacity:0.3; pointer-events:none;}
+  .hole-hdr{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:10px;}
+  .hole-hdr h2{font-size:27px;}
+  .par-row{display:flex; gap:8px; align-items:center; margin-bottom:12px;}
+  .par-row .chip{flex:0 0 54px; padding:10px;}
+  .shotlist{margin:14px 0;}
+  .shot{display:grid; grid-template-columns:18px 1fr 1fr auto auto; gap:6px; align-items:center; padding:8px 0; border-bottom:1px solid var(--line); font-size:16px;}
+  .shot .idx{color:var(--brass); font-family:'IBM Plex Mono',monospace;}
+  .shot .club{color:var(--ivory-dim); font-size:14px;}
+  .shot .lie{color:var(--ivory-dim); text-transform:uppercase; font-size:13px; letter-spacing:0.04em;}
+  .shot .dist{font-family:'IBM Plex Mono',monospace;}
+  .shot .sg{font-family:'IBM Plex Mono',monospace; font-weight:600; min-width:44px; text-align:right;}
+  .home-round{display:flex; justify-content:space-between; align-items:center; padding:14px 4px; border-bottom:1px solid var(--line); cursor:pointer;}
+  .home-round .meta{font-size:15px; color:var(--ivory-dim); margin-top:2px;}
+  .home-round .rsg{font-size:25px; font-weight:700;}
+  .empty{text-align:center; padding:36px 10px; color:var(--ivory-dim); font-size:17px; line-height:1.6;}
+  .note{font-size:15px; color:var(--ivory-dim); line-height:1.6; margin-top:14px;}
+  table.summary, table.card{width:100%; border-collapse:collapse; margin-top:6px; font-size:15px;}
+  table.summary th, table.card th{text-align:left; color:var(--ivory-dim); font-weight:600; font-size:12px; text-transform:uppercase; letter-spacing:0.05em; padding:6px 3px; border-bottom:1px solid var(--line);}
+  table.summary td, table.card td{padding:6px 3px; border-bottom:1px solid var(--line); font-family:'IBM Plex Mono',monospace;}
+  table.summary td.hole, table.card td.hole{font-family:'Inter',sans-serif; font-weight:600;}
+  table.card td.sel, table.card th.sel{font-weight:700; color:var(--brass);}
+  .tag{display:inline-block; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; padding:2px 7px; border-radius:20px; border:1px solid var(--brass-dim); color:var(--brass);}
+  .themebtn{cursor:pointer; font-size:14px; letter-spacing:0.08em; text-transform:uppercase; border:1px solid var(--line); border-radius:20px; padding:5px 10px; color:var(--ivory-dim); white-space:nowrap;}
+  .yardrow{display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;}
+  .yardchip{flex:1 1 auto; text-align:center; padding:8px 4px; border-radius:7px; background:var(--surface2); border:1px solid var(--line); font-size:14px;}
+  .yardchip.sel{background:var(--brass); color:#1a1408; border-color:var(--brass); font-weight:700;}
+  .yardchip .yc-label{display:block; font-size:12px; letter-spacing:0.05em; text-transform:uppercase; opacity:0.8;}
+  .yardchip .yc-val{display:block; font-family:'IBM Plex Mono',monospace; font-size:17px; font-weight:700; margin-top:2px;}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+/* ================= Expected-strokes baseline (approx. 15–20 hcp) ================= */
+const TABLES = {
+  putt: [[1,1.001],[2,1.02],[3,1.06],[4,1.13],[5,1.22],[6,1.31],[8,1.45],[10,1.56],[15,1.74],[20,1.85],[30,2.00],[40,2.10],[50,2.17],[60,2.22],[90,2.32],[120,2.40]],
+  shortFairway: [[3,2.20],[5,2.30],[10,2.45],[15,2.55],[20,2.65],[25,2.75],[30,2.85]],
+  shortSand:    [[3,2.45],[5,2.55],[10,2.70],[15,2.80],[20,2.90],[25,3.00],[30,3.10]],
+  fairway: [[30,2.85],[50,2.95],[75,3.05],[100,3.15],[125,3.30],[150,3.42],[175,3.58],[200,3.75],[225,3.90],[250,4.05],[275,4.20],[300,4.35]],
+  rough:   [[30,3.00],[50,3.10],[75,3.20],[100,3.32],[125,3.48],[150,3.62],[175,3.80],[200,3.98],[225,4.15],[250,4.32],[275,4.48],[300,4.62]],
+  sand:    [[30,3.10],[50,3.20],[75,3.32],[100,3.45],[125,3.60],[150,3.75],[175,3.92],[200,4.10],[225,4.28],[250,4.45],[275,4.60],[300,4.75]],
+  tee: [[100,3.05],[125,3.20],[150,3.32],[175,3.46],[200,3.60],[225,3.74],[250,3.86],[275,3.98],[300,4.10],[325,4.22],[350,4.35],[375,4.48],[400,4.62],[450,4.90],[500,5.15],[550,5.40]]
+};
+function interp(table, x){
+  if(x<=table[0][0]) return table[0][1];
+  if(x>=table[table.length-1][0]) return table[table.length-1][1] + (x-table[table.length-1][0])*0.003;
+  for(let i=0;i<table.length-1;i++){
+    const [x0,y0]=table[i], [x1,y1]=table[i+1];
+    if(x>=x0 && x<=x1){ const t=(x-x0)/(x1-x0); return y0 + t*(y1-y0); }
+  }
+  return table[table.length-1][1];
+}
+function expectedStrokes(lie, dist){
+  if(lie==='Green') return interp(TABLES.putt, dist);
+  if(dist<=30){ return lie==='Sand' ? interp(TABLES.shortSand,dist) : interp(TABLES.shortFairway,dist); }
+  if(lie==='Tee') return interp(TABLES.tee, dist);
+  if(lie==='Rough') return interp(TABLES.rough, dist);
+  if(lie==='Sand') return interp(TABLES.sand, dist);
+  if(lie==='Recovery') return interp(TABLES.rough, dist) + 0.3;
+  return interp(TABLES.fairway, dist);
+}
+function category(lie, dist, par, shotIndex){
+  if(lie==='Green') return 'Putting';
+  if(dist<=30 && lie!=='Tee') return 'Short Game';
+  if(lie==='Tee' && shotIndex===0 && par!==3) return 'Off Tee';
+  return 'Approach';
+}
+
+/* ================= Bag & course reference data ================= */
+const CLUBS = ['Driver','Mini-Driver','4-Rescue','7-Wood','9-Wood','6-Iron','7-Iron','8-Iron','9-Iron','PW (44°)','GW (48°)','SW (52°)','LW (56°)','LW (58°)','Putter'];
+
+const VL18 = [
+ {h:1,par:4,hdcp:13,black:380,blue:363,white:341,gold:320,red:262},
+ {h:2,par:5,hdcp:3, black:572,blue:541,white:519,gold:499,red:431},
+ {h:3,par:3,hdcp:15,black:206,blue:181,white:156,gold:125,red:112},
+ {h:4,par:4,hdcp:1, black:465,blue:436,white:413,gold:391,red:361},
+ {h:5,par:4,hdcp:11,black:400,blue:369,white:350,gold:329,red:297},
+ {h:6,par:5,hdcp:5, black:552,blue:524,white:502,gold:482,red:438},
+ {h:7,par:4,hdcp:7, black:436,blue:414,white:395,gold:376,red:347},
+ {h:8,par:3,hdcp:17,black:159,blue:143,white:121,gold:106,red:95},
+ {h:9,par:4,hdcp:9, black:445,blue:422,white:402,gold:378,red:354},
+ {h:10,par:4,hdcp:12,black:384,blue:355,white:337,gold:316,red:291},
+ {h:11,par:3,hdcp:18,black:197,blue:176,white:161,gold:144,red:131},
+ {h:12,par:4,hdcp:14,black:346,blue:324,white:304,gold:285,red:254},
+ {h:13,par:4,hdcp:2, black:483,blue:455,white:434,gold:410,red:377},
+ {h:14,par:4,hdcp:8, black:429,blue:409,white:389,gold:370,red:338},
+ {h:15,par:5,hdcp:4, black:574,blue:552,white:526,gold:500,red:440},
+ {h:16,par:5,hdcp:6, black:554,blue:527,white:500,gold:481,red:454},
+ {h:17,par:3,hdcp:16,black:204,blue:184,white:157,gold:139,red:128},
+ {h:18,par:4,hdcp:10,black:422,blue:395,white:375,gold:353,red:329}
+];
+const VL9 = [
+ {h:1,par:4,hdcp:7,blue:315,white:300,gold:260,red:240,family:220},
+ {h:2,par:5,hdcp:1,blue:520,white:495,gold:420,red:410,family:335},
+ {h:3,par:4,hdcp:5,blue:397,white:373,gold:353,red:343,family:235},
+ {h:4,par:3,hdcp:9,blue:172,white:147,gold:127,red:117,family:85},
+ {h:5,par:4,hdcp:4,blue:380,white:353,gold:337,red:327,family:265},
+ {h:6,par:4,hdcp:3,blue:417,white:387,gold:372,red:362,family:255},
+ {h:7,par:5,hdcp:2,blue:509,white:483,gold:464,red:454,family:350},
+ {h:8,par:3,hdcp:8,blue:197,white:172,gold:140,red:115,family:95},
+ {h:9,par:4,hdcp:6,blue:372,white:348,gold:328,red:318,family:250}
+];
+const TEES_18 = ['red','gold','white','blue','black'];
+const TEES_9 = ['red','gold','white','blue','family'];
+
+/* ================= State & storage ================= */
+let rounds = [], active = null, pins = {};
+const STORE_KEY='rounds_v2', ACTIVE_KEY='active_round_v2', PINS_KEY='course_pins_v2', THEME_KEY='theme_v2';
+/* Uses the browser's own localStorage — this file runs standalone in Safari,
+   outside Claude's environment, so persistence has to live on-device via
+   the browser itself rather than any external storage API. */
+async function loadState(){
+  try{ const r = localStorage.getItem(STORE_KEY); rounds = r? JSON.parse(r):[]; }catch(e){ rounds=[]; }
+  try{ const a = localStorage.getItem(ACTIVE_KEY); active = a? JSON.parse(a):null; }catch(e){ active=null; }
+  try{ const p = localStorage.getItem(PINS_KEY); pins = p? JSON.parse(p):{}; }catch(e){ pins={}; }
+}
+async function saveRounds(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(rounds)); }catch(e){} }
+async function saveActive(){ try{ localStorage.setItem(ACTIVE_KEY, active? JSON.stringify(active):'null'); }catch(e){} }
+async function savePins(){ try{ localStorage.setItem(PINS_KEY, JSON.stringify(pins)); }catch(e){} }
+async function loadTheme(){
+  try{
+    const t = localStorage.getItem(THEME_KEY);
+    const parsed = t? JSON.parse(t):null;
+    document.body.setAttribute('data-theme', (parsed&&parsed.mode)||'sun');
+  }catch(e){ document.body.setAttribute('data-theme','sun'); }
+}
+async function cycleTheme(){
+  const order=['sun','shade','dark','hc'];
+  const cur = document.body.getAttribute('data-theme')||'sun';
+  const next = order[(order.indexOf(cur)+1)%order.length];
+  document.body.setAttribute('data-theme', next);
+  try{ localStorage.setItem(THEME_KEY, JSON.stringify({mode:next})); }catch(e){}
+  render();
+}
+function themeToggleBtn(){
+  const cur = document.body.getAttribute('data-theme')||'sun';
+  const labels = {dark:'☾ Dusk / Indoor', shade:'⛅ Shade / Overcast', sun:'☀ Bright Sun', hc:'◐ High Contrast'};
+  return `<span onclick="cycleTheme()" class="themebtn">${labels[cur]}</span>`;
+}
+
+/* ================= GPS: tee + pin per hole ================= */
+function haversineYards(lat1,lon1,lat2,lon2){
+  const R=6371000, toRad=d=>d*Math.PI/180;
+  const dLat=toRad(lat2-lat1), dLon=toRad(lon2-lon1);
+  const a=Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))*1.09361;
+}
+function getPin(course, holeNum, type){
+  return pins[course] && pins[course][holeNum] && pins[course][holeNum][type] ? pins[course][holeNum][type] : null;
+}
+async function setPinHere(course, holeNum, type){
+  if(!navigator.geolocation){ alert('GPS not available on this device/browser.'); return; }
+  navigator.geolocation.getCurrentPosition(async pos=>{
+    if(!pins[course]) pins[course]={};
+    if(!pins[course][holeNum]) pins[course][holeNum]={};
+    pins[course][holeNum][type] = {lat:pos.coords.latitude, lon:pos.coords.longitude};
+    await savePins();
+    render();
+  }, err=>{ alert('Could not get GPS location: '+err.message); }, {enableHighAccuracy:true, timeout:10000});
+}
+function getGpsDistance(course, holeNum, type, cb){
+  const pin = getPin(course, holeNum, type);
+  if(!pin || !navigator.geolocation) return;
+  navigator.geolocation.getCurrentPosition(pos=>{
+    cb(Math.round(haversineYards(pos.coords.latitude, pos.coords.longitude, pin.lat, pin.lon)));
+  }, err=>{ alert('Could not get GPS location: '+err.message); }, {enableHighAccuracy:true, timeout:10000});
+}
+function getHoleHistory(course, holeNum){
+  if(!course) return [];
+  return rounds.filter(r=>r.course===course && r.holes[holeNum-1] && r.holes[holeNum-1].holed)
+    .map(r=>{
+      const h=r.holes[holeNum-1], shots=computeHole(h);
+      return {date:r.date, par:h.par, strokes:h.shots.length, sg:shots.reduce((a,s)=>a+s.sg,0), putts:shots.filter(s=>s.lie==='Green').length};
+    }).reverse();
+}
+function courseYardRow(courseType, holeNum){
+  const table = courseType==='vl18'?VL18:courseType==='vl9'?VL9:null;
+  if(!table) return null;
+  return table.find(r=>r.h===holeNum) || null;
+}
+
+/* ================= SG computation ================= */
+function computeHole(hole){
+  const shots = hole.shots, out=[];
+  for(let i=0;i<shots.length;i++){
+    const cur=shots[i];
+    const before=expectedStrokes(cur.lie,cur.dist);
+    const after=(i+1<shots.length)?expectedStrokes(shots[i+1].lie,shots[i+1].dist):0;
+    out.push({...cur, sg: before-after-1, cat: category(cur.lie,cur.dist,hole.par,i)});
+  }
+  return out;
+}
+function computeRoundTotals(round){
+  const totals={'Off Tee':0,'Approach':0,'Short Game':0,'Putting':0};
+  round.holes.forEach(h=>{ if(!h.holed) return; computeHole(h).forEach(s=>totals[s.cat]+=s.sg); });
+  return {totals, total:Object.values(totals).reduce((a,b)=>a+b,0)};
+}
+function strikeSummary(round){
+  const counts={}; let total=0;
+  round.holes.filter(h=>h.holed).forEach(h=>h.shots.forEach(s=>{ if(s.strike){ counts[s.strike]=(counts[s.strike]||0)+1; total++; } }));
+  if(total===0) return '';
+  return ['Center','Heel','Toe','High','Low'].filter(k=>counts[k]).map(k=>`${Math.round(100*counts[k]/total)}% ${k}`).join(' · ');
+}
+function fmt(n){ return (n>0?'+':'')+n.toFixed(2); }
+function sgClass(n){ return n>0.005?'pos':(n<-0.005?'neg':'zero'); }
+
+/* ================= Render ================= */
+const app = document.getElementById('app');
+let view='home', pendingLie=null, pendingClub=null, pendingStrike=null, detailId=null;
+
+function render(){
+  if(view==='home') return renderHome();
+  if(view==='new') return renderNew();
+  if(view==='hole') return renderHole();
+  if(view==='summary') return renderSummary(active);
+  if(view==='detail') return renderSummary(rounds.find(r=>r.id===detailId));
+  if(view==='scorecard') return renderScorecard();
+  if(view==='help') return renderHelp();
+}
+
+function renderHome(){
+  let html = `<div class="brand"><h1>The Caddie's Ledger</h1>${themeToggleBtn()}</div>`;
+  if(active){
+    const {totals,total}=computeRoundTotals(active);
+    html += `<div class="board"><div class="board-total"><span class="label">Round in progress · Hole ${active.holes.length}</span><span class="val ${sgClass(total)} num">${fmt(total)}</span></div>${catRows(totals)}</div>
+    <button class="btn" onclick="resumeRound()">Resume Round</button>`;
+  }
+  html += `<button class="btn ${active?'secondary':''}" onclick="goto('new')">New Round</button>`;
+  html += `<button class="btn secondary" onclick="goto('scorecard')">Village Links Scorecard</button>`;
+  html += `<button class="btn secondary" onclick="goto('help')">How to Use</button>`;
+  html += `<h3 style="margin-top:26px; font-size:16px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ivory-dim); font-family:'Inter',sans-serif;">Past Rounds</h3>`;
+  if(rounds.length===0){ html += `<div class="empty">No rounds logged yet.<br>Every recorded shot sharpens the baseline.</div>`; }
+  else{
+    rounds.slice().reverse().forEach(r=>{
+      const {total}=computeRoundTotals(r);
+      html += `<div class="home-round" onclick="viewDetail('${r.id}')"><div><div>${r.course||'Round'}</div><div class="meta">${r.date} · ${r.holes.filter(h=>h.holed).length} holes${r.tee?' · '+r.tee.toUpperCase()+' tees':''}</div></div><div class="rsg num ${sgClass(total)}">${fmt(total)}</div></div>`;
+    });
+  }
+  app.innerHTML = html;
+}
+function catRows(totals){
+  return ['Off Tee','Approach','Short Game','Putting'].map(c=>`<div class="cat-row"><span class="cname">${c}</span><span class="cval num ${sgClass(totals[c])}">${fmt(totals[c])}</span></div>`).join('');
+}
+
+function renderNew(){
+  const today = new Date().toISOString().slice(0,10);
+  window._newCourseType = window._newCourseType || 'other';
+  window._newTee = window._newTee || 'white';
+  const ct = window._newCourseType;
+  app.innerHTML = `
+    <div class="brand"><h1>New Round</h1>${themeToggleBtn()}</div>
+    <div class="field"><label>Course</label>
+      <div class="chip-row" style="margin-bottom:10px;">
+        <div class="chip ${ct==='vl18'?'active':''}" onclick="pickCourse('vl18')">VL 18-Hole</div>
+        <div class="chip ${ct==='vl9'?'active':''}" onclick="pickCourse('vl9')">VL 9-Hole</div>
+        <div class="chip ${ct==='other'?'active':''}" onclick="pickCourse('other')">Other</div>
+      </div>
+      <input type="text" id="courseInput" list="courseList" placeholder="Course name" value="${ct==='vl18'?'Village Links of Glen Ellyn - 18 Hole':ct==='vl9'?'Village Links of Glen Ellyn - 9 Hole':''}" style="font-family:'Inter',sans-serif;">
+      <datalist id="courseList">${[...new Set(rounds.map(r=>r.course).filter(Boolean))].map(c=>`<option value="${c}">`).join('')}</datalist>
+    </div>
+    ${ct!=='other'?`
+    <div class="field"><label>Tee</label>
+      <div class="chip-row">${(ct==='vl18'?TEES_18:TEES_9).map(t=>`<div class="chip ${window._newTee===t?'active':''}" onclick="pickTee('${t}')">${t}</div>`).join('')}</div>
+    </div>`:''}
+    <div class="field"><label>Date</label><input type="text" id="dateInput" value="${today}"></div>
+    <button class="btn" onclick="startRound()">Start Round — Hole 1</button>
+    <button class="btn secondary" onclick="goto('home')">Cancel</button>
+  `;
+}
+function pickCourse(ct){ window._newCourseType=ct; render(); }
+function pickTee(t){ window._newTee=t; render(); }
+async function startRound(){
+  const course = document.getElementById('courseInput').value.trim();
+  const date = document.getElementById('dateInput').value.trim();
+  const courseType = window._newCourseType;
+  const tee = courseType!=='other' ? window._newTee : null;
+  const firstPar = courseType==='vl18'?VL18[0].par:courseType==='vl9'?VL9[0].par:4;
+  active = { id:'r'+Date.now(), course, date, courseType, tee, holes:[{par:firstPar, shots:[], holed:false}] };
+  await saveActive();
+  view='hole'; render();
+}
+function resumeRound(){ view='hole'; render(); }
+
+function renderHole(){
+  const holeNum = active.holes.length;
+  const hole = active.holes[holeNum-1];
+  const shotsSG = computeHole(hole);
+  const {totals,total} = computeRoundTotals(active);
+  const canTee = hole.shots.length===0;
+  const lieOptions = ['Tee','Fairway','Rough','Sand','Green','Recovery'];
+  const yc = courseYardRow(active.courseType, holeNum);
+
+  let html = `<div class="board"><div class="board-total"><span class="label">Round Total</span><span class="val num ${sgClass(total)}">${fmt(total)}</span></div>${catRows(totals)}</div>`;
+  html += `<div class="hole-hdr"><h2>Hole ${holeNum}</h2><span style="display:flex; gap:8px; align-items:center;"><span class="tag">${hole.holed?'Holed':'In play'}</span>${themeToggleBtn()}</span></div>`;
+  html += `<div class="par-row"><span style="font-size:15px; color:var(--ivory-dim); margin-right:2px;">PAR</span>${[3,4,5].map(p=>`<div class="chip ${hole.par===p?'active':''}" onclick="setPar(${p})">${p}</div>`).join('')}</div>`;
+
+  if(yc){
+    const tees = active.courseType==='vl18'?TEES_18:TEES_9;
+    html += `<div class="board" style="padding:10px 12px;">
+      <div class="label" style="font-size:13px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ivory-dim); margin-bottom:2px;">Village Links Yardage · Par ${yc.par} · Hcp ${yc.hdcp}</div>
+      <div class="yardrow">${tees.map(t=>`<div class="yardchip ${active.tee===t?'sel':''}"><span class="yc-label">${t}</span><span class="yc-val">${yc[t]}</span></div>`).join('')}</div>
+    </div>`;
+  }
+
+  html += `<div class="shotlist">${hole.shots.map((s,i)=>{
+    const withSG=shotsSG[i];
+    const sgDisplay=(i<hole.shots.length-1||hole.holed)?`<span class="num ${sgClass(withSG.sg)}">${fmt(withSG.sg)}</span>`:'<span class="num zero">—</span>';
+    return `<div class="shot"><span class="idx">${i+1}</span><span class="club">${s.club||''}</span><span class="lie">${s.lie}${s.strike?' · '+strikeAbbr(s.strike):''}</span><span class="dist num">${s.dist}${s.lie==='Green'?'ft':'yd'}</span><span class="sg">${sgDisplay}</span></div>`;
+  }).join('')}</div>`;
+
+  // GPS panel: tee + pin
+  html += `<div class="board" style="padding:12px;">
+    <div class="label" style="font-size:14px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ivory-dim); margin-bottom:8px;">GPS — Hole ${holeNum}</div>`;
+  const teePin = getPin(active.course, holeNum, 'tee');
+  const greenPin = getPin(active.course, holeNum, 'green');
+  html += `<div style="display:flex; gap:8px; margin-bottom:8px;">
+    <div style="flex:1;">
+      <div class="note" style="margin:0 0 6px;">TEE</div>
+      ${teePin?`<button class="btn secondary" style="margin-top:0; font-size:16px; padding:13px;" onclick="doGpsDistance('tee')">Distance from Tee</button>`:`<button class="btn secondary" style="margin-top:0; font-size:16px; padding:13px;" onclick="doSetPin('tee')">Set Tee Here</button>`}
+    </div>
+    <div style="flex:1;">
+      <div class="note" style="margin:0 0 6px;">PIN</div>
+      ${greenPin?`<button class="btn secondary" style="margin-top:0; font-size:16px; padding:13px;" onclick="doGpsDistance('green')">Distance to Pin</button>`:`<button class="btn secondary" style="margin-top:0; font-size:16px; padding:13px;" onclick="doSetPin('green')">Set Pin Here</button>`}
+    </div>
+  </div>
+  <div id="gpsResult" class="num" style="font-size:25px; font-weight:700; text-align:center;"></div>
+  ${teePin?`<button class="btn ghost" style="margin-top:8px;" onclick="doSetPin('tee')">Re-set Tee</button>`:''}
+  ${greenPin?`<button class="btn ghost" style="margin-top:6px;" onclick="doSetPin('green')">Re-set Pin</button>`:''}
+  </div>`;
+
+  const hist = getHoleHistory(active.course, holeNum);
+  if(hist.length>0){
+    html += `<div class="board" style="padding:12px;"><div class="label" style="font-size:14px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ivory-dim); margin-bottom:8px;">This Hole — Past Visits</div>`;
+    hist.slice(0,4).forEach(h=>{ html += `<div class="cat-row"><span class="cname">${h.date} · ${h.strokes} shots (par ${h.par}) · ${h.putts} putt${h.putts===1?'':'s'}</span><span class="cval num ${sgClass(h.sg)}">${fmt(h.sg)}</span></div>`; });
+    html += `</div>`;
+  }
+
+  if(!hole.holed){
+    const clubChoices = pendingLie==='Green' ? ['Putter'] : CLUBS.filter(c=>c!=='Putter');
+    if(pendingLie==='Green') pendingClub='Putter';
+    html += `
+      <div class="field"><label>Lie</label>
+        <div class="chip-row">${lieOptions.map(l=>`<div class="chip ${pendingLie===l?'active':''} ${l==='Tee'&&!canTee?'disabled':''}" onclick="setLie('${l}')">${l}</div>`).join('')}</div>
+      </div>
+      <div class="field"><label>Club</label>
+        <select id="clubSelect" ${pendingLie==='Green'?'disabled':''}>
+          <option value="">— select —</option>
+          ${clubChoices.map(c=>`<option value="${c}" ${pendingClub===c?'selected':''}>${c}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field"><label>Distance to pin (${pendingLie==='Green'?'feet':'yards'})</label>
+        <input type="number" inputmode="numeric" id="distInput" placeholder="e.g. ${pendingLie==='Green'?'12':'150'}">
+      </div>
+      <div class="field"><label>Strike (optional)</label>
+        <div class="chip-row">${['Center','Heel','Toe','High','Low'].map(s=>`<div class="chip ${pendingStrike===s?'active':''}" onclick="setStrike('${s}')">${s}</div>`).join('')}</div>
+      </div>
+      <button class="btn" onclick="addShot()">Add Shot</button>
+      ${hole.shots.length>0?`<button class="btn secondary" onclick="holeOut()">Holed ✓</button>`:''}
+    `;
+  } else {
+    html += `<button class="btn" onclick="nextHole()">Next Hole</button><button class="btn secondary" onclick="finishRound()">Finish Round</button>`;
+  }
+  html += `<button class="btn ghost" onclick="goto('home')" style="margin-top:20px;">Save &amp; Exit to Home</button>
+  <button class="btn ghost" onclick="goto('help')" style="margin-top:8px;">How to Use</button>`;
+  app.innerHTML = html;
+}
+function setLie(l){ pendingLie=l; render(); }
+function setStrike(s){ pendingStrike = (pendingStrike===s) ? null : s; render(); }
+function strikeAbbr(s){ return {Center:'C',Heel:'H',Toe:'T',High:'Hi',Low:'Lo'}[s] || s; }
+function setPar(p){ active.holes[active.holes.length-1].par=p; saveActive(); render(); }
+async function addShot(){
+  const distEl = document.getElementById('distInput');
+  const clubEl = document.getElementById('clubSelect');
+  const dist = parseFloat(distEl.value);
+  const club = clubEl ? clubEl.value : '';
+  if(!pendingLie || isNaN(dist) || dist<0){ distEl.style.borderColor='var(--neg)'; return; }
+  active.holes[active.holes.length-1].shots.push({lie:pendingLie, dist, club, strike:pendingStrike||null});
+  pendingLie=null; pendingClub=null; pendingStrike=null;
+  await saveActive(); render();
+}
+async function holeOut(){ active.holes[active.holes.length-1].holed=true; await saveActive(); render(); }
+async function nextHole(){
+  const nextNum = active.holes.length+1;
+  const yc = courseYardRow(active.courseType, nextNum);
+  active.holes.push({par: yc?yc.par:4, shots:[], holed:false});
+  pendingLie=null; pendingClub=null; pendingStrike=null;
+  await saveActive(); render();
+}
+async function finishRound(){ rounds.push(active); await saveRounds(); active=null; await saveActive(); view='home'; render(); }
+
+function doGpsDistance(type){
+  const holeNum = active.holes.length;
+  const resultEl = document.getElementById('gpsResult');
+  if(resultEl) resultEl.textContent = 'Locating…';
+  getGpsDistance(active.course, holeNum, type, (yd)=>{
+    const el = document.getElementById('gpsResult');
+    if(el) el.textContent = yd + ' yd ' + (type==='green'?'to pin':'from tee');
+    const distInput = document.getElementById('distInput');
+    if(type==='green' && distInput && pendingLie && pendingLie!=='Green') distInput.value = yd;
+  });
+}
+async function doSetPin(type){ await setPinHere(active.course, active.holes.length, type); }
+
+function viewDetail(id){ detailId=id; view='detail'; render(); }
+function renderSummary(round){
+  const {totals,total}=computeRoundTotals(round);
+  let html = `<div class="brand"><h1>${round.course||'Round'}</h1>${themeToggleBtn()}</div>
+  <div class="note" style="margin-top:-10px;">${round.date}${round.tee?' · '+round.tee.toUpperCase()+' tees':''}</div>
+  <div class="board"><div class="board-total"><span class="label">Total Strokes Gained</span><span class="val num ${sgClass(total)}">${fmt(total)}</span></div>${catRows(totals)}</div>
+  <table class="summary"><thead><tr><th>Hole</th><th>Par</th><th>Shots</th><th>SG</th></tr></thead><tbody>`;
+  round.holes.filter(h=>h.holed).forEach((h,i)=>{
+    const shots=computeHole(h), holeSG=shots.reduce((a,s)=>a+s.sg,0);
+    html += `<tr><td class="hole">${i+1}</td><td>${h.par}</td><td>${h.shots.length}</td><td class="${sgClass(holeSG)}">${fmt(holeSG)}</td></tr>`;
+  });
+  html += `</tbody></table>`;
+  const strikeLine = strikeSummary(round);
+  if(strikeLine) html += `<p class="note">Strike quality — ${strikeLine}</p>`;
+  html += `<p class="note">Baseline: estimated 15–20 handicap expected-strokes curve, in the spirit of Broadie's strokes-gained method. Positive = better than baseline for that shot type. Trust the trend across rounds more than any single number.</p>
+  <button class="btn secondary" onclick="goto('home')" style="margin-top:16px;">Back to Home</button>`;
+  app.innerHTML = html;
+}
+
+function renderScorecard(){
+  let html = `<div class="brand"><h1>Village Links</h1>${themeToggleBtn()}</div>
+  <h3 style="font-size:18px; margin-bottom:8px;">18-Hole Course</h3>
+  <table class="card"><thead><tr><th>H</th><th>Par</th><th>Hcp</th><th>Red</th><th>Gold</th><th>White</th><th>Blue</th><th>Black</th></tr></thead><tbody>
+  ${VL18.map(r=>`<tr><td class="hole">${r.h}</td><td>${r.par}</td><td>${r.hdcp}</td><td>${r.red}</td><td>${r.gold}</td><td>${r.white}</td><td>${r.blue}</td><td>${r.black}</td></tr>`).join('')}
+  </tbody></table>
+  <div class="note">Total — Red 5486 · Gold 6004 · White 6382 · Blue 6770 · Black 7208 · Par 72</div>
+  <h3 style="font-size:18px; margin:22px 0 8px;">9-Hole Course</h3>
+  <table class="card"><thead><tr><th>H</th><th>Par</th><th>Hcp</th><th>Red</th><th>Gold</th><th>White</th><th>Blue</th><th>Family</th></tr></thead><tbody>
+  ${VL9.map(r=>`<tr><td class="hole">${r.h}</td><td>${r.par}</td><td>${r.hdcp}</td><td>${r.red}</td><td>${r.gold}</td><td>${r.white}</td><td>${r.blue}</td><td>${r.family}</td></tr>`).join('')}
+  </tbody></table>
+  <div class="note">Total — Red 2686 · Gold 2801 · White 3058 · Blue 3279 · Par 36</div>
+  <button class="btn secondary" onclick="goto('home')" style="margin-top:20px;">Back to Home</button>`;
+  app.innerHTML = html;
+}
+
+function renderHelp(){
+  const step = (n,title,body) => `<div class="board" style="padding:12px 14px;">
+    <div style="display:flex; gap:10px; align-items:baseline; margin-bottom:6px;">
+      <span class="num" style="color:var(--brass); font-weight:700; font-size:18px;">${n}</span>
+      <span style="font-weight:600; font-size:17px;">${title}</span>
+    </div>
+    <div style="font-size:16px; color:var(--ivory-dim); line-height:1.55;">${body}</div>
+  </div>`;
+  let html = `<div class="brand"><h1>How to Use</h1>${themeToggleBtn()}</div>`;
+  html += step('1','Start a round','Home → New Round. Pick Village Links 18 or 9 (or type another course), pick your tee color, tap Start.');
+  html += step('2','First time on a hole — set GPS once','On Hole 1: stand at the tee and tap <b>Set Tee Here</b>; walk to the green and tap <b>Set Pin Here</b>. One-time per hole per course - it is saved forever after.');
+  html += step('3','Every tee/fairway/rough/sand shot','Pick <b>Lie</b>, pick <b>Club</b>, tap <b>Distance to Pin</b> to auto-fill yardage (or type it), tap <b>Add Shot</b>. Optional: right after your tee shot, tap <b>Distance from Tee</b> just to see how far it went. Also optional: tag <b>Strike</b> (center/heel/toe/high/low) — skip it any shot you want, but the more you tag, the more the pattern shows up in your round summary.');
+  html += step('4','On the green','Set Lie to <b>Green</b> — the box switches to feet. GPS will not auto-fill here (too imprecise for putting) — pace it off or eyeball it, type the number, tap <b>Add Shot</b> for every putt.');
+  html += step('5','Ball goes in','Tap <b>Holed ✓</b>. That closes out the hole and locks in the strokes-gained numbers for every shot you logged.');
+  html += step('6','Next hole','Tap <b>Next Hole</b> — repeats steps 2–5. Yardage row and past-visit history for that hole show automatically at the top.');
+  html += step('7','Reading the numbers','Scoreboard at top = running total, broken into Off Tee / Approach / Short Game / Putting. Green = better than baseline for that shot type, red = worse. It is a trend to watch over rounds, not a verdict on one shot.');
+  html += step('8','Lighting','Tap the ☾/⛅/☀ pill top-right anytime to cycle Dusk, Shade, or Bright Sun display.');
+  html += step('9','Finishing up','Finish Round saves it to Past Rounds on the home screen — tap any past round anytime to see the full hole-by-hole breakdown.');
+  html += `<button class="btn secondary" onclick="goto('home')" style="margin-top:10px;">Back to Home</button>`;
+  app.innerHTML = html;
+}
+
+function goto(v){ view=v; render(); }
+loadTheme().then(()=>loadState().then(render));
+</script>
+</body>
+</html>
