@@ -30,6 +30,12 @@
     --brass:#7A5A10; --brass-dim: rgba(122,90,16,0.42);
     --sage:#245A28; --pos:#166622; --neg:#8F2E19; --warn:#8A5A0E;
   }
+  body[data-theme="hc"]{
+    --bg:#000000; --surface:#0D0D0D; --surface2:#1A1A1A; --line: rgba(255,255,255,0.4);
+    --ivory:#FFFFFF; --ivory-dim: rgba(255,255,255,0.92);
+    --brass:#FFC72C; --brass-dim: rgba(255,199,44,0.55);
+    --sage:#4ADE80; --pos:#4ADE80; --neg:#FF6B5C; --warn:#FFC72C;
+  }
   body[data-theme="shade"] .chip.active, body[data-theme="sun"] .chip.active{ color:#fff; }
   body[data-theme="shade"] .btn:not(.secondary):not(.ghost), body[data-theme="sun"] .btn:not(.secondary):not(.ghost){ color:#fff; }
   *{box-sizing:border-box;}
@@ -241,7 +247,7 @@ async function loadTheme(){
   }catch(e){ document.body.setAttribute('data-theme','sun'); }
 }
 async function cycleTheme(){
-  const order=['sun','shade','dark'];
+  const order=['sun','shade','dark','hc'];
   const cur = document.body.getAttribute('data-theme')||'sun';
   const next = order[(order.indexOf(cur)+1)%order.length];
   document.body.setAttribute('data-theme', next);
@@ -250,7 +256,7 @@ async function cycleTheme(){
 }
 function themeToggleBtn(){
   const cur = document.body.getAttribute('data-theme')||'sun';
-  const labels = {dark:'☾ Dusk', shade:'⛅ Shade', sun:'☀ Bright Sun'};
+  const labels = {dark:'☾ Dusk', shade:'⛅ Shade', sun:'☀ Bright Sun', hc:'◐ High Contrast'};
   return `<span onclick="cycleTheme()" class="themebtn">${labels[cur]}</span>`;
 }
 function todayStr(){ return new Date().toISOString().slice(0,10); }
