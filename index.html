@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Nutrition & Workout">
-<title>Nutrition & Workout Log — Dwight Clarke — Updated 8/31/26</title>
+<title>Nutrition & Workout Log — Dwight Clarke — v2026-09-21</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -45,6 +45,7 @@
   h1,h2,h3{font-family:'Fraunces',serif; margin:0; letter-spacing:0.01em;}
   .brand{display:flex; align-items:center; justify-content:space-between; padding:6px 2px 16px; border-bottom:1px solid var(--line); margin-bottom:16px;}
   .brand h1{font-size:22px; font-weight:600;}
+  .brand .sub{font-size:12px; color:var(--ivory-dim); margin-top:2px;}
   .num{font-family:'IBM Plex Mono',monospace; font-variant-numeric:tabular-nums;}
   .board{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:14px 12px; margin-bottom:16px;}
   .board h4{font-size:14px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ivory-dim); font-family:'Inter',sans-serif; margin-bottom:8px;}
@@ -87,6 +88,7 @@
 /* Uses the browser's own localStorage — this file runs standalone in Safari,
    outside Claude's environment. Same pattern as the other companion apps. */
 
+const APP_VERSION = 'v2026-09-21';
 const HEIGHT_IN = 70; // 5'10", from the protocol doc
 const FLUID_TARGET = [120,150];
 const WEIGHT_TARGET = [167,170];
@@ -119,12 +121,13 @@ const TRAINING_CARDS = [
 const WEEKLY_ROTATION = [
   { cards:['7'],      note:'Full Rest & Spinal Decompression — full nervous system reset before the week starts over.' },           // Sun
   { cards:['1','9-10'], note:'Upper A + ATG — pull-up Bottom Block starts the week fresh.' },                                        // Mon
-  { cards:['2'],      note:'Lower A — Single-Arm Clean & Press, squat/hinge work.' },                                                 // Tue
+  { cards:['2'],      note:'Lower A — Single-Arm Clean & Press and swings lead, then squat/hinge work.' },                                                 // Tue
   { cards:['3','9-10'], note:'Rotational/ATG + ATG — a lighter CNS day between two heavy lifting days.' },                            // Wed
-  { cards:['4'],      note:'Upper B — pull-up Middle + Top Block, your priority range.' },                                            // Thu
+  { cards:['4'],      note:'Upper B — pull-up Top + Middle Block lead the card, your priority range.' },                                            // Thu
   { cards:['5','9-10'], note:'Lower B + ATG — completes ATG\'s 3x/week target on schedule.' },                                        // Fri
   { cards:['6'],      note:'Zone 2 / Golf — optional pull-up skill touch here, only if fresh.' },                                     // Sat
 ];
+function todayStr(){ const d=new Date(), p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); } // local date, not UTC
 function todaysRotation(dateStr){
   // dateStr expected as YYYY-MM-DD (local); falls back to real today if unparseable.
   let d;
@@ -235,7 +238,7 @@ function render(){
 }
 
 function renderHome(){
-  let html = `<div class="brand"><h1>Nutrition & Workout</h1>${themeToggleBtn()}</div>`;
+  let html = `<div class="brand"><div><h1>Nutrition & Workout</h1><div class="sub">${APP_VERSION}</div></div>${themeToggleBtn()}</div>`;
   html += `<button class="btn" onclick="goto('new-daily')">Log Today</button>`;
   html += `<button class="btn secondary" onclick="goto('new-check')">Log DEXA / Body-Comp Checkpoint</button>`;
   html += `<button class="btn secondary" onclick="goto('help')">How to Use</button>`;
@@ -308,7 +311,7 @@ function renderHome(){
 }
 
 function renderNewDaily(){
-  const today = new Date().toISOString().slice(0,10);
+  const today = todayStr();
   editBlocks = editBlocks || {fasted:false, collagen:false, hydration:false, shake1:false, meal1:false, meal2:false, night:false, d3:false};
   editDaily = editDaily || {date:today, weight:'', fluidOz:'', cards:[...todaysRotation(today).cards], deload:false};
   app.innerHTML = `
@@ -354,7 +357,7 @@ async function saveDailyEntry(){
 }
 
 function renderNewCheck(){
-  const today = new Date().toISOString().slice(0,10);
+  const today = todayStr();
   app.innerHTML = `
     <div class="brand"><h1>DEXA / Body-Comp</h1>${themeToggleBtn()}</div>
     <div class="field"><label>Date</label><input type="text" id="cDateInput" value="${today}"></div>
@@ -437,7 +440,7 @@ function renderHelp(){
     <div class="board" style="margin:0 0 10px; padding:8px 10px; background:var(--surface2);">${rotationGrid}</div>
     <div style="display:flex; flex-wrap:wrap; gap:8px;">
       <span class="tag">Card 0 · daily, no exceptions</span>
-      <span class="tag">Card 8 · every 5th week, replaces 1/2/4/5</span>
+      <span class="tag">Card 8 · every 5th week, lightens 1/2/4/5</span>
     </div>
   `;
   html += step('5','Weekly Rotation', step5Body);
