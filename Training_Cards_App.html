@@ -146,6 +146,14 @@
   .timerbar.ready .tb-time{color:var(--pos);}
   .timerbar.ready .tb-sub{color:var(--pos); font-weight:700;}
   @keyframes tbpulse{0%,100%{opacity:1;} 50%{opacity:0.72;}}
+  .flash{background:rgba(143,176,138,0.16); border:1px solid var(--pos); border-radius:9px; padding:12px 14px; font-size:15px; line-height:1.5; margin-bottom:16px; color:var(--ivory); font-weight:600;}
+  .prog{font-size:14px; font-weight:700; color:var(--pos); margin-top:8px; padding:8px 10px; border:1px solid var(--pos); border-radius:7px;}
+  .cardio-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:8px;}
+  .togglechip.dim{opacity:0.45;}
+  .togglechip.hl{border-color:var(--pos); color:var(--pos);}
+  .ivnote{font-size:14px; line-height:1.5; margin-top:8px; padding:8px 10px; border-radius:7px; border:1px solid var(--line);}
+  .ivnote.good{border-color:var(--pos); color:var(--pos); font-weight:700;}
+  .ivnote.avoid{border-color:var(--warn); color:var(--ivory);}
 </style>
 </head>
 <body>
@@ -157,21 +165,30 @@
    system, separate localStorage keys, runs entirely in-browser. */
 
 const CARD0 = [
-  {key:'vest', name:'20 lb Weighted Vest Walk', presc:'20–45 min · 4 of 7 days, fasted'},
-  {key:'crossover', name:'Crossover Symmetry', presc:'1 session — before your workout'},
+  {key:'vest', name:'Cardio: 20 lb Vest Walk or 4×4 Intervals', presc:'Vest walk 20–45 min, 4 of 7 days · swap one walk a week for 4×4 intervals (Saturday best)'},
+  {key:'crossover', name:'Crossover Symmetry', presc:'1 session/day — before your workout (any time on non-lifting days)'},
   {key:'halo', name:'KB Alternating Halo + Clean', presc:'25 reps/side'},
   {key:'carry', name:'Single-Arm KB Suitcase Carry, Fwd + Back', presc:'1 lap each direction, switch hands'},
 ];
 
+const CARDIO = {
+  vest:{label:'Vest walk'},
+  row:{label:'4×4 Rower'},
+  bike:{label:'4×4 Bike'}
+};
+const INTERVAL_TARGET = 1;
+const INTERVAL_NOTE = '4×4 intervals: 5–10 min easy warm-up, then 4 rounds of 4 min hard (only a few words possible) with 3 min easy between, then 5 min easy. About 35 min. Not the day before Card 2 or Card 5.';
+
 const CARDS = {
-  '1': {name:'Upper Body A', num:'1', focus:'Chest / Triceps / Delts', meta:'~45 min · Upper push & lateral delts',
+  '1': {name:'Upper Body A', num:'1', focus:'Chest / Triceps / Delts / Upper Back', meta:'~50 min · Upper push, lateral delts & rows',
     deloadable:true,
-    golden:'3-1-1-0 tempo (3-sec down) on presses. Hit top reps on all sets → add 2.5–5 lb next time. Pull-up bottom block is maintenance volume — don\u2019t let it creep up; Card 4\u2019s top block is where your reps are actually being won. Effort: leave 2–3 reps in reserve on presses and 1–2 on skull crushers, lateral raises and flyes — never grind a rep.',
+    golden:'3-1-1-0 tempo (3-sec down) on presses. Hit top reps on all sets → add 2.5–5 lb next time. Pull-up bottom block is maintenance volume — don\u2019t let it creep up; Card 4\u2019s top block is where your reps are actually being won. Effort: leave 2–3 reps in reserve on presses, 1–3 on rows, and 1–2 on skull crushers, lateral raises and flyes — never grind a rep.',
     exercises:[
       {name:'Scap Pull-Ups', presc:'2 × 10 · rest 45s', cue:'Hang at full extension, depress and retract the shoulder blades only — no elbow bend. Warm-up primer.'},
       {name:'Arching Active Hang', presc:'2 × 3 (hold 3–5s) · rest 60s', cue:'From a dead hang, pull the chest slightly forward/up, extend through the upper back. Trains the lat under length.'},
       {name:'Bottom-Quarter Pull-Up', presc:'1 × 3 · rest 90s', cue:'Pull from dead hang to just past bottom quarter, lower under control. Kept light on purpose — upkeep, not priority.'},
       {name:'Incline Dumbbell / Barbell Press', presc:'3 × 8–12 · rest 2–3 min', cue:'Tuck shoulder blades into back pockets; 1-sec stretch pause at bottom.'},
+      {name:'Inverted Bodyweight Rows', presc:'3 × 10–12 · rest 90s', cue:'Same cabled-bar station as the pull-up drills. Pull chest to bar; hold 1-sec squeeze at top. Balances today\u2019s pressing and supports your pull-up middle range.'},
       {name:'Inverted Bodyweight Skull Crushers', presc:'3 × 10–12 · rest 90s', cue:'Strict elbow bend; keep body rigid as a plank.'},
       {name:'Deficit Push-Ups (Myo-Reps)', presc:'1×12–15 to 1RIR → rest 15s → 3–4 mini-sets × 3–5', cue:'Deep stretch below hands; stop mini-sets when rep speed drops.'},
       {name:'Dumbbell Lateral Raises', presc:'3 × 12–15 · rest 60s', cue:'Lean 15° forward, lead with elbows to isolate side delts.'},
@@ -204,19 +221,19 @@ const CARDS = {
       {name:'McGill Side Plank', presc:'5-3-1 pyramid · 10s holds', cue:'Straight line shoulder to ankle — hips level, not sagging. Elbow stacked under shoulder.'},
       {name:'McGill Bird-Dog', presc:'5-3-1 pyramid · 10s holds', cue:'Opposite arm/leg extend together, spine stays neutral — no rotation or side-bend.'},
     ]},
-  '4': {name:'Upper Body B', num:'4', focus:'Back / Chest / Rear Delts / Forearms', meta:'~50 min · Back density & clubface grip control',
+  '4': {name:'Upper Body B', num:'4', focus:'Back / Chest / Rear Delts / Forearms', meta:'~45 min · Back density & clubface grip control',
     deloadable:true,
-    golden:'Hold a 1-sec squeeze at the top of all pulls. Hit top reps → add 2.5–5 lb next time. Pull-up Top Block gets first priority if short on time — the highest-leverage 10 minutes in this card right now. Effort: leave 1–3 reps in reserve on rows, pulldowns, face pulls and curls, and 2–3 on the incline press, negatives and partials; end every hold well before your form breaks.',
+    setup:'Pull-up setup: use the cabled-bar station you row on (the J-hook rack works too). Bar at chin height for the partials and negatives, upper-chest height for the iso hold. Bend your knees to lift your feet off the floor — no box needed.',
+    golden:'Hold a 1-sec squeeze at the top of all pulls. Hit top reps → add 2.5–5 lb next time. Pull-up Top Block gets first priority if short on time — the highest-leverage 10 minutes in this card right now. Effort: leave 1–3 reps in reserve on pulldowns, face pulls and curls, and 2–3 on the incline press, negatives and partials; end every hold well before your form breaks.',
     exercises:[
-      {name:'Top-Quarter Partial Pull-Up (Top Block · priority)', presc:'3 × 3–5 · rest 2 min', cue:'Box/jump to 3/4 up, pull only the final quarter to chin-over, hold briefly at top before lowering. Lead with the upper sternum, not the chin; elbows slightly forward, legs together, glutes and quads tight.'},
-      {name:'Sticking-Point Negative (Middle Block)', presc:'3 × 5 · rest 2 min', cue:'Start from chin-over. Lower the first quarter extra slow (5–6s), then normal pace the rest — overloads your actual failure point.'},
-      {name:'Sticking-Point Iso Hold', presc:'2–3 × 15–20s · rest 90s', cue:'Hold isometrically at your actual stall position (~3/4 up). Light band or box-assist only if needed.'},
+      {name:'Top-Quarter Partial Pull-Up (Top Block · priority)', presc:'3 × 3–5 · rest 2 min', pu:true, cue:'From the set bar height, bend your knees to hang at 3/4 up, then pull only the final quarter to chin-over, hold briefly at top before lowering. Lead with the upper sternum, not the chin; elbows slightly forward, legs together, glutes and quads tight.'},
+      {name:'Sticking-Point Negative (Middle Block)', presc:'3 × 5 · rest 2 min', pu:true, cue:'Start from chin-over, stepping up into it from the set bar height. Lower the first quarter extra slow (5–6s), then normal pace the rest — overloads your actual failure point.'},
+      {name:'Sticking-Point Iso Hold', presc:'2–3 × 15–20s · rest 90s', pu:true, cue:'Hold isometrically at your actual stall position (~3/4 up). Light band or a light toe-touch on the floor only if needed.'},
       {name:'Med Ball Rotational Chest Pass', presc:'2 × 6/side · rest 90s', cue:'Explosive push from the chest, not the arms — the quality that correlates with club speed.'},
       {name:'Incline Bench Press', presc:'3 × 8–10 · rest 2 min', cue:'Lower under control; drive up through palms.'},
-      {name:'Inverted Bodyweight Rows', presc:'3 × 10–12 · rest 90s', cue:'Pull chest to bar; hold 1-sec squeeze at top. Also covers pull-up Middle-Block horizontal-pull work.'},
       {name:'Wide-Grip Cable Pulldown', presc:'3 × 10–12 · rest 90s', cue:'Loadable vertical pull independent of your pull-up ceiling. Elbows down and back, control the negative.'},
       {name:'Cable Rope Face Pull', presc:'3 × 12–15 · rest 60s', cue:'Pull to face, finish hands wide/thumbs back — external rotation at end range is the job. High elbow throughout.'},
-      {name:'Dumbbell Hammer Curls', presc:'3 × 10–12 · rest 60s', cue:'3-sec lowering for forearm/brachioradialis control & clubface stability.'},
+      {name:'Cross-Body Hammer Curls', presc:'3 × 10–12 · rest 60s', cue:'Palms facing in, curl each dumbbell across toward the opposite chest and stop at mid-chest. Upper arm pinned to your side, torso still. 1-sec squeeze at the top, 2–3 sec lowering. Brachialis & forearm strength for clubface grip control.'},
     ]},
   '5': {name:'Lower Body B', num:'5', focus:'Hamstrings / Glutes / Unilateral Power', meta:'~40 min · Posterior chain & unilateral power',
     deloadable:true,
@@ -230,7 +247,7 @@ const CARDS = {
     ]},
   '6': {name:'Zone 2 Aerobic & Active Recovery', num:'6', focus:'Cardiovascular base & golf movement', meta:'40+ min · Weekly floor 150–180 min total',
     deloadable:false,
-    golden:'Your daily vest walks (Card 0) likely already cover this. Log total Zone 2 minutes for the week — 150–180 min is the target regardless of which days it comes from.',
+    golden:'Your daily vest walks (Card 0) likely already cover this. Log total cardio minutes for the week — 150–180 min is the target regardless of which days it comes from.',
     exercises:[
       {name:'60-Min Weighted Vest Walk OR Golf Round', presc:'Steady pace', cue:'Nose-breathing effort — you should be able to hold a conversation the whole time.'},
       {name:'McGill Big Three, Endurance Dose', presc:'10s holds, 5-3-1 pyramid/side', cue:'Same form as Card 3\u2019s back panel — quality of the hold still matters more than getting through it.'},
@@ -250,6 +267,7 @@ const CARDS = {
     golden:'Never push into joint pain — scale depth/elevation to 0/10 pain. 3-1-1 tempo throughout. Weaker leg always goes first, match reps on the strong side.',
     exercises:[
       {name:'Warm-Up: Backward Walking', presc:'5–10 min continuous', cue:'Drives blood into the patellar tendons without impact. Usually already covered by the backward KB carry lap on Card 0.'},
+      {name:'Single-Leg Balance', presc:'2 × 30s/leg', cue:'Stand next to the rack or a wall for a fingertip safety touch. Progress: eyes open → eyes closed → foam pad → balance board. Weaker leg first. Soft knee, tall posture — the same lead-leg control you post on in the swing.'},
       {name:'Tibialis Raise', presc:'1 × 25', cue:'Heels 1–2 ft from wall. Pull forefeet up toward shins, hold 1s, lower 3s. Start at 6" from wall, progress to 18"+.'},
       {name:'FHL Calf Raise', presc:'1 × 25', cue:'Toes up on a slant block, heels on floor. Press through the big toe joint to a full peak raise, pause 1s.'},
       {name:'KOT Calf Raise', presc:'1 × 25', cue:'Slight knee bend (20–30°) locked in place throughout. Push through the balls of the feet; heels rise while the knee angle holds.'},
@@ -259,7 +277,7 @@ const CARDS = {
     deloadable:false, pairKey:'9',
     golden:'Drink Shake 1 (already on your nutrition schedule) within 60 min after this session.',
     exercises:[
-      {name:'ATG Split Squat', presc:'5 × 5/leg', cue:'Front heel free to rise as the knee presses forward. Lower 3s until the front hamstring covers the calf, hold 1s, press back. Toes forward throughout.'},
+      {name:'ATG Split Squat', presc:'5 × 5/leg', alt:{with:'5', presc:'3 × 5/leg'}, cue:'On Card 5 days: 3 × 5/leg, since the lunges already loaded the knees. Front heel free to rise as the knee presses forward. Lower 3s until the front hamstring covers the calf, hold 1s, press back. Toes forward throughout.'},
       {name:'Elephant Walk', presc:'1 × 30/leg', cue:'Hinge forward, hands down. Alternately extend one knee to full lock, flexing the quad on the other side to deepen the stretch.'},
       {name:'L-Sit (Pike Progression)', presc:'3 × 15s holds', cue:'Palms down beside hips, press to lift hips/legs, pull toes toward you. Start with seated pike leg lifts.'},
       {name:'Couch Stretch', presc:'60s/leg', cue:'Back knee in wall corner, shin flush to wall, front leg out at 90°. Squeeze back glute, torso upright.'},
@@ -276,8 +294,9 @@ const SESS_KEY='training_sessions_v1', DAILY_KEY='training_daily_v1', THEME_KEY=
 async function loadState(){
   try{ const s = localStorage.getItem(SESS_KEY); sessions = s? JSON.parse(s):[]; }catch(e){ sessions=[]; }
   try{ const d = localStorage.getItem(DAILY_KEY); dailyLogs = d? JSON.parse(d):[]; }catch(e){ dailyLogs=[]; }
+  { const byDate={}; dailyLogs.forEach(x=>{ if(!byDate[x.date] || x.ts>byDate[x.date].ts) byDate[x.date]=x; }); const n0=dailyLogs.length; dailyLogs=Object.values(byDate); if(dailyLogs.length!==n0){ try{ localStorage.setItem(DAILY_KEY, JSON.stringify(dailyLogs)); }catch(e){} } }
   try{ const sc = localStorage.getItem(SCHED_KEY); schedule = sanitizeSchedule(sc? JSON.parse(sc):null); }catch(e){ schedule = sanitizeSchedule(null); }
-  try{ const p = localStorage.getItem(PREF_KEY); if(p) prefs = Object.assign({guided:true}, JSON.parse(p)); }catch(e){}
+  try{ const p = localStorage.getItem(PREF_KEY); if(p) prefs = Object.assign({guided:true}, JSON.parse(p)); else prefs={guided:true}; }catch(e){}
   try{
     const g = localStorage.getItem(PROG_KEY);
     if(g){ const pr=JSON.parse(g); if(pr && pr.active && pr.active.date===todayStr() && (Date.now()-pr.ts) < 12*3600*1000 && CARDS[pr.active.cardKey] && (pr.active.exercises||[]).every((e,i)=>CARDS[pr.active.cardKey].exercises[i] && CARDS[pr.active.cardKey].exercises[i].name===e.name)) resumeData=pr; else localStorage.removeItem(PROG_KEY); }
@@ -313,6 +332,9 @@ function daysAgo(dateStr, n){
   const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-n);
   return d >= cutoff;
 }
+function weeklyIntervals(){
+  return dailyLogs.filter(d=>daysAgo(d.date,7) && d.items && d.items[0] && (d.cardio==='row'||d.cardio==='bike')).length;
+}
 function weeklyZone2(){
   let mins = 0;
   sessions.filter(s=>daysAgo(s.date,7)).forEach(s=>{ if(s.zone2Min) mins += Number(s.zone2Min); });
@@ -330,15 +352,31 @@ function shouldSwapToCard3(){
 function lastSessionForCard(key){
   return sessions.filter(s=>s.cardKey===key).sort((a,b)=>b.ts-a.ts)[0] || null;
 }
-function lastLoggedSets(exName){
+function pOf(ce){
+  if(ce && ce.alt){
+    const w=ce.alt.with;
+    const inQueue = guided && guided.queue && guided.queue.indexOf(w)!==-1;
+    if(inQueue || todayKeys().indexOf(w)!==-1 || doneToday(w)) return ce.alt.presc;
+  }
+  return ce.presc;
+}
+const PREV_NAMES = {'Cross-Body Hammer Curls':['Dumbbell Hammer Curls']};
+function lastLoggedSets(exName, cardKey, deload){
+  const names=[exName].concat(PREV_NAMES[exName]||[]);
   // Cross-card: a repeated exercise (e.g. Single-Arm KB Clean & Press on Cards 2 & 5)
   // is tracked as one continuous progression, not reset per card.
   const past = sessions.slice().sort((a,b)=>b.ts-a.ts);
+  const hits = [];
   for(const s of past){
-    const ex = (s.exercises||[]).find(e=>e.name===exName);
-    if(ex && ex.sets && ex.sets.length && ex.sets.some(st=>st.weight||st.reps||st.time)) return {sets:ex.sets, date:s.date, cardKey:s.cardKey, note:ex.note||''};
+    const ex = (s.exercises||[]).find(e=>names.indexOf(e.name)!==-1);
+    if(ex && ex.sets && ex.sets.length && ex.sets.some(st=>st.weight||st.reps||st.time)) hits.push({sets:ex.sets, date:s.date, cardKey:s.cardKey, note:ex.note||'', deload:!!s.deload});
   }
-  return null;
+  if(!hits.length) return null;
+  const dl = !!deload;
+  return hits.find(h=>h.cardKey===cardKey && h.deload===dl)
+      || hits.find(h=>h.cardKey===cardKey)
+      || hits.find(h=>h.deload===dl)
+      || hits[0];
 }
 function firstSessionDate(){
   const dates = sessions.map(s=>s.date).sort();
@@ -360,6 +398,8 @@ function last7DaysSessionCount(){ return sessions.filter(s=>daysAgo(s.date,7)).l
 /* ================= Render ================= */
 const app = document.getElementById('app');
 let view='home', pickDeload=false, active=null; // active session in progress
+let flash='', resumedNote=false;
+function clock(ts){ const d=new Date(ts); let h=d.getHours(), m=String(d.getMinutes()).padStart(2,'0'); const ap=h>=12?'PM':'AM'; h=h%12||12; return h+':'+m+' '+ap; }
 
 function render(){
   saveProgress();
@@ -371,6 +411,7 @@ function render(){
   if(view==='daily') return renderDaily();
   if(view==='detail') return renderDetail();
   if(view==='help') return renderHelp();
+  if(view==='backup') return renderBackup();
 }
 
 function renderHome(){
@@ -384,15 +425,20 @@ function renderHome(){
     const rc=CARDS[resumeData.active.cardKey];
     html += `<div class="banner"><b>Session in progress:</b> Card ${rc.num} — ${rc.name}.<div class="gbtns" style="margin-top:10px;"><button class="btn small" onclick="resumeSession()">Resume</button><button class="btn secondary small" onclick="discardResume()">Discard</button></div></div>`;
   }
+  if(flash){ html += `<div class="flash">${flash}</div>`; flash=''; }
+  html += backupNudgeHtml();
   html += todayBoardHtml();
   html += `<button class="btn secondary" onclick="openPicker()">Start a Different Card</button>`;
-  html += `<button class="btn secondary" onclick="goto('daily')">Log Daily Foundation (Card 0)</button>`;
+  const d0=dailyFor(todayStr());
+  html += `<button class="btn secondary" onclick="openDaily()">${d0?'Card 0 today \u2713 saved '+clock(d0.ts)+' \u00b7 edit':'Log Daily Foundation (Card 0)'}</button>`;
   html += `<button class="btn secondary" onclick="goto('help')">How to Use</button>`;
+  html += `<button class="btn secondary" onclick="goto('backup')">Backup & Restore</button>`;
 
   const z = weeklyZone2();
   html += `<div class="board" style="margin-top:22px;">
-    <h4>Zone 2 — Last 7 Days</h4>
+    <h4>Cardio — Last 7 Days</h4>
     <div class="cat-row"><span class="cname">Minutes</span><span class="cval num ${z>=ZONE2_TARGET[0]?'pos':'zero'}">${z} min</span><span class="ctarget">target ${ZONE2_TARGET[0]}–${ZONE2_TARGET[1]}</span></div>
+    <div class="cat-row"><span class="cname">4×4 Intervals</span><span class="cval num ${weeklyIntervals()>=INTERVAL_TARGET?'pos':'zero'}">${weeklyIntervals()}</span><span class="ctarget">target ${INTERVAL_TARGET} a week</span></div>
   </div>`;
 
   const readiness = recentReadiness();
@@ -456,6 +502,7 @@ function startSession(key){
 function renderSession(){
   const c = CARDS[active.cardKey];
   let html = `<div class="brand"><div><h1>Card ${c.num}</h1><div class="sub">${c.name}${active.deload?' · Deload':''}</div></div>${themeToggleBtn()}</div>`;
+  if(resumedNote){ html += `<div class="flash">Picked up where you left off.</div>`; resumedNote=false; }
 
   if(active.deload && c.deloadable){
     html += `<div class="banner"><b>Deload:</b> ${DELOAD_NOTE}</div>`;
@@ -464,19 +511,21 @@ function renderSession(){
     html += `<div class="banner">This card isn\u2019t adjusted for deload weeks — run it as normal.</div>`;
   }
 
+  if(c.setup) html += `<div class="banner">${c.setup}</div>`;
   active.exercises.forEach((ex,i)=>{
-    const last = lastLoggedSets(ex.name);
+    const last = lastLoggedSets(ex.name, active.cardKey, active.deload && c.deloadable);
     html += `<div class="exwrap ${ex.done?'done':''}">
       <div class="ex-top">
         <div>
           <div class="ex-name">${ex.name}</div>
-          <div class="ex-presc">${c.exercises[i].presc}</div>
+          <div class="ex-presc">${pOf(c.exercises[i])}</div>
         </div>
         <div class="check ${ex.done?'on':''}" onclick="toggleExDone(${i})">${ex.done?'✓':''}</div>
       </div>
       <div class="ex-cue">${c.exercises[i].cue}</div>
       ${formHtml(ex.name)}
-      ${last?`<div class="ex-last">Last time (${last.date}${last.cardKey!==active.cardKey?', Card '+CARDS[last.cardKey].num:''}): ${last.sets.map(fmtSet).join(', ')}${last.note?' \u00b7 '+esc(last.note):''}</div>`:''}
+      ${progressHint(c.exercises[i], active.cardKey, last, active.deload && c.deloadable)}
+      ${last?`<div class="ex-last">Last time (${last.date}${last.cardKey!==active.cardKey?', Card '+CARDS[last.cardKey].num:''}${last.deload?', deload':''}): ${last.sets.map(fmtSet).join(', ')}${last.note?' \u00b7 '+esc(last.note):''}</div>`:''}
       ${restBtnHtml(i)}${logToggleHtml(i)}
       ${ex.logOpen?renderSetRows(i,ex):''}
       <div class="sidenote"><input type="text" placeholder="${notePH(ex.name)}" value="${esc(ex.note)}" oninput="active.exercises[${i}].note=this.value"></div>
@@ -487,7 +536,7 @@ function renderSession(){
 
   html += `<div class="board"><h4>Joint Readiness (before/after)</h4><div class="slider-row">${[...Array(10)].map((_,n)=>`<div class="sn ${active.readiness===n+1?'active':''}" onclick="setReadiness(${n+1})">${n+1}</div>`).join('')}</div><div class="hint" style="margin-top:8px;">1 = beat up, 10 = fresh. Below 6 two sessions running → swap next lifting day to Card 3.</div></div>`;
 
-  html += `<div class="field"><label>Zone 2 Minutes Today (optional)</label><input type="number" inputmode="numeric" value="${active.zone2Min}" placeholder="e.g. 45" oninput="active.zone2Min=this.value"></div>`;
+  html += `<div class="field"><label>Cardio Minutes Today (optional)</label><input type="number" inputmode="numeric" value="${active.zone2Min}" placeholder="e.g. 45" oninput="active.zone2Min=this.value"></div>`;
   html += `<div class="field"><label>Session Notes (optional)</label><input type="text" value="${esc(active.notes)}" oninput="active.notes=this.value"></div>`;
 
   html += `<button class="btn" onclick="saveSession()">Save Session</button>`;
@@ -501,26 +550,75 @@ function removeSet(i,j){ active.exercises[i].sets.splice(j,1); render(); }
 function setReadiness(n){ active.readiness = n; render(); }
 function cancelSession(){ active=null; stopTimer(); clearProgress(); goto('home'); }
 async function saveSession(){
+  active.savedTs=Date.now();
   sessions.push(active);
+  flash='\u2713 Card '+CARDS[active.cardKey].num+' \u2014 '+CARDS[active.cardKey].name+' saved at '+clock(active.savedTs)+'.';
   active = null;
   stopTimer(); clearProgress();
   await saveSessions();
   goto('home');
 }
 
+const DAYNAMES=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const HEAVY_LEGS=['2','5'];
+function wdOf(dateStr){ const m=String(dateStr||'').match(/^(\d{4})-(\d{2})-(\d{2})$/); return m? new Date(+m[1],+m[2]-1,+m[3]).getDay() : new Date().getDay(); }
+function dayFit(wd){
+  const t=schedule[wd]||[], n=schedule[(wd+1)%7]||[];
+  const legsTomorrow=n.find(k=>HEAVY_LEGS.indexOf(k)!==-1);
+  if(legsTomorrow) return {fit:'avoid', card:legsTomorrow};
+  const legsToday=t.find(k=>HEAVY_LEGS.indexOf(k)!==-1);
+  if(legsToday) return {fit:'tired', card:legsToday};
+  if(t.length && t.every(k=>k==='7')) return {fit:'rest'};
+  if(!t.some(k=>LIFT_CARDS.indexOf(k)!==-1 || k==='3')) return {fit:'good'};
+  return {fit:'ok'};
+}
+function dayList(fit){ const out=[]; [6,0,1,2,3,4,5].forEach(w=>{ if(dayFit(w).fit===fit) out.push(DAYNAMES[w]); }); return out; }
+function intervalAdvice(dateStr, editingDate){
+  const wd=wdOf(dateStr), f=dayFit(wd);
+  const good=dayList('good'), ok=dayList('ok');
+  const better=(good.concat(ok)).slice(0,2).join(' or ') || 'another day';
+  const doneThisWeek = dailyLogs.filter(d=>d.date!==editingDate && daysAgo(d.date,7) && d.items && d.items[0] && (d.cardio==='row'||d.cardio==='bike')).length >= INTERVAL_TARGET;
+  if(f.fit==='avoid') return {cls:'avoid', dim:true, text:`Tomorrow is Card ${CARDS[f.card].num}, ${CARDS[f.card].name}. Save intervals for ${better}.`};
+  if(f.fit==='tired') return {cls:'avoid', dim:true, text:`Your legs worked hard on Card ${CARDS[f.card].num} today. ${better} is a better day for intervals.`};
+  if(f.fit==='rest') return {cls:'avoid', dim:true, text:`Today is your full rest day. Save intervals for ${better}.`};
+  if(doneThisWeek) return {cls:'', dim:false, text:'Weekly intervals already done \u2713 \u2014 a vest walk is the call today.'};
+  if(f.fit==='good') return {cls:'good', dim:false, hl:true, text:'Good day for your weekly intervals.'};
+  return {cls:'', dim:false, text:`OK for intervals if ${good.join(' or ')||'another day'} won\u2019t work.`};
+}
+function dailyFor(date){ return dailyLogs.filter(x=>x.date===date).sort((a,b)=>b.ts-a.ts)[0] || null; }
+function openDaily(){
+  const ex=dailyFor(todayStr());
+  window._dailyDraft = ex ? {date:ex.date, items:[...ex.items], zone2Min:ex.zone2Min||'', cardio:ex.cardio||(ex.items[0]?'vest':'')} : {date:todayStr(), items:[false,false,false,false], zone2Min:'', cardio:''};
+  goto('daily');
+}
+function setCardio(k){
+  const d=window._dailyDraft;
+  if(d.items[0] && d.cardio===k){ d.items[0]=false; d.cardio=''; render(); return; }
+  d.items[0]=true; d.cardio=k;
+  render();
+  const el=document.getElementById('cardiomin');
+  if(el && !String(d.zone2Min||'').trim()){ try{ el.scrollIntoView({behavior:'smooth', block:'center'}); el.focus(); }catch(e){} }
+}
 function renderDaily(){
   const today = todayStr();
-  window._dailyDraft = window._dailyDraft || {date:today, items:[false,false,false,false], zone2Min:''};
+  window._dailyDraft = window._dailyDraft || {date:today, items:[false,false,false,false], zone2Min:'', cardio:''};
   const d = window._dailyDraft;
+  const existing = dailyFor((d.date||'').trim());
   let html = `<div class="brand"><h1>Daily Foundation</h1>${themeToggleBtn()}</div>`;
-  html += `<div class="field"><label>Date</label><input type="text" value="${d.date}" oninput="window._dailyDraft.date=this.value"></div>`;
+  if(existing) html += `<div class="flash">Already saved for ${existing.date} at ${clock(existing.ts)}. Changes here update that entry.</div>`;
+  html += `<div class="field"><label>Date</label><input type="text" value="${d.date}" onchange="window._dailyDraft.date=this.value; render();"></div>`;
   html += `<div class="board"><h4>Card 0 — Runs Every Day</h4>`;
   CARD0.forEach((b,i)=>{
+    if(i===0){
+      const adv=intervalAdvice((d.date||'').trim(), existing?existing.date:null);
+      html += `<div class="blockrow" style="padding:10px 0; border-bottom:1px solid var(--line);"><div style="font-size:16px;">${b.name}</div><div style="font-size:13px; color:var(--ivory-dim);">${b.presc}</div><div class="ivnote ${adv.cls}">${adv.text}</div><div class="cardio-row">${Object.keys(CARDIO).map(k=>`<div class="togglechip ${d.items[0]&&d.cardio===k?'active':''} ${k!=='vest'&&adv.dim&&!(d.items[0]&&d.cardio===k)?'dim':''} ${k!=='vest'&&adv.hl&&!(d.items[0]&&d.cardio===k)?'hl':''}" onclick="setCardio('${k}')">${d.items[0]&&d.cardio===k?'\u2713 ':''}${CARDIO[k].label}</div>`).join('')}</div>${d.items[0]&&d.cardio&&d.cardio!=='vest'?`<div class="hint" style="margin-top:8px;">${INTERVAL_NOTE}</div>`:''}</div>`;
+      return;
+    }
     html += `<div class="blockrow" style="display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line);"><div><div style="font-size:16px;">${b.name}</div><div style="font-size:13px; color:var(--ivory-dim);">${b.presc}</div></div><div class="togglechip ${d.items[i]?'active':''}" onclick="toggleDailyItem(${i})">${d.items[i]?'✓ Yes':'No'}</div></div>`;
   });
   html += `</div>`;
-  html += `<div class="field"><label>Zone 2 Minutes Today (optional)</label><input type="number" inputmode="numeric" value="${d.zone2Min}" placeholder="e.g. 30" oninput="window._dailyDraft.zone2Min=this.value"></div>`;
-  html += `<button class="btn" onclick="saveDailyEntry()">Save</button>`;
+  html += `<div class="field"><label>Cardio Minutes Today${d.items[0]&&d.cardio?' \u2014 '+CARDIO[d.cardio].label:' (optional)'}</label><input id="cardiomin" type="number" inputmode="numeric" value="${d.zone2Min}" placeholder="${d.cardio&&d.cardio!=='vest'?'e.g. 35':'e.g. 30'}" oninput="window._dailyDraft.zone2Min=this.value"></div>`;
+  html += `<button class="btn" onclick="saveDailyEntry()">${existing?'Update':'Save'}</button>`;
   html += `<button class="btn secondary" onclick="cancelDaily()">Cancel</button>`;
   app.innerHTML = html;
 }
@@ -528,7 +626,18 @@ function toggleDailyItem(i){ window._dailyDraft.items[i] = !window._dailyDraft.i
 function cancelDaily(){ window._dailyDraft=null; goto('home'); }
 async function saveDailyEntry(){
   const d = window._dailyDraft;
-  dailyLogs.push({id:'d'+Date.now(), ts:Date.now(), date:(d.date||todayStr()).trim(), items:[...d.items], zone2Min:d.zone2Min});
+  if(d.items[0] && !String(d.zone2Min||'').trim()){
+    const ans = prompt('How many minutes of cardio ('+(CARDIO[d.cardio||'vest']||CARDIO.vest).label+') today?', d.cardio&&d.cardio!=='vest'?'35':'');
+    if(ans===null) return;
+    const v=parseInt(ans,10);
+    if(v>0) d.zone2Min=String(v);
+  }
+  const date=(d.date||todayStr()).trim();
+  const entry={id:'d'+Date.now(), ts:Date.now(), date:date, items:[...d.items], zone2Min:d.zone2Min, cardio:d.items[0]?(d.cardio||'vest'):''};
+  const had = dailyLogs.some(x=>x.date===date);
+  dailyLogs = dailyLogs.filter(x=>x.date!==date);
+  dailyLogs.push(entry);
+  flash = '\u2713 Daily Foundation '+(had?'updated':'saved')+' for '+date+' at '+clock(entry.ts)+' ('+entry.items.filter(Boolean).length+'/4).';
   window._dailyDraft = null;
   await saveDaily();
   goto('home');
@@ -551,13 +660,13 @@ function renderDetail(){
       html += `</div>`;
     });
     if(s.readiness!=null) html += `<div class="board"><div class="cat-row"><span class="cname">Joint Readiness</span><span class="cval num ${s.readiness<6?'warn':'zero'}">${s.readiness}/10</span><span class="ctarget"></span></div></div>`;
-    if(s.zone2Min) html += `<div class="board"><div class="cat-row"><span class="cname">Zone 2 Minutes</span><span class="cval num zero">${s.zone2Min}</span><span class="ctarget"></span></div></div>`;
+    if(s.zone2Min) html += `<div class="board"><div class="cat-row"><span class="cname">Cardio Minutes</span><span class="cval num zero">${s.zone2Min}</span><span class="ctarget"></span></div></div>`;
     if(s.notes) html += `<div class="note">${esc(s.notes)}</div>`;
   } else {
     const d = dailyLogs.find(x=>x.id===id);
     html += `<div class="note" style="margin-top:-10px;">${d.date} · Daily Foundation</div>`;
-    html += `<div class="board">${CARD0.map((b,i)=>`<div class="cat-row"><span class="cname">${b.name}</span><span class="cval num zero" style="font-size:15px;">${d.items[i]?'✓ Yes':'No'}</span><span class="ctarget"></span></div>`).join('')}</div>`;
-    if(d.zone2Min) html += `<div class="board"><div class="cat-row"><span class="cname">Zone 2 Minutes</span><span class="cval num zero">${d.zone2Min}</span><span class="ctarget"></span></div></div>`;
+    html += `<div class="board">${CARD0.map((b,i)=>`<div class="cat-row"><span class="cname">${i===0?'Cardio':b.name}</span><span class="cval num zero" style="font-size:15px;">${d.items[i]?(i===0?'\u2713 '+(CARDIO[d.cardio||'vest']||CARDIO.vest).label:'✓ Yes'):'No'}</span><span class="ctarget"></span></div>`).join('')}</div>`;
+    if(d.zone2Min) html += `<div class="board"><div class="cat-row"><span class="cname">Cardio Minutes</span><span class="cval num zero">${d.zone2Min}</span><span class="ctarget"></span></div></div>`;
   }
   html += `<button class="btn secondary" onclick="goto('home')" style="margin-top:16px;">Back to Home</button>`;
   app.innerHTML = html;
@@ -572,20 +681,23 @@ function renderHelp(){
     <div style="font-size:15px; color:var(--ivory-dim); line-height:1.55;">${body}</div>
   </div>`;
   let html = `<div class="brand"><h1>How to Use</h1>${themeToggleBtn()}</div>`;
-  html += step('1','Card 0, once a day','Log Daily Foundation covers the vest walk, Crossover Symmetry, halos, and suitcase carry — the four things that run underneath whichever numbered card you\u2019re on. Log it once per day, separate from your numbered session.');
+  html += step('1','Card 0, once a day','Log Daily Foundation covers your cardio, Crossover Symmetry, halos, and suitcase carry — the four things that run underneath whichever numbered card you\u2019re on. For cardio, pick Vest walk, 4×4 Rower or 4×4 Bike; aim for one interval day a week, ideally Saturday. The screen checks your rotation: the day before Card 2 or Card 5, on those card days themselves, and on your rest day, the interval buttons are dimmed with a note (still tappable, so you can always log what you actually did). On a good day they\u2019re highlighted. There is one entry per day: open it again and you\u2019re editing today\u2019s entry, not adding a second one. The home button shows when it was saved.');
   html += step('2','Today\u2019s Card','The home screen shows what your weekly schedule calls for today. Tap Start and the app walks you through it. On days with more than one card (a lift plus ATG, for example) the cards run back to back. The starting schedule is a default — tap Edit Weekly Schedule and set it to match your real week. If your last two joint ratings were under 6, you can swap today\u2019s lift to Card 3 with one tap.');
   html += step('3','Guided walk-through','One exercise at a time, with the prescription, the cue, and your last logged numbers on screen. Enter weight and reps for each set (optional — on bodyweight moves, weight means added weight, so leave it blank for plain bodyweight), tap Set done, and the rest timer starts on its own. Tap Show form under any ATG or McGill move to see its diagram. At the end of each card, rate your joints and save. Weights you log power the last-time hint on your next visit. On a deload week, sets are capped at 2 per movement. If the phone reloads the page mid-session, a Resume button waits for you on the home screen.');
   html += step('4','Rest timer','Counts down the rest listed on the card and beeps when it is up. For a range like 2–3 min it beeps at the low end and keeps running, so you can go when ready. Med ball throws use a stopwatch for full recovery. Use −15 and +15 to adjust, and Skip to dismiss. The app asks your phone to keep the screen awake during sessions. If the phone locks anyway, the beep cannot play, but the time is still right when you come back.');
-  html += step('5','Full list view','Prefer the whole card at once? Tap Start a Different Card, switch Walk-through to Full list view, and work top to bottom. Tap the circle when an exercise is done, tap the Rest button on any exercise for its timer, and tap + log weight / reps to record sets. Repeated exercises (like Single-Arm KB Clean & Press on Cards 2 & 5) are tracked as one continuous progression across cards, not reset per card.');
+  html += step('5','Full list view','Prefer the whole card at once? Tap Start a Different Card, switch Walk-through to Full list view, and work top to bottom. Tap the circle when an exercise is done, tap the Rest button on any exercise for its timer, and tap + log weight / reps to record sets. The last-time numbers come from the last time you did that exercise on the same card, so Card 5\u2019s heavier RDLs don\u2019t get mixed up with Card 2\u2019s. If you\u2019ve never done it on this card, it borrows from the other card and says which one.');
   html += step('6','Deload weeks','Today\u2019s Card and the card picker auto-flag Deload every 5th training week, counted from your first logged session — toggle it off any time you\u2019d rather push through, or on early if you want one sooner. It only changes guidance on Cards 1, 2, 4, and 5 (2 sets @ ~60%) — Card 3\u2019s rotational throws and Card 6\u2019s Zone 2 stay as normal, per the program.');
   html += step('7','Joint readiness & Card 3 swap','Rate joints 1–10 at the end of any session, especially before Card 7. If your last two ratings are both under 6, the home screen will flag that your next lifting day should swap to Card 3 instead of pushing through.');
-  html += step('8','Zone 2 tally','Minutes logged in sessions and in Daily Foundation both count toward the rolling 7-day total shown on the home screen, against the 150–180 min weekly target.');
+  html += step('8','Cardio tally','Cardio means your vest walks and intervals, not just Zone 2. When you tap a cardio choice on Card 0, the app jumps to the minutes box, and if you save without minutes it asks how many. Minutes logged in sessions and in Daily Foundation both count toward the rolling 7-day total on the home screen, against the 150–180 min weekly target. Interval days show on their own line, against a target of one a week.');
+  html += step('9','Progress prompts','When you hit the top of the rep range on every set last time, a green line tells you to add weight today (2.5–5 lb on upper cards, 5–10 lb on lower cards, one bell size on kettlebells). It stays quiet on deload weeks.');
+  html += step('10','Saved and where you are','After every save, a green line at the top of the home screen confirms what was saved and when, and Today\u2019s Card shows the save time next to each card. If the phone closes or reloads the app mid-session, it opens right back to the exercise and set you were on.');
+  html += step('11','Backup & Restore','Everything lives on this iPhone only. Tap Backup & Restore on the home screen, then Back Up Now, and save the file to iCloud Drive or Google Drive. You\u2019ll get a reminder if it has been two weeks. To move to a new phone, install the app and use Restore.');
   html += `<button class="btn secondary" onclick="goto('home')" style="margin-top:10px;">Back to Home</button>`;
   app.innerHTML = html;
 }
 
 /* ================= Version, schedule & preferences ================= */
-const APP_VERSION = 'v2026-09-21b';
+const APP_VERSION = 'v2026-09-24d';
 const SCHED_KEY='training_schedule_v1', PREF_KEY='training_prefs_v1', PROG_KEY='training_inprogress_v1';
 const DAY_NAMES=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const DAY_ORDER=[1,2,3,4,5,6,0];
@@ -629,6 +741,7 @@ function todayKeys(){
   base.forEach(k=>{ const kk = LIFT_CARDS.indexOf(k)!==-1 ? '3' : k; if(out.indexOf(kk)===-1) out.push(kk); });
   return out;
 }
+function doneTs(key){ const t=todayStr(); const x=sessions.filter(s=>s.date===t && s.cardKey===key).sort((a,b)=>b.ts-a.ts)[0]; return x?(x.savedTs||x.ts):Date.now(); }
 function doneToday(key){ const t=todayStr(); return sessions.some(s=>s.date===t && s.cardKey===key); }
 function todayDeloadOn(){ return todayDeload===null ? isAutoDeloadWeek() : todayDeload; }
 function todayBoardHtml(){
@@ -638,7 +751,7 @@ function todayBoardHtml(){
   if(!keys.length){ h+=`<div class="hint">Nothing scheduled today. Pick a card below, or edit the weekly schedule.</div>`; }
   keys.forEach(k=>{
     const c=CARDS[k], done=doneToday(k);
-    h+=`<div class="tc-row ${done?'done':''}"><div><div class="tc-name">${c.name}</div><div class="tc-meta">Card ${c.num} · ${c.meta}</div></div><div class="tc-state">${done?'✓ Done':''}</div></div>`;
+    h+=`<div class="tc-row ${done?'done':''}"><div><div class="tc-name">${c.name}</div><div class="tc-meta">Card ${c.num} · ${c.meta}</div></div><div class="tc-state">${done?'✓ Saved '+clock(doneTs(k)):''}</div></div>`;
   });
   if(keys.length){
     const remaining=keys.filter(k=>!doneToday(k));
@@ -749,6 +862,7 @@ async function keepAwake(on){
   }catch(e){ wakeLock=null; }
 }
 document.addEventListener('visibilitychange', ()=>{
+  if(document.visibilityState==='hidden') saveProgress();
   if(document.visibilityState==='visible' && (active || timer)) keepAwake(true);
   if(timer) tickTimer();
 });
@@ -819,7 +933,7 @@ const LOG_TYPES = {
   'Top-Quarter Partial Pull-Up (Top Block \u00b7 priority)':'bw',
   'Inverted Bodyweight Skull Crushers':'bw', 'Deficit Push-Ups (Myo-Reps)':'bw', 'Inverted Bodyweight Rows':'bw',
   'Tibialis Raise':'bw', 'Patrick Step-Up':'bw', 'Patrick Step':'bw', 'FHL Calf Raise':'bw', 'KOT Calf Raise':'bw',
-  'Sticking-Point Iso Hold':'secs', 'L-Sit (Pike Progression)':'secs',
+  'Sticking-Point Iso Hold':'secs', 'Single-Leg Balance':'secs', 'L-Sit (Pike Progression)':'secs',
   'Passive Hanging / Decompression':'mins', 'Warm-Up: Backward Walking':'mins',
   '60-Min Weighted Vest Walk OR Golf Round':'none',
   'Elephant Walk':'none', 'T-Spine Open Books':'none', 'Couch Stretch':'none',
@@ -840,6 +954,26 @@ function fmtSet(s){
   if(w) return lb;
   if(r) return r+' reps';
   return '';
+}
+function topReps(presc){
+  if(/mini-sets|pyramid/i.test(presc)) return null;
+  const m=presc.match(/^\s*\d+(?:–\d+)?\s*[×x]\s*(\d+)(?:\s*[–-]\s*(\d+))?(?!\s*s\b)/);
+  if(!m) return null;
+  if(/^\s*\d+(?:–\d+)?\s*[×x]\s*\d+(?:\s*[–-]\s*\d+)?\s*(s|sec|min)\b/i.test(presc)) return null;
+  return parseInt(m[2]||m[1],10);
+}
+function progressHint(ce, cardKey, last, deloadNow){
+  if(deloadNow || !last || last.deload || last.cardKey!==cardKey) return '';
+  if(logType(ce.name)!=='load') return '';
+  const presc=pOf(ce), top=topReps(presc);
+  if(!top) return '';
+  const n=setPlan(presc,false).n;
+  const done=last.sets.filter(st=>hasVal(st.reps));
+  if(done.length<n) return '';
+  if(!done.slice(0,n).every(st=>parseInt(st.reps,10)>=top)) return '';
+  const kb=/KB|Kettlebell/i.test(ce.name);
+  const inc = kb ? 'move up one bell size (or add a rep per set first if the jump is too big)' : (['2','5'].indexOf(cardKey)!==-1 ? 'add 5–10 lb' : 'add 2.5–5 lb');
+  return `<div class="prog">\u2191 Progress today: you hit ${top} reps on all ${n} sets last time \u2014 ${inc}.</div>`;
 }
 function logWord(type){ return (type==='load'||type==='bw') ? 'weight / reps' : (type==='reps' ? 'reps' : 'time'); }
 function logToggleHtml(i){
@@ -908,7 +1042,7 @@ function setPlan(presc, cap){
 }
 function gPlan(){
   const ce=gCard().exercises[guided.ei];
-  const p=setPlan(ce.presc, gDeloadEff());
+  const p=setPlan(pOf(ce), gDeloadEff());
   return {n:p.n+guided.extra, labels:p.labels};
 }
 function renderGuided(){
@@ -927,12 +1061,15 @@ function readinessBoard(title, hint){
 function renderGuidedIntro(){
   const c=gCard(), key=guided.queue[guided.qi], tot=guided.queue.length;
   let h=gHeader();
+  if(flash){ h+=`<div class="flash">${flash}</div>`; flash=''; }
+  if(resumedNote){ h+=`<div class="flash">Picked up where you left off.</div>`; resumedNote=false; }
   if(LIFT_CARDS.indexOf(key)!==-1 && shouldSwapToCard3()){
     h+=`<div class="banner"><b>Card 7 rule triggered:</b> joint readiness has been below 6 for two sessions in a row. Consider a Card 3 swap instead of pushing today.</div>`;
   }
   if(guided.deload && c.deloadable) h+=`<div class="banner"><b>Deload:</b> ${DELOAD_NOTE}</div>`;
   if(guided.deload && !c.deloadable) h+=`<div class="banner">This card isn\u2019t adjusted for deload weeks \u2014 run it as normal.</div>`;
   h+=`<div class="board"><h4>${c.focus}</h4><div class="hint">${c.meta}</div><div class="hint" style="margin-top:6px;">${c.exercises.length} exercises</div></div>`;
+  if(c.setup) h+=`<div class="banner">${c.setup}</div>`;
   h+=readinessBoard('Joint readiness today', '1 = beat up, 10 = fresh. Optional. Below 6 two sessions running \u2192 swap next lifting day to Card 3.');
   h+=`<div class="golden"><b>Golden Rule.</b> ${c.golden}</div>`;
   h+=`<button class="btn" onclick="gBegin()">Begin</button>`;
@@ -952,16 +1089,18 @@ function gInputsHtml(type, lastSet){
 function renderGuidedExercise(){
   const c=gCard(), n=c.exercises.length, i=guided.ei, ce=c.exercises[i], ex=active.exercises[i];
   const plan=gPlan(), si=guided.si, type=logType(ce.name);
-  const last=lastLoggedSets(ce.name);
+  const last=lastLoggedSets(ce.name, guided.queue[guided.qi], gDeloadEff());
   const lastSet = last ? last.sets[Math.min(si,last.sets.length-1)] : null;
   const r=restInfo(ce.presc);
   const isLastSet = si>=plan.n-1, isLastEx = i===n-1;
   const multi = plan.n>1 || !!plan.labels;
   let h=gHeader();
+  if(resumedNote){ h+=`<div class="flash">Picked up where you left off \u2014 exercise ${i+1} of ${n}, set ${si+1}.</div>`; resumedNote=false; }
   h+=`<div class="gprog-top"><span class="num">Exercise ${i+1} of ${n}</span><span class="num">${Math.round((i/n)*100)}%</span></div><div class="gbar"><div class="gbar-fill" style="width:${Math.round((i/n)*100)}%"></div></div>`;
   if(gDeloadEff()) h+=`<div class="banner"><b>Deload:</b> ${DELOAD_NOTE}</div>`;
-  h+=`<div class="exwrap"><div class="ex-name gname">${ce.name}</div><div class="ex-presc">${ce.presc}</div><div class="ex-cue">${ce.cue}</div>${formHtml(ce.name)}`;
-  if(last) h+=`<div class="ex-last">Last time (${last.date}${last.cardKey!==guided.queue[guided.qi]?', Card '+CARDS[last.cardKey].num:''}): ${last.sets.map(fmtSet).join(', ')}${last.note?' \u00b7 '+esc(last.note):''}</div>`;
+  h+=`<div class="exwrap"><div class="ex-name gname">${ce.name}</div><div class="ex-presc">${pOf(ce)}</div><div class="ex-cue">${ce.cue}</div>${ce.pu && c.setup ? `<div class="ex-last">${c.setup}</div>` : ''}${formHtml(ce.name)}`;
+  h+=progressHint(ce, guided.queue[guided.qi], last, gDeloadEff());
+  if(last) h+=`<div class="ex-last">Last time (${last.date}${last.cardKey!==guided.queue[guided.qi]?', Card '+CARDS[last.cardKey].num:''}${last.deload?', deload':''}): ${last.sets.map(fmtSet).join(', ')}${last.note?' \u00b7 '+esc(last.note):''}</div>`;
   if(multi){
     h+=`<div class="sets-track">${[...Array(plan.n)].map((_,j)=>`<span class="sdot ${j<si?'done':(j===si?'cur':'')}"></span>`).join('')}</div>`;
     h+=`<div class="setlabel">${plan.labels && plan.labels[si] ? plan.labels[si] : 'Set '+(si+1)+' of '+plan.n}</div>`;
@@ -987,7 +1126,7 @@ function renderGuidedWrap(){
   h+=`<div class="board"><h4>Card complete</h4><div class="cat-row"><span class="cname">Exercises done</span><span class="cval num ${doneCount===c.exercises.length?'pos':'zero'}">${doneCount} / ${c.exercises.length}</span><span class="ctarget"></span></div></div>`;
   if(active.readiness==null) h+=readinessBoard('Joint Readiness (optional)', '1 = beat up, 10 = fresh. Below 6 two sessions running \u2192 swap next lifting day to Card 3.');
   else h+=`<div class="board"><div class="cat-row"><span class="cname">Joint readiness today</span><span class="cval num ${active.readiness<6?'warn':'zero'}">${active.readiness}/10</span><span class="ctarget"></span></div></div>`;
-  h+=`<div class="field"><label>Zone 2 Minutes Today (optional)</label><input type="number" inputmode="numeric" value="${active.zone2Min}" placeholder="e.g. 45" oninput="active.zone2Min=this.value"></div>`;
+  h+=`<div class="field"><label>Cardio Minutes Today (optional)</label><input type="number" inputmode="numeric" value="${active.zone2Min}" placeholder="e.g. 45" oninput="active.zone2Min=this.value"></div>`;
   h+=`<div class="field"><label>Session Notes (optional)</label><input type="text" value="${esc(active.notes)}" oninput="active.notes=this.value"></div>`;
   h+=`<button class="btn" onclick="gSaveCard()">${more?'Save & continue to Card '+CARDS[guided.queue[guided.qi+1]].num:'Save & finish'}</button>`;
   h+=`<button class="btn secondary" onclick="gDiscard()">Discard this card</button>`;
@@ -996,7 +1135,7 @@ function renderGuidedWrap(){
 function gResetPos(){ guided.si=0; guided.extra=0; guided.draft=blankDraft(); }
 function gBegin(){ guided.ei=0; gResetPos(); render(); window.scrollTo(0,0); }
 function gUseLast(){
-  const last=lastLoggedSets(gCard().exercises[guided.ei].name);
+  const last=lastLoggedSets(gCard().exercises[guided.ei].name, guided.queue[guided.qi], gDeloadEff());
   if(!last) return;
   const s=last.sets[Math.min(guided.si,last.sets.length-1)];
   guided.draft={weight:hasVal(s.weight)?String(s.weight):'', reps:hasVal(s.reps)?String(s.reps):'', time:hasVal(s.time)?String(s.time):''};
@@ -1036,8 +1175,10 @@ function gNextCard(){
   render(); window.scrollTo(0,0);
 }
 async function gSaveCard(){
+  active.savedTs=Date.now();
   sessions.push(active);
   await saveSessions();
+  flash='\u2713 Card '+CARDS[active.cardKey].num+' \u2014 '+CARDS[active.cardKey].name+' saved at '+clock(active.savedTs)+'.';
   if(guided.qi<guided.queue.length-1){ gNextCard(); }
   else { active=null; guided=null; stopTimer(); clearProgress(); goto('home'); window.scrollTo(0,0); }
 }
@@ -1100,9 +1241,72 @@ function formHtml(name){
 }
 function toggleForm(k){ formShown[k]=!formShown[k]; render(); }
 
+/* ================= Backup & restore ================= */
+function backupPayload(){
+  const data={};
+  for(let i=0;i<localStorage.length;i++){ const k=localStorage.key(i); if(k && k.indexOf('training_')===0 && k!==PROG_KEY) data[k]=localStorage.getItem(k); }
+  return {app:'training-cards', version:APP_VERSION, exported:new Date().toISOString(), sessions:sessions.length, dailyLogs:dailyLogs.length, data:data};
+}
+function lastBackup(){ return prefs.lastBackup || null; }
+function backupNudgeHtml(){
+  if(!sessions.length) return '';
+  const lb=lastBackup();
+  const days = lb ? Math.floor((Date.now()-lb)/86400000) : null;
+  if(days!==null && days<14) return '';
+  return `<div class="banner"><b>Backup reminder:</b> ${lb?'last backup was '+days+' days ago':'no backup yet'}. <span class="logtoggle" onclick="goto('backup')">Back up now</span></div>`;
+}
+async function doBackup(){
+  const json=JSON.stringify(backupPayload());
+  const name='Training_Cards_Backup_'+todayStr()+'.json';
+  let ok=false;
+  try{
+    const file=new File([json], name, {type:'application/json'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], title:name}); ok=true; }
+  }catch(e){ if(e && e.name==='AbortError'){ return; } }
+  if(!ok){
+    try{
+      const url=URL.createObjectURL(new Blob([json],{type:'application/json'}));
+      const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 4000); ok=true;
+    }catch(e){}
+  }
+  if(ok){ prefs.lastBackup=Date.now(); await savePrefs(); flash='\u2713 Backup created: '+name+'.'; goto('home'); }
+}
+function pickRestore(){ const el=document.getElementById('restorefile'); if(el) el.click(); }
+function doRestore(input){
+  const f=input.files && input.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=async ()=>{
+    try{
+      const p=JSON.parse(r.result);
+      if(!p || p.app!=='training-cards' || !p.data) throw new Error('bad');
+      if(!confirm('Replace everything in this app with the backup from '+String(p.exported||'').slice(0,10)+' ('+p.sessions+' sessions, '+p.dailyLogs+' daily logs)?')) return;
+      Object.keys(p.data).forEach(k=>{ if(k.indexOf('training_')===0) localStorage.setItem(k, p.data[k]); });
+      await loadState(); await loadTheme();
+      flash='\u2713 Restored '+p.sessions+' sessions and '+p.dailyLogs+' daily logs from the '+String(p.exported||'').slice(0,10)+' backup.';
+      goto('home');
+    }catch(e){ alert('That file isn\u2019t a Training Cards backup.'); }
+    input.value='';
+  };
+  r.readAsText(f);
+}
+function renderBackup(){
+  const lb=lastBackup();
+  let h=`<div class="brand"><h1>Backup & Restore</h1>${themeToggleBtn()}</div>`;
+  h+=`<div class="board"><h4>What's stored</h4><div class="cat-row"><span class="cname">Sessions</span><span class="cval num zero">${sessions.length}</span><span class="ctarget"></span></div><div class="cat-row"><span class="cname">Daily logs</span><span class="cval num zero">${dailyLogs.length}</span><span class="ctarget"></span></div><div class="cat-row"><span class="cname">Last backup</span><span class="cval num zero" style="font-size:15px;">${lb?new Date(lb).toLocaleDateString():'never'}</span><span class="ctarget"></span></div></div>`;
+  h+=`<button class="btn" onclick="doBackup()">Back Up Now</button>`;
+  h+=`<div class="note">Opens your iPhone share sheet. Tap <b>Save to Files</b> and pick iCloud Drive (your AppsClaude folder works well), or pick the Google Drive app if it's installed. The backup is one small file that includes your sessions, daily logs, schedule and settings.</div>`;
+  h+=`<input type="file" id="restorefile" accept=".json,application/json" style="display:none" onchange="doRestore(this)">`;
+  h+=`<button class="btn secondary" style="margin-top:22px;" onclick="pickRestore()">Restore From a Backup File</button>`;
+  h+=`<div class="note">Pick a backup file from Files. It replaces what's in the app now, and asks first.</div>`;
+  h+=`<button class="btn secondary" onclick="goto('home')" style="margin-top:16px;">Back to Home</button>`;
+  app.innerHTML=h;
+}
+
 function goto(v){ view=v; render(); }
 document.title='Training Cards — Dwight Clarke — '+APP_VERSION;
-loadTheme().then(()=>loadState().then(render));
+loadTheme().then(()=>loadState().then(()=>{ if(resumeData){ resumedNote=true; resumeSession(); } else render(); }));
+window.addEventListener('pagehide', ()=>saveProgress());
 </script>
 </body>
 </html>
