@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Nutrition & Workout">
-<title>Nutrition & Workout Log — Dwight Clarke — v2026-09-21</title>
+<title>Nutrition & Workout Log — Dwight Clarke — v2026-10-03</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -78,6 +78,8 @@
   .home-round{display:flex; justify-content:space-between; align-items:center; padding:14px 4px; border-bottom:1px solid var(--line); cursor:pointer;}
   .home-round .meta{font-size:13px; color:var(--ivory-dim); margin-top:2px;}
   .home-round .rval{font-size:20px; font-weight:700;}
+  .chip.half{min-width:44px; flex:1 1 44px; padding:11px 4px; font-size:15px;}
+  .duebox{border:1px solid var(--brass-dim); border-radius:8px; padding:10px 12px; font-size:14px; line-height:1.5; margin-top:8px;}
   .tag{display:inline-block; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; padding:3px 8px; border-radius:20px; border:1px solid var(--brass-dim); color:var(--brass); margin-left:8px;}
 </style>
 </head>
@@ -88,7 +90,7 @@
 /* Uses the browser's own localStorage — this file runs standalone in Safari,
    outside Claude's environment. Same pattern as the other companion apps. */
 
-const APP_VERSION = 'v2026-09-21';
+const APP_VERSION = 'v2026-10-03';
 const HEIGHT_IN = 70; // 5'10", from the protocol doc
 const FLUID_TARGET = [120,150];
 const WEIGHT_TARGET = [167,170];
@@ -145,12 +147,14 @@ function rotationCardLabel(key){
 }
 
 /* ================= State & storage ================= */
-let dailyLogs = [], checkpoints = [];
-const DAILY_KEY='nutrition_daily_v1', CHECK_KEY='nutrition_checkpoints_v1', THEME_KEY='nutrition_theme_v1', SEEDED_KEY='nutrition_seeded_v1';
+let dailyLogs = [], checkpoints = [], srtTests = [];
+const DAILY_KEY='nutrition_daily_v1', CHECK_KEY='nutrition_checkpoints_v1', THEME_KEY='nutrition_theme_v1', SEEDED_KEY='nutrition_seeded_v1', SRT_KEY='nutrition_srt_v1';
+const SRT_INTERVAL_DAYS = 30;
 
 async function loadState(){
   try{ const d = localStorage.getItem(DAILY_KEY); dailyLogs = d? JSON.parse(d):[]; }catch(e){ dailyLogs=[]; }
   try{ const c = localStorage.getItem(CHECK_KEY); checkpoints = c? JSON.parse(c):[]; }catch(e){ checkpoints=[]; }
+  try{ const s = localStorage.getItem(SRT_KEY); srtTests = s? JSON.parse(s):[]; }catch(e){ srtTests=[]; }
   if(!localStorage.getItem(SEEDED_KEY)){
     // Seed the protocol doc's own baseline numbers so the trend has a starting point.
     dailyLogs.push({id:'seed-d1', date:'2026-08-21', weight:183, blocks:null, fluidOz:null, isBaseline:true});
@@ -161,6 +165,7 @@ async function loadState(){
 }
 async function saveDaily(){ try{ localStorage.setItem(DAILY_KEY, JSON.stringify(dailyLogs)); }catch(e){} }
 async function saveCheck(){ try{ localStorage.setItem(CHECK_KEY, JSON.stringify(checkpoints)); }catch(e){} }
+async function saveSrt(){ try{ localStorage.setItem(SRT_KEY, JSON.stringify(srtTests)); }catch(e){} }
 async function loadTheme(){
   try{
     const t = localStorage.getItem(THEME_KEY);
@@ -220,6 +225,17 @@ function trainingSummary(){
   const lastCardNames = last ? last.cards.map(k=>{ const c=TRAINING_CARDS.find(x=>x.key===k); return c?c.label:k; }).join(', ') : null;
   return {trainedDays, days:last7.length, lastDate: last? last.date: null, lastCardNames};
 }
+function sortedSrt(){ return srtTests.slice().sort((a,b)=>a.date.localeCompare(b.date)); }
+function dayNum(dateStr){ const m=String(dateStr||'').match(/^(\d{4})-(\d{2})-(\d{2})$/); return m? Math.round(new Date(+m[1],+m[2]-1,+m[3]).getTime()/86400000) : null; }
+function addDays(dateStr, n){ const m=String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})$/); const d=new Date(+m[1],+m[2]-1,+m[3]+n), p=v=>String(v).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
+function fmtScore(v){ return (Math.round(v*2)/2).toFixed(v%1?1:0); }
+function srtSummary(){
+  const list = sortedSrt();
+  if(!list.length) return {count:0};
+  const first=list[0], latest=list[list.length-1], prev=list.length>1? list[list.length-2] : null;
+  const since = dayNum(todayStr()) - dayNum(latest.date);
+  return {count:list.length, first, latest, prev, since, due: since>=SRT_INTERVAL_DAYS, nextDue: addDays(latest.date, SRT_INTERVAL_DAYS)};
+}
 function latestWeight(){
   const list = sortedDaily();
   return list.length ? list[list.length-1] : null;
@@ -235,12 +251,15 @@ function render(){
   if(view==='new-check') return renderNewCheck();
   if(view==='detail') return renderDetail();
   if(view==='help') return renderHelp();
+  if(view==='new-srt') return renderNewSrt();
 }
 
 function renderHome(){
   let html = `<div class="brand"><div><h1>Nutrition & Workout</h1><div class="sub">${APP_VERSION}</div></div>${themeToggleBtn()}</div>`;
   html += `<button class="btn" onclick="goto('new-daily')">Log Today</button>`;
   html += `<button class="btn secondary" onclick="goto('new-check')">Log DEXA / Body-Comp Checkpoint</button>`;
+  const srt0 = srtSummary();
+  html += `<button class="btn secondary" onclick="openSrt()">${srt0.count===0?'Take Sitting-Rising Test (baseline)':(srt0.due?'Sitting-Rising Test \u2014 due':'Log Sitting-Rising Test')}</button>`;
   html += `<button class="btn secondary" onclick="goto('help')">How to Use</button>`;
 
   // Today's rotation
@@ -261,6 +280,22 @@ function renderHome(){
       <div class="cat-row"><span class="cname">Fat Mass</span><span class="cval num zero">${ct.latest.fatMass.toFixed(1)} lb</span><span class="ctarget">baseline ${ct.baseline.fatMass.toFixed(1)}</span></div>
       <div class="cat-row"><span class="cname">Body Fat %</span><span class="cval num zero">${ct.latest.bodyFatPct.toFixed(1)}%</span><span class="ctarget">baseline ${ct.baseline.bodyFatPct.toFixed(1)}%</span></div>
       <div class="cat-row"><span class="cname">Waist:Height</span><span class="cval num ${ct.waistRatioLatest<WAIST_HEIGHT_TARGET?'pos':'neg'}">${ct.waistRatioLatest.toFixed(3)}</span><span class="ctarget">&lt; ${WAIST_HEIGHT_TARGET.toFixed(2)}</span></div>
+    </div>`;
+  }
+
+  // Sitting-rising test
+  const sr = srtSummary();
+  if(sr.count===0){
+    html += `<div class="board"><h4>Sitting-Rising Test</h4><div class="note" style="margin-top:0;">Not taken yet. Take a baseline this week, then once a month.</div></div>`;
+  } else {
+    const chg = sr.prev ? sr.latest.score - sr.prev.score : null;
+    const tot = sr.latest.score - sr.first.score;
+    html += `<div class="board">
+      <h4>Sitting-Rising Test${sr.count===1?' <span class="tag">Baseline Only</span>':''}</h4>
+      <div class="cat-row"><span class="cname">Latest</span><span class="cval num ${chg==null?'zero':(chg>0?'pos':(chg<0?'neg':'zero'))}">${fmtScore(sr.latest.score)}/10</span><span class="ctarget">${sr.latest.date}</span></div>
+      ${sr.prev?`<div class="cat-row"><span class="cname">vs Last Test</span><span class="cval num zero">${chg>=0?'+':''}${fmtScore(chg)}</span><span class="ctarget">${sr.prev.date}</span></div>`:''}
+      ${sr.count>2?`<div class="cat-row"><span class="cname">vs First Test</span><span class="cval num zero">${tot>=0?'+':''}${fmtScore(tot)}</span><span class="ctarget">${sr.first.date}</span></div>`:''}
+      <div class="duebox">${sr.due?`<b style="color:var(--brass);">Due now</b> \u2014 last test was ${sr.since} days ago.`:`Next test due ${sr.nextDue}.`}</div>
     </div>`;
   }
 
@@ -295,13 +330,16 @@ function renderHome(){
   html += `<h3 style="margin-top:22px; font-size:15px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ivory-dim); font-family:'Inter',sans-serif;">Past Entries</h3>`;
   const allEntries = [
     ...dailyLogs.map(d=>({...d, _type:'daily'})),
-    ...checkpoints.map(c=>({...c, _type:'check'}))
+    ...checkpoints.map(c=>({...c, _type:'check'})),
+    ...srtTests.map(s=>({...s, _type:'srt'}))
   ].sort((a,b)=>b.date.localeCompare(a.date));
   if(allEntries.length===0){ html += `<div class="empty">Nothing logged yet.</div>`; }
   else{
     allEntries.forEach(e=>{
       if(e._type==='daily'){
         html += `<div class="home-round" onclick="viewDetail('${e.id}','daily')"><div><div>Daily${e.isBaseline?' · baseline':''}</div><div class="meta">${e.date}</div></div><div class="rval num">${e.weight} lb</div></div>`;
+      } else if(e._type==='srt'){
+        html += `<div class="home-round" onclick="viewDetail('${e.id}','srt')"><div><div>Sitting-Rising Test</div><div class="meta">${e.date}</div></div><div class="rval num">${fmtScore(e.score)}/10</div></div>`;
       } else {
         html += `<div class="home-round" onclick="viewDetail('${e.id}','check')"><div><div>DEXA / Body-Comp${e.isBaseline?' · baseline':''}</div><div class="meta">${e.date}</div></div><div class="rval num">${e.leanMass.toFixed(1)} lb lean</div></div>`;
       }
@@ -385,6 +423,42 @@ async function saveCheckEntry(){
   goto('home');
 }
 
+/* ================= Sitting-rising test ================= */
+let editSrt=null;
+const SRT_STEPS=[5,4.5,4,3.5,3,2.5,2,1.5,1,0.5,0];
+function openSrt(){ editSrt={date:todayStr(), down:null, up:null, note:''}; goto('new-srt'); }
+function setSrt(part,v){ editSrt[part]=v; render(); }
+function srtChips(part){
+  return `<div class="chip-row">${SRT_STEPS.map(v=>`<div class="chip half num ${editSrt[part]===v?'active':''}" onclick="setSrt('${part}',${v})">${fmtScore(v)}</div>`).join('')}</div>`;
+}
+function renderNewSrt(){
+  const total = (editSrt.down!=null && editSrt.up!=null) ? editSrt.down+editSrt.up : null;
+  const last = srtSummary();
+  app.innerHTML = `
+    <div class="brand"><h1>Sitting-Rising Test</h1>${themeToggleBtn()}</div>
+    <div class="board">
+      <h4>How to Do It</h4>
+      <div style="font-size:15px; line-height:1.55;">Barefoot or in socks, on a clear patch of floor with a sturdy chair or wall within reach. Cross your feet, sit down to the floor, then stand back up, using as little support as you can.</div>
+      <div class="note">Each half starts at 5. Take off <b>1</b> for every hand, knee, forearm or side of a leg you use for support, and <b>½</b> for a noticeable wobble. Best of two tries.</div>
+    </div>
+    <div class="field"><label>Date</label><input type="text" value="${editSrt.date}" oninput="editSrt.date=this.value"></div>
+    <div class="board"><h4>Sitting Down — out of 5</h4>${srtChips('down')}</div>
+    <div class="board"><h4>Standing Up — out of 5</h4>${srtChips('up')}</div>
+    <div class="board"><div class="cat-row"><span class="cname">Total</span><span class="cval num ${total==null?'zero':''}">${total==null?'—':fmtScore(total)+'/10'}</span><span class="ctarget">${last.count?'last: '+fmtScore(last.latest.score):''}</span></div></div>
+    <div class="field"><label>Note (optional)</label><input type="text" value="${editSrt.note.replace(/"/g,'&quot;')}" placeholder="e.g. left hand on the way up" oninput="editSrt.note=this.value"></div>
+    <button class="btn" onclick="saveSrtEntry()" ${total==null?'style="opacity:0.5;"':''}>Save</button>
+    <button class="btn secondary" onclick="editSrt=null; goto('home')">Cancel</button>
+  `;
+}
+async function saveSrtEntry(){
+  if(editSrt.down==null || editSrt.up==null) return;
+  const date=(editSrt.date||'').trim() || todayStr();
+  srtTests.push({id:'s'+Date.now(), date, down:editSrt.down, up:editSrt.up, score:editSrt.down+editSrt.up, note:(editSrt.note||'').trim()});
+  editSrt=null;
+  await saveSrt();
+  goto('home');
+}
+
 function viewDetail(id, type){ detailId=id; detailType=type; view='detail'; render(); }
 function renderDetail(){
   let html = `<div class="brand"><h1>Entry Detail</h1>${themeToggleBtn()}</div>`;
@@ -400,6 +474,16 @@ function renderDetail(){
       const cardNames = (d.cards||[]).map(k=>{ const c=TRAINING_CARDS.find(x=>x.key===k); return c?`${c.label} (${c.name})`:k; });
       html += `<div class="board"><h4>Training</h4><div class="cat-row"><span class="cname">Card(s)</span><span class="cval num zero" style="font-size:15px;">${cardNames.length?cardNames.join(', '):'None logged'}</span><span class="ctarget"></span></div>${d.deload?'<div class="cat-row"><span class="cname">Deload Week</span><span class="cval num zero">Yes</span><span class="ctarget"></span></div>':''}</div>`;
     }
+  } else if(detailType==='srt'){
+    const s = srtTests.find(x=>x.id===detailId);
+    html += `<div class="note" style="margin-top:-10px;">${s.date} · Sitting-Rising Test</div>`;
+    html += `<div class="board">
+      <div class="cat-row"><span class="cname">Total</span><span class="cval num zero">${fmtScore(s.score)}/10</span><span class="ctarget"></span></div>
+      <div class="cat-row"><span class="cname">Sitting Down</span><span class="cval num zero">${fmtScore(s.down)}/5</span><span class="ctarget"></span></div>
+      <div class="cat-row"><span class="cname">Standing Up</span><span class="cval num zero">${fmtScore(s.up)}/5</span><span class="ctarget"></span></div>
+    </div>`;
+    if(s.note) html += `<div class="note">${s.note.replace(/</g,'&lt;')}</div>`;
+    html += `<button class="btn ghost" onclick="deleteSrt('${s.id}')" style="margin-top:6px;">Delete This Test</button>`;
   } else {
     const c = checkpoints.find(x=>x.id===detailId);
     html += `<div class="note" style="margin-top:-10px;">${c.date}${c.isBaseline?' · baseline (from protocol doc)':''}</div>`;
@@ -444,11 +528,18 @@ function renderHelp(){
     </div>
   `;
   html += step('5','Weekly Rotation', step5Body);
+  html += step('6','Sitting-rising test','Once a month, tap the Sitting-Rising Test button. Cross your feet, sit to the floor and stand back up with as little support as you can, then tap your score for each half. The home screen shows your latest score, the change since your last test and since your first, and says when the next test is due. It goes green when the score improves and red when it slips. A dip of a point or more that holds on a second try is worth paying attention to. This measures your ability to get down to the floor and back up, which the Technical Stand-Up on Card 3 trains.');
   html += `<button class="btn secondary" onclick="goto('home')" style="margin-top:10px;">Back to Home</button>`;
   app.innerHTML = html;
 }
 
-function goto(v){ view=v; render(); }
+async function deleteSrt(id){
+  if(!confirm('Delete this sitting-rising test?')) return;
+  srtTests = srtTests.filter(x=>x.id!==id);
+  await saveSrt();
+  goto('home');
+}
+function goto(v){ view=v; render(); window.scrollTo(0,0); }
 loadTheme().then(()=>loadState().then(render));
 </script>
 </body>
