@@ -6,8 +6,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Nutrition & Workout">
-<title>Nutrition & Workout Log — Dwight Clarke — v2026-10-11</title>
+<meta name="apple-mobile-web-app-title" content="Scorecard">
+<title>The Daily Scorecard — Dwight Clarke — v2026-10-12</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -64,7 +64,8 @@
   .btn.ghost{background:transparent; color:var(--brass); border:1px solid var(--brass-dim); padding:12px; font-size:17px;}
   .field{margin-bottom:14px;}
   .field label{display:block; font-size:15px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ivory-dim); margin-bottom:6px;}
-  .field input[type=text], .field input[type=number]{ width:100%; background:var(--surface2); border:1px solid var(--line); color:var(--ivory); border-radius:8px; padding:14px 12px; font-size:19px; font-family:'IBM Plex Mono',monospace;}
+  .field input[type=date]{ -webkit-appearance:none; appearance:none; display:block; min-height:54px; text-align:left; }
+  .field input[type=text], .field input[type=number], .field input[type=date]{ width:100%; background:var(--surface2); border:1px solid var(--line); color:var(--ivory); border-radius:8px; padding:14px 12px; font-size:19px; font-family:'IBM Plex Mono',monospace;}
   .field .hint{font-size:13px; color:var(--ivory-dim); margin-top:5px;}
   .chip-row{display:flex; flex-wrap:wrap; gap:8px;}
   .chip{flex:1 1 auto; min-width:60px; text-align:center; padding:13px 10px; border-radius:8px; border:1px solid var(--line); background:var(--surface2); color:var(--ivory-dim); font-size:16px; font-weight:600; cursor:pointer;}
@@ -84,6 +85,11 @@
   .chip.half{min-width:44px; flex:1 1 44px; padding:11px 4px; font-size:15px;}
   .duebox{border:1px solid var(--brass-dim); border-radius:8px; padding:10px 12px; font-size:14px; line-height:1.5; margin-top:8px;}
   .tag{display:inline-block; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; padding:3px 8px; border-radius:20px; border:1px solid var(--brass-dim); color:var(--brass); margin-left:8px;}
+  .minirow{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px;}
+  .minibtn{background:transparent; color:var(--ivory); border:1px solid var(--line); border-radius:9px; font-family:'Inter',sans-serif; font-weight:600; font-size:14px; padding:12px 4px; cursor:pointer; line-height:1.25; text-align:center;}
+  .minibtn.due{border-color:var(--brass); color:var(--brass);}
+  .review{border:2px solid var(--brass); }
+  .review .focus{background:var(--surface2); border-radius:8px; padding:10px 12px; font-size:16px; line-height:1.5; margin-top:10px;}
   .carblist{margin:4px 0 8px; padding-left:18px;}
   .carblist li{margin-bottom:3px;}
 </style>
@@ -95,12 +101,14 @@
 /* Uses the browser's own localStorage — this file runs standalone in Safari,
    outside Claude's environment. Same pattern as the other companion apps. */
 
-const APP_VERSION = 'v2026-10-11';
+const APP_VERSION = 'v2026-10-12';
 const HEIGHT_IN = 70; // 5'10", from the protocol doc
 const FLUID_TARGET = [120,150];
 const WEIGHT_TARGET = [170,175];
 const WAIST_HEIGHT_TARGET = 0.50;
 const RATE_TARGET = [1,1.5]; // lb lost per week
+const CUT_START = '2026-10-12';
+const PROTEIN_RULE = 'Both shakes, plus a full 4–5 oz protein portion (palm-sized) at both meals. Anything missed or skimpy = No.';
 
 const BLOCKS = [
   {key:'fasted', name:'Fasted', time:'On waking'},
@@ -295,9 +303,54 @@ function waistSummary(){
   const since = dayNum(todayStr()) - dayNum(latest.date);
   return {latest, prev, since, due: since>=WAIST_INTERVAL_DAYS, nextDue: addDays(latest.date, WAIST_INTERVAL_DAYS), count:list.length};
 }
+function proteinAdherence(){
+  const real = sortedDaily().filter(d=>!d.isBaseline && d.blocks);
+  const last7 = real.slice(-7);
+  return {hit: last7.filter(d=>d.blocks.protein).length, days:last7.length};
+}
+function fmtShort(dateStr){
+  const m=String(dateStr).match(/^(\d{4})-(\d{2})-(\d{2})$/); if(!m) return dateStr;
+  const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return MON[+m[2]-1]+' '+(+m[3]);
+}
+// Weekly review covers Mon–Sun. On Sunday it is this week; other days, the last completed week.
+function reviewWeekEnd(){
+  const t = todayStr();
+  const dow = new Date().getDay();
+  return dow===0 ? t : addDays(t, -dow);
+}
+function weeklyReview(endDate){
+  const end = endDate || reviewWeekEnd();
+  const start = addDays(end, -6);
+  const pStart = addDays(start, -7), pEnd = addDays(start, -1);
+  const real = sortedDaily().filter(d=>!d.isBaseline);
+  const inRange = (a,b)=> real.filter(d=>d.date>=a && d.date<=b);
+  const wk = inRange(start, end), prev = inRange(pStart, pEnd);
+  const avg = arr=> arr.length ? arr.reduce((s,d)=>s+d.weight,0)/arr.length : null;
+  const avgW = avg(wk), avgP = avg(prev);
+  const change = (wk.length>=3 && prev.length>=3) ? avgW - avgP : null;
+  const withBlocks = wk.filter(d=>d.blocks);
+  const protein = withBlocks.filter(d=>d.blocks.protein).length;
+  let hit=0, possible=0;
+  withBlocks.forEach(d=>BLOCKS.forEach(b=>{ possible++; if(d.blocks[b.key]) hit++; }));
+  const liftKeys=['1','2','3','4','5'];
+  const liftDays = wk.filter(d=>(d.cards||[]).some(k=>liftKeys.includes(k))).length;
+  const zone2 = wk.filter(d=>(d.cards||[]).includes('6')).length;
+  const ws = waistSummary(), sr = srtSummary();
+  const early = dayNum(end) < dayNum(CUT_START) + 13;
+  let focus;
+  if(wk.length<3) focus = 'Only '+wk.length+' day'+(wk.length===1?'':'s')+' logged this week. Log daily next week so the review has real numbers.';
+  else if(withBlocks.length && protein < Math.min(6, withBlocks.length)) focus = 'Protein first: meet the rule at least 6 days next week. It matters more than anything else on the cut.';
+  else if(change==null) focus = 'Keep logging. Weekly change appears once both weeks have 3+ weigh-ins.';
+  else if(early) focus = 'Early in the cut, most of the drop is water. Change nothing yet.';
+  else focus = rateAdvice(-change);
+  return {start, end, days:wk.length, avgW, avgP, change, protein, proteinDays:withBlocks.length, hit, possible, liftDays, zone2,
+          waistDue: ws ? ws.due : true, waist: ws, srtDue: sr.count===0 || sr.due, focus};
+}
 
 /* ================= Render ================= */
 const app = document.getElementById('app');
+let showAllEntries=false;
 let view='home', editBlocks=null, editDaily=null, detailId=null, detailType=null;
 
 function render(){
@@ -308,6 +361,8 @@ function render(){
   if(view==='help') return renderHelp();
   if(view==='new-srt') return renderNewSrt();
   if(view==='new-waist') return renderNewWaist();
+  if(view==='review') return renderReview();
+  if(view==='backup') return renderBackup();
 }
 
 function fuelBoard(rot){
@@ -322,20 +377,121 @@ function fuelBoard(rot){
   </div>`;
 }
 
+function reviewBoard(r, onHome){
+  const sign = v => v>0?'+':(v<0?'−':'');
+  const pct = r.possible ? Math.round(100*r.hit/r.possible) : null;
+  return `<div class="board review" style="margin-top:18px;">
+    <h4>Weekly Review · ${fmtShort(r.start)}–${fmtShort(r.end)}</h4>
+    <div class="cat-row"><span class="cname">Days Logged</span><span class="cval num zero">${r.days}/7</span><span class="ctarget"></span></div>
+    <div class="cat-row"><span class="cname">Avg Weight</span><span class="cval num zero">${r.avgW==null?'—':r.avgW.toFixed(1)+' lb'}</span><span class="ctarget">${r.avgP==null?'':'prior '+r.avgP.toFixed(1)}</span></div>
+    <div class="cat-row"><span class="cname">Change</span><span class="cval num zero">${r.change==null?'—':sign(r.change)+Math.abs(r.change).toFixed(1)+' lb'}</span><span class="ctarget">aim −${RATE_TARGET[0]} to −${RATE_TARGET[1]}</span></div>
+    <div class="cat-row"><span class="cname">Protein Days</span><span class="cval num ${r.proteinDays?(r.protein>=Math.min(6,r.proteinDays)?'pos':'neg'):'zero'}">${r.protein}/${r.proteinDays}</span><span class="ctarget">aim 6+</span></div>
+    <div class="cat-row"><span class="cname">Blocks Hit</span><span class="cval num zero">${pct==null?'—':pct+'%'}</span><span class="ctarget"></span></div>
+    <div class="cat-row"><span class="cname">Lifting Days</span><span class="cval num zero">${r.liftDays}</span><span class="ctarget">${r.zone2?'+ '+r.zone2+' Zone 2':''}</span></div>
+    <div class="cat-row"><span class="cname">Waist</span><span class="cval num zero" style="font-size:15px;">${r.waistDue?'Due — measure today':r.waist.latest.waistIn.toFixed(1)+' in'}</span><span class="ctarget"></span></div>
+    ${r.srtDue?`<div class="cat-row"><span class="cname">Sit-Rise Test</span><span class="cval num zero" style="font-size:15px;">Due</span><span class="ctarget"></span></div>`:''}
+    <div class="focus"><b>Next week:</b> ${r.focus}</div>
+    ${onHome?'':`<div class="note">On Sundays this card also appears at the top of the home screen.</div>`}
+  </div>`;
+}
+function renderReview(){
+  let html = `<div class="brand"><h1>Weekly Review</h1>${themeToggleBtn()}</div>`;
+  const end = reviewWeekEnd();
+  html += reviewBoard(weeklyReview(end), false);
+  const prevEnd = addDays(end, -7);
+  if(sortedDaily().some(d=>!d.isBaseline && d.date>=addDays(prevEnd,-6) && d.date<=prevEnd)){
+    html += `<h3 style="margin-top:6px; font-size:15px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ivory-dim); font-family:'Inter',sans-serif;">Week Before</h3>`;
+    html += reviewBoard(weeklyReview(prevEnd), true);
+  }
+  html += `<button class="btn secondary" onclick="goto('home')">Back to Home</button>`;
+  app.innerHTML = html;
+}
+
+/* ================= Backup ================= */
+const BACKUP_KEYS = [DAILY_KEY, CHECK_KEY, SRT_KEY, WAIST_KEY, SEEDED_KEY, THEME_KEY];
+const LAST_BACKUP_KEY = 'nutrition_last_backup_v1';
+function lastBackup(){ try{ return localStorage.getItem(LAST_BACKUP_KEY); }catch(e){ return null; } }
+function backupDue(){
+  if(!dailyLogs.some(d=>!d.isBaseline)) return false;
+  const lb = lastBackup();
+  return !lb || dayNum(todayStr()) - dayNum(lb) >= 7;
+}
+async function exportBackup(){
+  const data = {app:'nutrition-log', version:APP_VERSION, exported:new Date().toISOString(), store:{}};
+  BACKUP_KEYS.forEach(k=>{ try{ const v=localStorage.getItem(k); if(v!=null) data.store[k]=v; }catch(e){} });
+  const name = 'Nutrition_Log_Backup_'+todayStr()+'.json';
+  const blob = new Blob([JSON.stringify(data,null,1)], {type:'application/json'});
+  let done = false;
+  try{
+    const file = new File([blob], name, {type:'application/json'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file], title:name}); done = true; }
+  }catch(e){ if(e && e.name==='AbortError') return; }
+  if(!done){
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+  try{ localStorage.setItem(LAST_BACKUP_KEY, todayStr()); }catch(e){}
+  render();
+}
+function pickRestore(){ const el=document.getElementById('restoreInput'); if(el) el.click(); }
+function restoreBackup(input){
+  const f = input.files && input.files[0]; if(!f) return;
+  const reader = new FileReader();
+  reader.onload = async ()=>{
+    let data;
+    try{ data = JSON.parse(reader.result); }catch(e){ data = null; }
+    if(!data || data.app!=='nutrition-log' || !data.store || !data.store[DAILY_KEY]){
+      document.getElementById('restoreMsg').textContent = 'That file is not a Nutrition Log backup. Nothing was changed.'; return;
+    }
+    let n=0; try{ n = JSON.parse(data.store[DAILY_KEY]).length; }catch(e){}
+    if(!confirm('Replace everything in the app with the backup from '+String(data.exported).slice(0,10)+' ('+n+' daily entries)?')) return;
+    BACKUP_KEYS.forEach(k=>{ try{ if(data.store[k]!=null) localStorage.setItem(k, data.store[k]); else localStorage.removeItem(k); }catch(e){} });
+    await loadTheme(); await loadState();
+    goto('home');
+  };
+  reader.readAsText(f);
+}
+function renderBackup(){
+  const lb = lastBackup();
+  const since = lb ? dayNum(todayStr()) - dayNum(lb) : null;
+  app.innerHTML = `
+    <div class="brand"><h1>Backup</h1>${themeToggleBtn()}</div>
+    <div class="board">
+      <h4>Why</h4>
+      <div style="font-size:15px; line-height:1.55;">Your logs live only in Safari on this phone. A new phone, deleting the app, or clearing Safari data erases them. A backup file in iCloud Drive protects months of entries.</div>
+      <div class="duebox">${lb?`Last backup: ${lb}${since>=7?` <b style="color:var(--brass);">(${since} days ago, time for another)</b>`:''}`:'<b style="color:var(--brass);">No backup yet.</b>'}</div>
+    </div>
+    <button class="btn" onclick="exportBackup()">Export Backup</button>
+    <div class="note">Choose <b>Save to Files</b> and pick iCloud Drive › AppsClaude. Once a week is plenty.</div>
+    <button class="btn secondary" onclick="pickRestore()" style="margin-top:22px;">Restore From Backup</button>
+    <input type="file" id="restoreInput" accept=".json,application/json" style="display:none" onchange="restoreBackup(this)">
+    <div class="note" id="restoreMsg">Restoring replaces everything in the app with the backup file's contents.</div>
+    <button class="btn secondary" onclick="goto('home')" style="margin-top:22px;">Back to Home</button>
+  `;
+}
+
 function renderHome(){
-  let html = `<div class="brand"><div><h1>Nutrition & Workout</h1><div class="sub">${APP_VERSION}</div></div>${themeToggleBtn()}</div>`;
-  html += `<button class="btn" onclick="goto('new-daily')">Log Today</button>`;
+  let html = `<div class="brand"><div><h1>The Daily Scorecard</h1><div class="sub">${APP_VERSION}</div></div>${themeToggleBtn()}</div>`;
+  html += `<button class="btn" onclick="openDaily(todayStr())">${entryFor(todayStr())?'Update Today':'Log Today'}</button>`;
   const ws0 = waistSummary();
-  html += `<button class="btn secondary" onclick="openWaist()">${ws0 && ws0.due ? 'Log Waist — due' : 'Log Waist'}</button>`;
-  html += `<button class="btn secondary" onclick="goto('new-check')">Log DEXA / Body-Comp Checkpoint</button>`;
   const srt0 = srtSummary();
-  html += `<button class="btn secondary" onclick="openSrt()">${srt0.count===0?'Take Sitting-Rising Test (baseline)':(srt0.due?'Sitting-Rising Test — due':'Log Sitting-Rising Test')}</button>`;
-  html += `<button class="btn secondary" onclick="goto('help')">How to Use</button>`;
+  const waistDue = !ws0 || ws0.due, srtDue = srt0.count===0 || srt0.due;
+  html += `<div class="minirow">
+    <button class="minibtn ${waistDue?'due':''}" onclick="openWaist()">Waist${waistDue?'<br>due':''}</button>
+    <button class="minibtn" onclick="goto('new-check')">DEXA</button>
+    <button class="minibtn ${srtDue?'due':''}" onclick="openSrt()">Sit-Rise${srtDue?'<br>due':''}</button>
+    <button class="minibtn" onclick="goto('review')">Weekly<br>Review</button>
+    <button class="minibtn ${backupDue()?'due':''}" onclick="goto('backup')">Backup${backupDue()?'<br>due':''}</button>
+    <button class="minibtn" onclick="goto('help')">How to<br>Use</button>
+  </div>`;
+
+  // Sunday review sits at the top on Sundays
+  if(new Date().getDay()===0) html += reviewBoard(weeklyReview(), true);
 
   // Today's rotation
   const rot = todaysRotation();
   const rotNames = rot.cards.map(rotationCardLabel).join('  +  ');
-  html += `<div class="board" style="margin-top:22px; border-color: var(--brass-dim);">
+  html += `<div class="board" style="margin-top:18px; border-color: var(--brass-dim);">
     <h4>Today's Card — Weekly Rotation</h4>
     <div class="cat-row"><span class="cname">Suggested</span><span class="cval num zero" style="font-size:16px;">${rotNames}</span><span class="ctarget"></span></div>
     <div class="note" style="margin-top:2px;">${rot.note} Card 0 runs today regardless, as always.</div>
@@ -401,10 +557,12 @@ function renderHome(){
   // Weekly adherence
   const wa = weeklyAdherence();
   const d3a = d3Adherence();
+  const pa = proteinAdherence();
   const ts = trainingSummary();
   if(wa.days>0){
     html += `<div class="board">
-      <h4>Supplement Blocks — Last ${wa.days} Logged Day${wa.days===1?'':'s'}</h4>
+      <h4>Last ${wa.days} Logged Day${wa.days===1?'':'s'}</h4>
+      <div class="cat-row"><span class="cname">Protein 165+</span><span class="cval num ${pa.hit>=Math.min(6,pa.days)?'pos':'neg'}">${pa.hit}/${pa.days} days</span><span class="ctarget">aim 6+ of 7</span></div>
       <div class="cat-row"><span class="cname">Blocks Hit</span><span class="cval num zero">${wa.hit}/${wa.possible}</span><span class="ctarget">${wa.possible?Math.round(100*wa.hit/wa.possible):0}%</span></div>
       <div class="cat-row"><span class="cname">Vitamin D3</span><span class="cval num zero">${d3a.hit}/${d3a.days} days</span><span class="ctarget">under dose review</span></div>
     </div>`;
@@ -426,7 +584,8 @@ function renderHome(){
   ].sort((a,b)=>b.date.localeCompare(a.date));
   if(allEntries.length===0){ html += `<div class="empty">Nothing logged yet.</div>`; }
   else{
-    allEntries.forEach(e=>{
+    const SHOW = 14;
+    allEntries.slice(0, showAllEntries ? allEntries.length : SHOW).forEach(e=>{
       if(e._type==='daily'){
         html += `<div class="home-round" onclick="viewDetail('${e.id}','daily')"><div><div>Daily${e.isBaseline?' · baseline':''}</div><div class="meta">${e.date}</div></div><div class="rval num">${e.weight} lb</div></div>`;
       } else if(e._type==='srt'){
@@ -437,21 +596,62 @@ function renderHome(){
         html += `<div class="home-round" onclick="viewDetail('${e.id}','check')"><div><div>DEXA / Body-Comp${e.isBaseline?' · baseline':''}</div><div class="meta">${e.date}</div></div><div class="rval num">${e.leanMass.toFixed(1)} lb lean</div></div>`;
       }
     });
+    if(allEntries.length > SHOW){
+      html += `<button class="btn ghost" onclick="showAllEntries=!showAllEntries; render();" style="margin-top:12px;">${showAllEntries?'Show Recent Only':'Show All '+allEntries.length+' Entries'}</button>`;
+    }
   }
   app.innerHTML = html;
 }
 
+/* One entry per day: opening a date that already has an entry loads it for editing. */
+let editingId=null;
+const EMPTY_BLOCKS = {fasted:false, collagen:false, hydration:false, shake1:false, meal1:false, meal2:false, night:false, d3:false, protein:false};
+function changeDailyDate(v){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(v)) return;
+  const e = entryFor(v);
+  if(e && e.id!==editingId){ openDaily(v, e.id); return; }   // that day already has an entry: load it
+  editDaily.date = v;
+  if(!editingId) editDaily.cards = [...todaysRotation(v).cards];
+  render();
+}
+function entryFor(date){
+  const list = dailyLogs.filter(d=>!d.isBaseline && d.date===date);
+  return list.length ? list[list.length-1] : null;
+}
+function openDaily(date, id){
+  const e = id ? dailyLogs.find(x=>x.id===id) : entryFor(date);
+  if(e && !e.isBaseline){
+    editingId = e.id;
+    editBlocks = {...EMPTY_BLOCKS, ...(e.blocks||{})};
+    editDaily = {date:e.date, weight:String(e.weight), fluidOz:e.fluidOz==null?'':String(e.fluidOz), cards:[...(e.cards||[])], deload:!!e.deload};
+  } else {
+    editingId = null;
+    editBlocks = {...EMPTY_BLOCKS};
+    editDaily = {date, weight:'', fluidOz:'', cards:[...todaysRotation(date).cards], deload:false};
+  }
+  goto('new-daily');
+}
+async function deleteDaily(id){
+  if(!confirm('Delete this day\'s entry?')) return;
+  dailyLogs = dailyLogs.filter(x=>x.id!==id);
+  await saveDaily();
+  goto('home');
+}
+
 function renderNewDaily(){
-  const today = todayStr();
-  editBlocks = editBlocks || {fasted:false, collagen:false, hydration:false, shake1:false, meal1:false, meal2:false, night:false, d3:false};
-  editDaily = editDaily || {date:today, weight:'', fluidOz:'', cards:[...todaysRotation(today).cards], deload:false};
+  if(!editDaily){ openDaily(todayStr()); return; }
   app.innerHTML = `
-    <div class="brand"><h1>Log Today</h1>${themeToggleBtn()}</div>
-    <div class="field"><label>Date</label><input type="text" id="dateInput" value="${editDaily.date}" oninput="editDaily.date=this.value"></div>
+    <div class="brand"><h1>${editingId?'Update Day':'Log Today'}</h1>${themeToggleBtn()}</div>
+    ${editingId?`<div class="note" style="margin-top:-6px; margin-bottom:12px;">Editing your saved entry. Change anything and Save again as often as you like.</div>`:''}
+    <div class="field"><label>Date</label><input type="date" id="dateInput" value="${editDaily.date}" max="${todayStr()}" onchange="changeDailyDate(this.value)"></div>
     <div class="field"><label>Weight (lb)</label><input type="number" inputmode="decimal" id="weightInput" value="${editDaily.weight}" placeholder="e.g. 182.4" oninput="editDaily.weight=this.value"></div>
     <div class="board">
       <h4>Blocks Completed</h4>
       ${BLOCKS.map(b=>`<div class="blockrow"><div><span class="bname">${b.name}</span><span class="btime">${b.time}</span></div><div class="togglechip ${editBlocks[b.key]?'active':''}" onclick="toggleBlock('${b.key}')">${editBlocks[b.key]?'✓ Yes':'No'}</div></div>`).join('')}
+    </div>
+    <div class="board" style="border-color:var(--brass-dim);">
+      <h4>Protein 165+</h4>
+      <div class="blockrow"><div><span class="bname">Hit the protein rule today</span><span class="btime">${PROTEIN_RULE}</span></div><div class="togglechip ${editBlocks.protein?'active':''}" onclick="toggleBlock('protein')">${editBlocks.protein?'✓ Yes':'No'}</div></div>
     </div>
     <div class="board">
       <h4>Supplement Watch</h4>
@@ -475,14 +675,17 @@ function toggleCard(key){
   render();
 }
 function toggleDeload(){ editDaily.deload = !editDaily.deload; render(); }
-function cancelDaily(){ editBlocks=null; editDaily=null; goto('home'); }
+function cancelDaily(){ editBlocks=null; editDaily=null; editingId=null; goto('home'); }
 async function saveDailyEntry(){
   const date = (editDaily.date||'').trim();
   const weight = parseFloat(editDaily.weight);
   const fluidOz = editDaily.fluidOz===''||editDaily.fluidOz==null ? null : parseFloat(editDaily.fluidOz);
   if(isNaN(weight)){ const el=document.getElementById('weightInput'); if(el) el.style.borderColor='var(--neg)'; return; }
-  dailyLogs.push({id:'d'+Date.now(), date, weight, blocks:{...editBlocks}, fluidOz, cards:[...editDaily.cards], deload:editDaily.deload, isBaseline:false});
-  editBlocks=null; editDaily=null;
+  // Replace the entry being edited and any other entry already saved for this date.
+  const id = editingId || ('d'+Date.now());
+  dailyLogs = dailyLogs.filter(d=> d.id!==editingId && (d.isBaseline || d.date!==date));
+  dailyLogs.push({id, date, weight, blocks:{...editBlocks}, fluidOz, cards:[...editDaily.cards], deload:editDaily.deload, isBaseline:false});
+  editBlocks=null; editDaily=null; editingId=null;
   await saveDaily();
   goto('home');
 }
@@ -499,7 +702,7 @@ function renderNewWaist(){
       <div style="font-size:15px; line-height:1.55;">At the navel, standing relaxed after a normal breath out. Tape snug, not pressing in. Same time of day each time, ideally first thing in the morning.</div>
       <div class="note">Every 2 weeks. Target: under 35 in (waist:height under 0.50).</div>
     </div>
-    <div class="field"><label>Date</label><input type="text" value="${editWaist.date}" oninput="editWaist.date=this.value"></div>
+    <div class="field"><label>Date</label><input type="date" value="${editWaist.date}" max="${todayStr()}" onchange="editWaist.date=this.value"></div>
     <div class="field"><label>Waist (inches)</label><input type="number" inputmode="decimal" id="waistInput" value="${editWaist.waistIn}" placeholder="${ws?'last: '+ws.latest.waistIn.toFixed(1):'e.g. 35.0'}" oninput="editWaist.waistIn=this.value"></div>
     <button class="btn" onclick="saveWaistEntry()">Save</button>
     <button class="btn secondary" onclick="editWaist=null; goto('home')">Cancel</button>
@@ -525,7 +728,7 @@ function renderNewCheck(){
   const today = todayStr();
   app.innerHTML = `
     <div class="brand"><h1>DEXA / Body-Comp</h1>${themeToggleBtn()}</div>
-    <div class="field"><label>Date</label><input type="text" id="cDateInput" value="${today}"></div>
+    <div class="field"><label>Date</label><input type="date" id="cDateInput" value="${today}" max="${today}"></div>
     <div class="field"><label>Total Weight (lb)</label><input type="number" inputmode="decimal" id="cTotalInput" placeholder="e.g. 183.0"></div>
     <div class="field"><label>Lean Mass (lb)</label><input type="number" inputmode="decimal" id="cLeanInput" placeholder="e.g. 130.0"></div>
     <div class="field"><label>Fat Mass (lb)</label><input type="number" inputmode="decimal" id="cFatInput" placeholder="e.g. 49.0"></div>
@@ -568,7 +771,7 @@ function renderNewSrt(){
       <div style="font-size:15px; line-height:1.55;">Barefoot or in socks, on a clear patch of floor with a sturdy chair or wall within reach. Cross your feet, sit down to the floor, then stand back up, using as little support as you can.</div>
       <div class="note">Each half starts at 5. Take off <b>1</b> for every hand, knee, forearm or side of a leg you use for support, and <b>½</b> for a noticeable wobble. Best of two tries.</div>
     </div>
-    <div class="field"><label>Date</label><input type="text" value="${editSrt.date}" oninput="editSrt.date=this.value"></div>
+    <div class="field"><label>Date</label><input type="date" value="${editSrt.date}" max="${todayStr()}" onchange="editSrt.date=this.value"></div>
     <div class="board"><h4>Sitting Down — out of 5</h4>${srtChips('down')}</div>
     <div class="board"><h4>Standing Up — out of 5</h4>${srtChips('up')}</div>
     <div class="board"><div class="cat-row"><span class="cname">Total</span><span class="cval num ${total==null?'zero':''}">${total==null?'—':fmtScore(total)+'/10'}</span><span class="ctarget">${last.count?'last: '+fmtScore(last.latest.score):''}</span></div></div>
@@ -597,9 +800,14 @@ function renderDetail(){
     html += `</div>`;
     if(d.blocks){
       html += `<div class="board"><h4>Blocks Completed</h4>${BLOCKS.map(b=>`<div class="blockrow"><span class="bname">${b.name}</span><span class="togglechip ${d.blocks[b.key]?'active':''}">${d.blocks[b.key]?'✓ Yes':'No'}</span></div>`).join('')}</div>`;
+      html += `<div class="board"><h4>Protein 165+</h4><div class="blockrow"><span class="bname">Protein rule</span><span class="togglechip ${d.blocks.protein?'active':''}">${d.blocks.protein?'✓ Yes':'No'}</span></div></div>`;
       html += `<div class="board"><h4>Supplement Watch</h4>${EXTRA_TOGGLES.map(b=>`<div class="blockrow"><span class="bname">${b.name}</span><span class="togglechip ${d.blocks[b.key]?'active':''}">${d.blocks[b.key]?'✓ Yes':'No'}</span></div>`).join('')}</div>`;
       const cardNames = (d.cards||[]).map(k=>{ const c=TRAINING_CARDS.find(x=>x.key===k); return c?`${c.label} (${c.name})`:k; });
       html += `<div class="board"><h4>Training</h4><div class="cat-row"><span class="cname">Card(s)</span><span class="cval num zero" style="font-size:15px;">${cardNames.length?cardNames.join(', '):'None logged'}</span><span class="ctarget"></span></div>${d.deload?'<div class="cat-row"><span class="cname">Deload Week</span><span class="cval num zero">Yes</span><span class="ctarget"></span></div>':''}</div>`;
+    }
+    if(!d.isBaseline){
+      html += `<button class="btn" onclick="openDaily('${d.date}','${d.id}')">Edit This Day</button>`;
+      html += `<button class="btn ghost" onclick="deleteDaily('${d.id}')" style="margin-top:10px;">Delete This Day</button>`;
     }
   } else if(detailType==='srt'){
     const s = srtTests.find(x=>x.id===detailId);
@@ -645,7 +853,7 @@ function renderHelp(){
     <div style="font-size:15px; color:var(--ivory-dim); line-height:1.55;">${body}</div>
   </div>`;
   let html = `<div class="brand"><h1>How to Use</h1>${themeToggleBtn()}</div>`;
-  html += step('1','Daily entry','Log Today → weight, tap each block Yes/No as you actually hit it, tap whichever gym card(s) you did (plus Deload Week if it applies), optional fluid ounces. Takes a few seconds.');
+  html += step('1','Daily entry','Log Today → weight, tap each block Yes/No as you actually hit it, tap whichever gym card(s) you did (plus Deload Week if it applies), optional fluid ounces. Save as often as you like through the day: once today is saved, the button reads Update Today and reopens your entry, so each day stays a single entry. To fix an earlier day, tap it under Past Entries, then Edit This Day.');
   html += step('2','DEXA / body-comp checkpoints','Whenever you get a new scan, log DEXA / Body-Comp with the numbers straight off the report. Waist:height computes itself from a waist measurement — height is fixed at 5\'10" per the protocol.');
   html += step('3','What the colors mean','Lean Mass and Waist:Height are colored against the protocol\'s own stated goals — lean mass trending up, waist:height under 0.50. Everything else (weight, fat mass, body fat %, fluid, block count) is shown for reference only, no judgment attached.');
   html += step('4','Baseline entries','The 7/14/26 DEXA scan and the most recent logged weight from the protocol doc are pre-loaded as a starting point, tagged "baseline" so they are never mistaken for something you logged yourself.');
@@ -676,6 +884,9 @@ function renderHelp(){
     <ul class="carblist"><li>Sugared drinks, juice, syrup, sweets. Allulose covers coffee.</li></ul>
   `;
   html += step('8','Carbs for the cut', step8Body);
+  html += step('9','Protein 165+','One tap a day in Log Today. Yes means: '+PROTEIN_RULE+' The home screen shows how many of your last 7 logged days hit it. Aim for 6 or 7. If the scale drops fast and lifts slip, check this first.');
+  html += step('10','Weekly Review','Every Sunday a review card appears at the top of the home screen for Monday through Sunday: average weight against the week before, the change, protein days, blocks, lifting days, and whether the waist or sit-rise test is due. It ends with one focus for the coming week. Any other day, tap Weekly Review to see the last completed week.');
+  html += step('11','Backup','Your logs live only in Safari on this phone. Once a week, tap Backup → Export Backup → Save to Files → iCloud Drive › AppsClaude. The Backup button turns gold when a week has passed. On a new phone, install the app, then Backup → Restore From Backup and pick the newest file.');
   html += `<button class="btn secondary" onclick="goto('home')" style="margin-top:10px;">Back to Home</button>`;
   app.innerHTML = html;
 }
