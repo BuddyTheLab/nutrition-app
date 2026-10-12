@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Nutrition & Workout">
-<title>Nutrition & Workout Log — Dwight Clarke — v2026-10-03</title>
+<title>Nutrition & Workout Log — Dwight Clarke — v2026-10-11</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -54,6 +54,9 @@
   .cat-row .cname{color:var(--ivory-dim);}
   .cat-row .cval{font-size:18px; font-weight:600;}
   .cat-row .ctarget{font-size:13px; color:var(--ivory-dim);}
+  .fuel-row{padding:7px 0; border-bottom:1px solid var(--line); font-size:16px; line-height:1.45;}
+  .fuel-row:last-child{border-bottom:none;}
+  .fuel-row .fl{display:block; font-size:13px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ivory-dim); margin-bottom:2px;}
   .pos{color:var(--pos);} .neg{color:var(--neg);} .zero{color:var(--ivory-dim);}
   .btn{display:block; width:100%; text-align:center; background:var(--brass); color:#1a1408; border:none; border-radius:9px; font-family:'Inter',sans-serif; font-weight:600; font-size:19px; padding:17px 18px; cursor:pointer; margin-top:10px;}
   .btn:active{opacity:0.85;}
@@ -81,6 +84,8 @@
   .chip.half{min-width:44px; flex:1 1 44px; padding:11px 4px; font-size:15px;}
   .duebox{border:1px solid var(--brass-dim); border-radius:8px; padding:10px 12px; font-size:14px; line-height:1.5; margin-top:8px;}
   .tag{display:inline-block; font-size:12px; letter-spacing:0.08em; text-transform:uppercase; padding:3px 8px; border-radius:20px; border:1px solid var(--brass-dim); color:var(--brass); margin-left:8px;}
+  .carblist{margin:4px 0 8px; padding-left:18px;}
+  .carblist li{margin-bottom:3px;}
 </style>
 </head>
 <body>
@@ -90,11 +95,12 @@
 /* Uses the browser's own localStorage — this file runs standalone in Safari,
    outside Claude's environment. Same pattern as the other companion apps. */
 
-const APP_VERSION = 'v2026-10-03';
+const APP_VERSION = 'v2026-10-11';
 const HEIGHT_IN = 70; // 5'10", from the protocol doc
 const FLUID_TARGET = [120,150];
-const WEIGHT_TARGET = [167,170];
+const WEIGHT_TARGET = [170,175];
 const WAIST_HEIGHT_TARGET = 0.50;
+const RATE_TARGET = [1,1.5]; // lb lost per week
 
 const BLOCKS = [
   {key:'fasted', name:'Fasted', time:'On waking'},
@@ -129,6 +135,18 @@ const WEEKLY_ROTATION = [
   { cards:['5','9-10'], note:'Lower B + ATG — completes ATG\'s 3x/week target on schedule.' },                                        // Fri
   { cards:['6'],      note:'Zone 2 / Golf — optional pull-up skill touch here, only if fresh.' },                                     // Sat
 ];
+// Carb portions for the cut, keyed by the day's rotation. No rice or potato.
+const TRAINING_DAY_CARDS = ['1','2','3','4','5'];
+const CARB_GUIDE = {
+  train:{ label:'Training Day', cal:'~2,100 cal',
+    meal1:'1 cup cooked quinoa or farro + 1 cup berries',
+    meal2:'½ cup beans or lentils, plus vegetables' },
+  rest:{ label:'Rest / Zone 2 Day', cal:'~1,800 cal',
+    meal1:'½ cup cooked quinoa or farro + 1 cup berries',
+    meal2:'Vegetables only, no starch' },
+};
+function dayType(rot){ return rot.cards.some(k=>TRAINING_DAY_CARDS.includes(k)) ? 'train' : 'rest'; }
+
 function todayStr(){ const d=new Date(), p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); } // local date, not UTC
 function todaysRotation(dateStr){
   // dateStr expected as YYYY-MM-DD (local); falls back to real today if unparseable.
@@ -147,15 +165,19 @@ function rotationCardLabel(key){
 }
 
 /* ================= State & storage ================= */
-let dailyLogs = [], checkpoints = [], srtTests = [];
-const DAILY_KEY='nutrition_daily_v1', CHECK_KEY='nutrition_checkpoints_v1', THEME_KEY='nutrition_theme_v1', SEEDED_KEY='nutrition_seeded_v1', SRT_KEY='nutrition_srt_v1';
+let dailyLogs = [], checkpoints = [], srtTests = [], waists = [];
+const DAILY_KEY='nutrition_daily_v1', CHECK_KEY='nutrition_checkpoints_v1', THEME_KEY='nutrition_theme_v1', SEEDED_KEY='nutrition_seeded_v1', SRT_KEY='nutrition_srt_v1', WAIST_KEY='nutrition_waist_v1';
 const SRT_INTERVAL_DAYS = 30;
+const WAIST_INTERVAL_DAYS = 14;
 
 async function loadState(){
   try{ const d = localStorage.getItem(DAILY_KEY); dailyLogs = d? JSON.parse(d):[]; }catch(e){ dailyLogs=[]; }
   try{ const c = localStorage.getItem(CHECK_KEY); checkpoints = c? JSON.parse(c):[]; }catch(e){ checkpoints=[]; }
   try{ const s = localStorage.getItem(SRT_KEY); srtTests = s? JSON.parse(s):[]; }catch(e){ srtTests=[]; }
-  if(!localStorage.getItem(SEEDED_KEY)){
+  try{ const w = localStorage.getItem(WAIST_KEY); waists = w? JSON.parse(w):[]; }catch(e){ waists=[]; }
+  let seeded = false;
+  try{ seeded = !!localStorage.getItem(SEEDED_KEY); }catch(e){}
+  if(!seeded){
     // Seed the protocol doc's own baseline numbers so the trend has a starting point.
     dailyLogs.push({id:'seed-d1', date:'2026-08-21', weight:183, blocks:null, fluidOz:null, isBaseline:true});
     checkpoints.push({id:'seed-c1', date:'2026-07-14', totalWeight:186.5, leanMass:128.7, fatMass:51.2, bodyFatPct:27.5, waistIn:35.5, isBaseline:true});
@@ -166,6 +188,7 @@ async function loadState(){
 async function saveDaily(){ try{ localStorage.setItem(DAILY_KEY, JSON.stringify(dailyLogs)); }catch(e){} }
 async function saveCheck(){ try{ localStorage.setItem(CHECK_KEY, JSON.stringify(checkpoints)); }catch(e){} }
 async function saveSrt(){ try{ localStorage.setItem(SRT_KEY, JSON.stringify(srtTests)); }catch(e){} }
+async function saveWaist(){ try{ localStorage.setItem(WAIST_KEY, JSON.stringify(waists)); }catch(e){} }
 async function loadTheme(){
   try{
     const t = localStorage.getItem(THEME_KEY);
@@ -240,6 +263,38 @@ function latestWeight(){
   const list = sortedDaily();
   return list.length ? list[list.length-1] : null;
 }
+// 7-day average ending at the latest weigh-in, compared with the 7 days before it.
+function weightTrend(){
+  const list = sortedDaily().filter(d=>dayNum(d.date)!=null && !isNaN(d.weight));
+  if(!list.length) return null;
+  const latest = list[list.length-1];
+  const end = dayNum(latest.date);
+  const inWin = (a,b)=> list.filter(d=>{ const n=dayNum(d.date); return n>=a && n<=b; }).map(d=>d.weight);
+  const avg = arr=> arr.length ? arr.reduce((s,v)=>s+v,0)/arr.length : null;
+  const cur = inWin(end-6, end), prev = inWin(end-13, end-7);
+  const avg7 = avg(cur), prevAvg = avg(prev);
+  const change = (avg7!=null && prevAvg!=null) ? avg7 - prevAvg : null;
+  return {latest, avg7, n7:cur.length, prevAvg, nPrev:prev.length, change, reliable: cur.length>=3 && prev.length>=3};
+}
+// Adjustment rule from the cut protocol (lb lost per week).
+function rateAdvice(lossPerWeek){
+  if(lossPerWeek < 0.5) return 'Under 0.5 lb/week: cut 150–200 calories (carbs first) or add a daily walk.';
+  if(lossPerWeek > 2) return 'Over 2 lb/week: add 150–200 calories back.';
+  return 'On pace. Change nothing.';
+}
+function allWaists(){
+  return [
+    ...waists.map(w=>({date:w.date, waistIn:w.waistIn, src:'quick'})),
+    ...checkpoints.map(c=>({date:c.date, waistIn:c.waistIn, src:'dexa'}))
+  ].filter(w=>w.waistIn!=null && !isNaN(w.waistIn) && dayNum(w.date)!=null).sort((a,b)=>a.date.localeCompare(b.date));
+}
+function waistSummary(){
+  const list = allWaists();
+  if(!list.length) return null;
+  const latest = list[list.length-1], prev = list.length>1 ? list[list.length-2] : null;
+  const since = dayNum(todayStr()) - dayNum(latest.date);
+  return {latest, prev, since, due: since>=WAIST_INTERVAL_DAYS, nextDue: addDays(latest.date, WAIST_INTERVAL_DAYS), count:list.length};
+}
 
 /* ================= Render ================= */
 const app = document.getElementById('app');
@@ -252,14 +307,29 @@ function render(){
   if(view==='detail') return renderDetail();
   if(view==='help') return renderHelp();
   if(view==='new-srt') return renderNewSrt();
+  if(view==='new-waist') return renderNewWaist();
+}
+
+function fuelBoard(rot){
+  const g = CARB_GUIDE[dayType(rot)];
+  return `<div class="board">
+    <h4>Today's Fuel — ${g.label}</h4>
+    <div class="fuel-row"><span class="fl">Calories</span>${g.cal}</div>
+    <div class="fuel-row"><span class="fl">Meal 1 carbs</span>${g.meal1}</div>
+    <div class="fuel-row"><span class="fl">Meal 2 carbs</span>${g.meal2}</div>
+    <div class="fuel-row"><span class="fl">Protein</span>165–175 g, every day</div>
+    <div class="note" style="margin-top:6px;">Deload week: training-day portions every day.</div>
+  </div>`;
 }
 
 function renderHome(){
   let html = `<div class="brand"><div><h1>Nutrition & Workout</h1><div class="sub">${APP_VERSION}</div></div>${themeToggleBtn()}</div>`;
   html += `<button class="btn" onclick="goto('new-daily')">Log Today</button>`;
+  const ws0 = waistSummary();
+  html += `<button class="btn secondary" onclick="openWaist()">${ws0 && ws0.due ? 'Log Waist — due' : 'Log Waist'}</button>`;
   html += `<button class="btn secondary" onclick="goto('new-check')">Log DEXA / Body-Comp Checkpoint</button>`;
   const srt0 = srtSummary();
-  html += `<button class="btn secondary" onclick="openSrt()">${srt0.count===0?'Take Sitting-Rising Test (baseline)':(srt0.due?'Sitting-Rising Test \u2014 due':'Log Sitting-Rising Test')}</button>`;
+  html += `<button class="btn secondary" onclick="openSrt()">${srt0.count===0?'Take Sitting-Rising Test (baseline)':(srt0.due?'Sitting-Rising Test — due':'Log Sitting-Rising Test')}</button>`;
   html += `<button class="btn secondary" onclick="goto('help')">How to Use</button>`;
 
   // Today's rotation
@@ -270,11 +340,40 @@ function renderHome(){
     <div class="cat-row"><span class="cname">Suggested</span><span class="cval num zero" style="font-size:16px;">${rotNames}</span><span class="ctarget"></span></div>
     <div class="note" style="margin-top:2px;">${rot.note} Card 0 runs today regardless, as always.</div>
   </div>`;
+  html += fuelBoard(rot);
+
+  // Weight trend
+  const wt = weightTrend();
+  if(wt){
+    const lossPerWeek = wt.change!=null ? -wt.change : null;
+    html += `<div class="board">
+      <h4>Weight${wt.latest.isBaseline?' <span class="tag">Baseline Only</span>':''}</h4>
+      <div class="cat-row"><span class="cname">Latest</span><span class="cval num zero">${wt.latest.weight} lb</span><span class="ctarget">${wt.latest.date}</span></div>
+      <div class="cat-row"><span class="cname">7-Day Average</span><span class="cval num zero">${wt.avg7.toFixed(1)} lb</span><span class="ctarget">target ${WEIGHT_TARGET[0]}–${WEIGHT_TARGET[1]}</span></div>
+      <div class="cat-row"><span class="cname">Weekly Change</span><span class="cval num zero">${wt.change==null?'—':(wt.change>0?'+':(wt.change<0?'−':''))+Math.abs(wt.change).toFixed(1)+' lb'}</span><span class="ctarget">aim −${RATE_TARGET[0]} to −${RATE_TARGET[1]}</span></div>
+      ${wt.reliable ? `<div class="duebox">${rateAdvice(lossPerWeek)} <span style="color:var(--ivory-dim);">Act on this every 2 weeks; skip week 1.</span></div>`
+        : `<div class="note" style="margin-top:6px;">Weekly change appears once you have 3+ weigh-ins in each of the last two weeks.</div>`}
+    </div>`;
+  }
+
+  // Waist
+  const ws = waistSummary();
+  if(ws){
+    const r = waistToHeight(ws.latest.waistIn);
+    const chg = ws.prev ? ws.latest.waistIn - ws.prev.waistIn : null;
+    html += `<div class="board">
+      <h4>Waist</h4>
+      <div class="cat-row"><span class="cname">Latest</span><span class="cval num zero">${ws.latest.waistIn.toFixed(1)} in</span><span class="ctarget">${ws.latest.date}${ws.latest.src==='dexa'?' · DEXA':''}</span></div>
+      ${chg!=null?`<div class="cat-row"><span class="cname">vs Previous</span><span class="cval num zero">${chg>0?'+':(chg<0?'−':'')}${Math.abs(chg).toFixed(1)} in</span><span class="ctarget">${ws.prev.date}</span></div>`:''}
+      <div class="cat-row"><span class="cname">Waist:Height</span><span class="cval num ${r<WAIST_HEIGHT_TARGET?'pos':'neg'}">${r.toFixed(3)}</span><span class="ctarget">&lt; ${WAIST_HEIGHT_TARGET.toFixed(2)} (under 35 in)</span></div>
+      <div class="duebox">${ws.due?`<b style="color:var(--brass);">Due now</b> — last measured ${ws.since} days ago.`:`Next measurement due ${ws.nextDue}.`}</div>
+    </div>`;
+  }
 
   // Body comp trend
   const ct = checkpointTrend();
   if(ct){
-    html += `<div class="board" style="margin-top:22px;">
+    html += `<div class="board">
       <h4>Body Composition${ct.hasMultiple?'':' <span class="tag">Baseline Only</span>'}</h4>
       <div class="cat-row"><span class="cname">Lean Mass</span><span class="cval num ${ct.hasMultiple?(ct.leanDelta>0?'pos':(ct.leanDelta<0?'neg':'zero')):'zero'}">${ct.latest.leanMass.toFixed(1)} lb</span><span class="ctarget">${ct.hasMultiple?(ct.leanDelta>=0?'+':'')+ct.leanDelta.toFixed(1)+' vs baseline':'baseline: '+ct.baseline.leanMass.toFixed(1)}</span></div>
       <div class="cat-row"><span class="cname">Fat Mass</span><span class="cval num zero">${ct.latest.fatMass.toFixed(1)} lb</span><span class="ctarget">baseline ${ct.baseline.fatMass.toFixed(1)}</span></div>
@@ -295,16 +394,7 @@ function renderHome(){
       <div class="cat-row"><span class="cname">Latest</span><span class="cval num ${chg==null?'zero':(chg>0?'pos':(chg<0?'neg':'zero'))}">${fmtScore(sr.latest.score)}/10</span><span class="ctarget">${sr.latest.date}</span></div>
       ${sr.prev?`<div class="cat-row"><span class="cname">vs Last Test</span><span class="cval num zero">${chg>=0?'+':''}${fmtScore(chg)}</span><span class="ctarget">${sr.prev.date}</span></div>`:''}
       ${sr.count>2?`<div class="cat-row"><span class="cname">vs First Test</span><span class="cval num zero">${tot>=0?'+':''}${fmtScore(tot)}</span><span class="ctarget">${sr.first.date}</span></div>`:''}
-      <div class="duebox">${sr.due?`<b style="color:var(--brass);">Due now</b> \u2014 last test was ${sr.since} days ago.`:`Next test due ${sr.nextDue}.`}</div>
-    </div>`;
-  }
-
-  // Weight trend
-  const lw = latestWeight();
-  if(lw){
-    html += `<div class="board">
-      <h4>Weight${lw.isBaseline?' <span class="tag">Baseline Only</span>':''}</h4>
-      <div class="cat-row"><span class="cname">Latest</span><span class="cval num zero">${lw.weight} lb</span><span class="ctarget">target ${WEIGHT_TARGET[0]}–${WEIGHT_TARGET[1]} lb</span></div>
+      <div class="duebox">${sr.due?`<b style="color:var(--brass);">Due now</b> — last test was ${sr.since} days ago.`:`Next test due ${sr.nextDue}.`}</div>
     </div>`;
   }
 
@@ -331,7 +421,8 @@ function renderHome(){
   const allEntries = [
     ...dailyLogs.map(d=>({...d, _type:'daily'})),
     ...checkpoints.map(c=>({...c, _type:'check'})),
-    ...srtTests.map(s=>({...s, _type:'srt'}))
+    ...srtTests.map(s=>({...s, _type:'srt'})),
+    ...waists.map(w=>({...w, _type:'waist'}))
   ].sort((a,b)=>b.date.localeCompare(a.date));
   if(allEntries.length===0){ html += `<div class="empty">Nothing logged yet.</div>`; }
   else{
@@ -340,6 +431,8 @@ function renderHome(){
         html += `<div class="home-round" onclick="viewDetail('${e.id}','daily')"><div><div>Daily${e.isBaseline?' · baseline':''}</div><div class="meta">${e.date}</div></div><div class="rval num">${e.weight} lb</div></div>`;
       } else if(e._type==='srt'){
         html += `<div class="home-round" onclick="viewDetail('${e.id}','srt')"><div><div>Sitting-Rising Test</div><div class="meta">${e.date}</div></div><div class="rval num">${fmtScore(e.score)}/10</div></div>`;
+      } else if(e._type==='waist'){
+        html += `<div class="home-round" onclick="viewDetail('${e.id}','waist')"><div><div>Waist</div><div class="meta">${e.date}</div></div><div class="rval num">${e.waistIn.toFixed(1)} in</div></div>`;
       } else {
         html += `<div class="home-round" onclick="viewDetail('${e.id}','check')"><div><div>DEXA / Body-Comp${e.isBaseline?' · baseline':''}</div><div class="meta">${e.date}</div></div><div class="rval num">${e.leanMass.toFixed(1)} lb lean</div></div>`;
       }
@@ -391,6 +484,40 @@ async function saveDailyEntry(){
   dailyLogs.push({id:'d'+Date.now(), date, weight, blocks:{...editBlocks}, fluidOz, cards:[...editDaily.cards], deload:editDaily.deload, isBaseline:false});
   editBlocks=null; editDaily=null;
   await saveDaily();
+  goto('home');
+}
+
+/* ================= Quick waist ================= */
+let editWaist=null;
+function openWaist(){ editWaist={date:todayStr(), waistIn:''}; goto('new-waist'); }
+function renderNewWaist(){
+  const ws = waistSummary();
+  app.innerHTML = `
+    <div class="brand"><h1>Log Waist</h1>${themeToggleBtn()}</div>
+    <div class="board">
+      <h4>How to Measure</h4>
+      <div style="font-size:15px; line-height:1.55;">At the navel, standing relaxed after a normal breath out. Tape snug, not pressing in. Same time of day each time, ideally first thing in the morning.</div>
+      <div class="note">Every 2 weeks. Target: under 35 in (waist:height under 0.50).</div>
+    </div>
+    <div class="field"><label>Date</label><input type="text" value="${editWaist.date}" oninput="editWaist.date=this.value"></div>
+    <div class="field"><label>Waist (inches)</label><input type="number" inputmode="decimal" id="waistInput" value="${editWaist.waistIn}" placeholder="${ws?'last: '+ws.latest.waistIn.toFixed(1):'e.g. 35.0'}" oninput="editWaist.waistIn=this.value"></div>
+    <button class="btn" onclick="saveWaistEntry()">Save</button>
+    <button class="btn secondary" onclick="editWaist=null; goto('home')">Cancel</button>
+  `;
+}
+async function saveWaistEntry(){
+  const waistIn = parseFloat(editWaist.waistIn);
+  if(isNaN(waistIn)){ const el=document.getElementById('waistInput'); if(el) el.style.borderColor='var(--neg)'; return; }
+  const date = (editWaist.date||'').trim() || todayStr();
+  waists.push({id:'w'+Date.now(), date, waistIn});
+  editWaist=null;
+  await saveWaist();
+  goto('home');
+}
+async function deleteWaist(id){
+  if(!confirm('Delete this waist measurement?')) return;
+  waists = waists.filter(x=>x.id!==id);
+  await saveWaist();
   goto('home');
 }
 
@@ -484,6 +611,15 @@ function renderDetail(){
     </div>`;
     if(s.note) html += `<div class="note">${s.note.replace(/</g,'&lt;')}</div>`;
     html += `<button class="btn ghost" onclick="deleteSrt('${s.id}')" style="margin-top:6px;">Delete This Test</button>`;
+  } else if(detailType==='waist'){
+    const w = waists.find(x=>x.id===detailId);
+    const r = waistToHeight(w.waistIn);
+    html += `<div class="note" style="margin-top:-10px;">${w.date} · Waist</div>`;
+    html += `<div class="board">
+      <div class="cat-row"><span class="cname">Waist</span><span class="cval num zero">${w.waistIn.toFixed(1)} in</span><span class="ctarget"></span></div>
+      <div class="cat-row"><span class="cname">Waist:Height</span><span class="cval num ${r<WAIST_HEIGHT_TARGET?'pos':'neg'}">${r.toFixed(3)}</span><span class="ctarget">&lt; ${WAIST_HEIGHT_TARGET.toFixed(2)}</span></div>
+    </div>`;
+    html += `<button class="btn ghost" onclick="deleteWaist('${w.id}')" style="margin-top:6px;">Delete This Measurement</button>`;
   } else {
     const c = checkpoints.find(x=>x.id===detailId);
     html += `<div class="note" style="margin-top:-10px;">${c.date}${c.isBaseline?' · baseline (from protocol doc)':''}</div>`;
@@ -511,7 +647,7 @@ function renderHelp(){
   let html = `<div class="brand"><h1>How to Use</h1>${themeToggleBtn()}</div>`;
   html += step('1','Daily entry','Log Today → weight, tap each block Yes/No as you actually hit it, tap whichever gym card(s) you did (plus Deload Week if it applies), optional fluid ounces. Takes a few seconds.');
   html += step('2','DEXA / body-comp checkpoints','Whenever you get a new scan, log DEXA / Body-Comp with the numbers straight off the report. Waist:height computes itself from a waist measurement — height is fixed at 5\'10" per the protocol.');
-  html += step('3','What the colors mean','Lean Mass and Waist:Height are colored against the protocol\'s own stated goals — lean mass trending up, waist:height under 0.50. Everything else (weight, fat mass, body fat %, fluid, block count) is shown for reference only, no judgment attached — this app tracks the numbers, it does not interpret them.');
+  html += step('3','What the colors mean','Lean Mass and Waist:Height are colored against the protocol\'s own stated goals — lean mass trending up, waist:height under 0.50. Everything else (weight, fat mass, body fat %, fluid, block count) is shown for reference only, no judgment attached.');
   html += step('4','Baseline entries','The 7/14/26 DEXA scan and the most recent logged weight from the protocol doc are pre-loaded as a starting point, tagged "baseline" so they are never mistaken for something you logged yourself.');
 
   const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
@@ -529,6 +665,17 @@ function renderHelp(){
   `;
   html += step('5','Weekly Rotation', step5Body);
   html += step('6','Sitting-rising test','Once a month, tap the Sitting-Rising Test button. Cross your feet, sit to the floor and stand back up with as little support as you can, then tap your score for each half. The home screen shows your latest score, the change since your last test and since your first, and says when the next test is due. It goes green when the score improves and red when it slips. A dip of a point or more that holds on a second try is worth paying attention to. This measures your ability to get down to the floor and back up, which the Technical Stand-Up on Card 3 trains.');
+  html += step('7','Weight trend & waist','Judge the 7-day average, not single weigh-ins. Weekly Change compares this week\'s average with last week\'s; the cut aims for 1–1.5 lb lost per week. Once there are 3+ weigh-ins in each week, the box underneath shows the protocol\'s adjustment for that pace. Act on it every 2 weeks and ignore week 1, which is mostly water. Log Waist every 2 weeks at the navel; DEXA waist readings count too.');
+  const step8Body = `
+    <div style="margin-bottom:8px;">Today's Fuel on the home screen sets the carb portions from the day's card: Mon–Fri are training days, Sat and Sun are lighter. During a deload week, use training-day portions every day.</div>
+    <b style="color:var(--ivory);">Best picks</b>
+    <ul class="carblist"><li>Quinoa, farro, steel-cut or rolled oats</li><li>Berries and other whole fruit</li><li>Beans, lentils, chickpeas</li><li>Vegetables of every kind, no limit</li></ul>
+    <b style="color:var(--ivory);">Limit</b>
+    <ul class="carblist"><li>Rice, potatoes, bread, pasta, crackers, tortillas</li></ul>
+    <b style="color:var(--ivory);">Out</b>
+    <ul class="carblist"><li>Sugared drinks, juice, syrup, sweets. Allulose covers coffee.</li></ul>
+  `;
+  html += step('8','Carbs for the cut', step8Body);
   html += `<button class="btn secondary" onclick="goto('home')" style="margin-top:10px;">Back to Home</button>`;
   app.innerHTML = html;
 }
