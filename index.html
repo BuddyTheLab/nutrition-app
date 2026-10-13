@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Scorecard">
-<title>The Daily Scorecard — Dwight Clarke — v2026-10-12b</title>
+<title>The Daily Scorecard — Dwight Clarke — v2026-10-13</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -101,7 +101,7 @@
 /* Uses the browser's own localStorage — this file runs standalone in Safari,
    outside Claude's environment. Same pattern as the other companion apps. */
 
-const APP_VERSION = 'v2026-10-12b';
+const APP_VERSION = 'v2026-10-13';
 const HEIGHT_IN = 70; // 5'10", from the protocol doc
 const FLUID_TARGET = [120,150];
 const WEIGHT_TARGET = [170,175];
@@ -132,6 +132,7 @@ const TRAINING_CARDS = [
   {key:'6', label:'6', name:'Zone 2'},
   {key:'7', label:'7', name:'Full Rest'},
   {key:'9-10', label:'9&10', name:'ATG Knee'},
+  {key:'golf', label:'⛳', name:'Golf'},
 ];
 // Weekly Rotation — mirrors the master reference card in Training Cards — Gym.
 // Indexed by JS Date.getDay(): 0=Sun, 1=Mon, ... 6=Sat.
@@ -252,12 +253,13 @@ function d3Adherence(){
 function trainingSummary(){
   const real = sortedDaily().filter(d=>!d.isBaseline);
   const last7 = real.slice(-7);
-  const trained = d=> d.cards && d.cards.some(k=>k!=='0');
+  const trained = d=> d.cards && d.cards.some(k=>k!=='0' && k!=='golf');
   const trainedDays = last7.filter(trained).length;
   const card0 = last7.filter(d=>(d.cards||[]).includes('0')).length;
+  const golf = last7.filter(d=>(d.cards||[]).includes('golf')).length;
   const last = real.slice().reverse().find(trained);
-  const lastCardNames = last ? last.cards.filter(k=>k!=='0').map(k=>{ const c=TRAINING_CARDS.find(x=>x.key===k); return c?c.label:k; }).join(', ') : null;
-  return {trainedDays, card0, days:last7.length, lastDate: last? last.date: null, lastCardNames};
+  const lastCardNames = last ? last.cards.filter(k=>k!=='0' && k!=='golf').map(k=>{ const c=TRAINING_CARDS.find(x=>x.key===k); return c?c.label:k; }).join(', ') : null;
+  return {trainedDays, card0, golf, days:last7.length, lastDate: last? last.date: null, lastCardNames};
 }
 function sortedSrt(){ return srtTests.slice().sort((a,b)=>a.date.localeCompare(b.date)); }
 function dayNum(dateStr){ const m=String(dateStr||'').match(/^(\d{4})-(\d{2})-(\d{2})$/); return m? Math.round(new Date(+m[1],+m[2]-1,+m[3]).getTime()/86400000) : null; }
@@ -340,6 +342,7 @@ function weeklyReview(endDate){
   const liftDays = wk.filter(d=>(d.cards||[]).some(k=>liftKeys.includes(k))).length;
   const zone2 = wk.filter(d=>(d.cards||[]).includes('6')).length;
   const card0 = wk.filter(d=>(d.cards||[]).includes('0')).length;
+  const golf = wk.filter(d=>(d.cards||[]).includes('golf')).length;
   const ws = waistSummary(), sr = srtSummary();
   const early = dayNum(end) < dayNum(CUT_START) + 13;
   let focus;
@@ -348,7 +351,7 @@ function weeklyReview(endDate){
   else if(change==null) focus = 'Keep logging. Weekly change appears once both weeks have 3+ weigh-ins.';
   else if(early) focus = 'Early in the cut, most of the drop is water. Change nothing yet.';
   else focus = rateAdvice(-change);
-  return {start, end, days:wk.length, avgW, avgP, change, protein, proteinDays:withBlocks.length, hit, possible, liftDays, zone2, card0,
+  return {start, end, days:wk.length, avgW, avgP, change, protein, proteinDays:withBlocks.length, hit, possible, liftDays, zone2, card0, golf,
           waistDue: ws ? ws.due : true, waist: ws, srtDue: sr.count===0 || sr.due, focus};
 }
 
@@ -393,6 +396,7 @@ function reviewBoard(r, onHome){
     <div class="cat-row"><span class="cname">Blocks Hit</span><span class="cval num zero">${pct==null?'—':pct+'%'}</span><span class="ctarget"></span></div>
     <div class="cat-row"><span class="cname">Card 0</span><span class="cval num ${r.days?(r.card0>=Math.min(6,r.days)?'pos':'neg'):'zero'}">${r.card0}/${r.days}</span><span class="ctarget">aim daily</span></div>
     <div class="cat-row"><span class="cname">Lifting Days</span><span class="cval num zero">${r.liftDays}</span><span class="ctarget">${r.zone2?'+ '+r.zone2+' Zone 2':''}</span></div>
+    <div class="cat-row"><span class="cname">Golf</span><span class="cval num zero">${r.golf}</span><span class="ctarget">session${r.golf===1?'':'s'}</span></div>
     <div class="cat-row"><span class="cname">Waist</span><span class="cval num zero" style="font-size:15px;">${r.waistDue?'Due — measure today':r.waist.latest.waistIn.toFixed(1)+' in'}</span><span class="ctarget"></span></div>
     ${r.srtDue?`<div class="cat-row"><span class="cname">Sit-Rise Test</span><span class="cval num zero" style="font-size:15px;">Due</span><span class="ctarget"></span></div>`:''}
     <div class="focus"><b>Next week:</b> ${r.focus}</div>
@@ -577,6 +581,7 @@ function renderHome(){
       <h4>Training — Last ${ts.days} Logged Day${ts.days===1?'':'s'}</h4>
       <div class="cat-row"><span class="cname">Card 0</span><span class="cval num ${ts.card0>=Math.min(6,ts.days)?'pos':'neg'}">${ts.card0}/${ts.days} days</span><span class="ctarget">daily</span></div>
       <div class="cat-row"><span class="cname">Days Trained</span><span class="cval num zero">${ts.trainedDays}/${ts.days}</span><span class="ctarget"></span></div>
+      <div class="cat-row"><span class="cname">Golf</span><span class="cval num zero">${ts.golf} session${ts.golf===1?'':'s'}</span><span class="ctarget"></span></div>
       ${ts.lastDate?`<div class="cat-row"><span class="cname">Last Session</span><span class="cval num zero" style="font-size:15px;">${ts.lastCardNames}</span><span class="ctarget">${ts.lastDate}</span></div>`:''}
     </div>`;
   }
@@ -665,7 +670,7 @@ function renderNewDaily(){
     </div>
     <div class="board">
       <h4>Training — Card(s) Done Today</h4>
-      <div class="hint" style="margin-bottom:10px;">Rotation for ${editDaily.date}: ${todaysRotation(editDaily.date).cards.map(rotationCardLabel).join('  +  ')} — pre-checked below, adjust if your day went differently. Tap 0 once your Daily Foundation is done.</div>
+      <div class="hint" style="margin-bottom:10px;">Rotation for ${editDaily.date}: ${todaysRotation(editDaily.date).cards.map(rotationCardLabel).join('  +  ')} — pre-checked below, adjust if your day went differently. Tap 0 once your Daily Foundation is done, and ⛳ for golf practice or a round.</div>
       <div class="chip-row">${TRAINING_CARDS.map(c=>`<div class="chip ${editDaily.cards.includes(c.key)?'active':''}" onclick="toggleCard('${c.key}')">${c.label}<br><span style="font-size:11px; font-weight:400;">${c.name}</span></div>`).join('')}</div>
       <div class="blockrow" style="margin-top:8px;"><div><span class="bname">Deload Week</span></div><div class="togglechip ${editDaily.deload?'active':''}" onclick="toggleDeload()">${editDaily.deload?'✓ Yes':'No'}</div></div>
     </div>
