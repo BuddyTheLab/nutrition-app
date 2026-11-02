@@ -165,10 +165,12 @@
    system, separate localStorage keys, runs entirely in-browser. */
 
 const CARD0 = [
-  {key:'vest', name:'Cardio: 20 lb Vest Walk or 4×4 Intervals', presc:'Vest walk 20–45 min, 4 of 7 days · swap one walk a week for 4×4 intervals (Saturday best)'},
-  {key:'crossover', name:'Crossover Symmetry', presc:'1 session/day — before your workout (any time on non-lifting days)'},
-  {key:'halo', name:'KB Alternating Halo + Clean', presc:'25 reps/side'},
-  {key:'carry', name:'Single-Arm KB Suitcase Carry, Fwd + Back', presc:'1 lap each direction, switch hands'},
+  {key:'vest', name:'Cardio: 20 lb Vest Walk or 4×4 Intervals', presc:'Walk 20–45 min every day · vest on Mon, Wed, Thu, Sat, Sun · one 4×4 a week, no vest (Saturday best)'},
+  {key:'crossover', name:'Crossover Symmetry', presc:'1 session a day, first, before any lifting'},
+  {key:'halo', name:'KB Alternating Halo + Clean', presc:'Mon · Thu front-to-back, 30–40 lb · Wed · Sat outside clean, 20–30 lb or my club · Tue · Fri halos only · Sun off'},
+  {key:'carry', name:'Kettlebell Track Loops', presc:'Mon · Thu two bells after the card · Wed · Sat one bell, light lunges · Tue · Fri one light bell, no lunges'},
+  {key:'balance', name:'Balance: Band Walk · Clock Steps · Lean and Step', presc:'10 steps each way · 1 round per leg · 3 each way'},
+  {key:'mcgill', name:'McGill Big Three, base', presc:'1 round, 3 each, 10-sec holds'},
 ];
 
 const CARDIO = {
@@ -180,108 +182,89 @@ const INTERVAL_TARGET = 1;
 const INTERVAL_NOTE = '4×4 intervals: 5–10 min easy warm-up, then 4 rounds of 4 min hard (only a few words possible) with 3 min easy between, then 5 min easy. About 35 min. Not the day before Card 2 or Card 5.';
 
 const CARDS = {
-  '1': {name:'Upper Body A', num:'1', focus:'Chest / Triceps / Delts / Upper Back', meta:'~50 min · Upper push, lateral delts & rows',
-    deloadable:true,
-    golden:'3-1-1-0 tempo (3-sec down) on presses. Hit top reps on all sets → add 2.5–5 lb next time. Pull-up bottom block is maintenance volume — don\u2019t let it creep up; Card 4\u2019s top block is where your reps are actually being won. Effort: leave 2–3 reps in reserve on presses, 1–3 on rows, and 1–2 on skull crushers, lateral raises and flyes — never grind a rep.',
+  '1': {name:"Upper Body A", num:"1", focus:"Chest \u00b7 Triceps \u00b7 Delts \u00b7 Upper Back \u00b7 pull-up bottom block first", meta:"35\u201345 min \u00b7 Monday", deloadable:true, golden:"Base is 2 sets; the 3rd is earned. 3-1-1-0 tempo on presses. Top reps on all sets: add 2.5\u20135 lb next time. Reps in reserve: 2\u20133 presses, 1\u20133 rows, 1\u20132 skull crushers, raises and flyes. The whole session fills an hour, no more.",
     exercises:[
-      {name:'Scap Pull-Ups', presc:'2 × 10 · rest 45s', cue:'Hang at full extension, depress and retract the shoulder blades only — no elbow bend. Warm-up primer.'},
-      {name:'Arching Active Hang', presc:'2 × 3 (hold 3–5s) · rest 60s', cue:'From a dead hang, pull the chest slightly forward/up, extend through the upper back. Trains the lat under length.'},
-      {name:'Bottom-Quarter Pull-Up', presc:'1 × 3 · rest 90s', cue:'Pull from dead hang to just past bottom quarter, lower under control. Kept light on purpose — upkeep, not priority.'},
-      {name:'Incline Dumbbell / Barbell Press', presc:'3 × 8–12 · rest 2–3 min', cue:'Tuck shoulder blades into back pockets; 1-sec stretch pause at bottom.'},
-      {name:'Inverted Bodyweight Rows', presc:'3 × 10–12 · rest 90s', cue:'Same cabled-bar station as the pull-up drills. Pull chest to bar; hold 1-sec squeeze at top. Balances today\u2019s pressing and supports your pull-up middle range.'},
-      {name:'Inverted Bodyweight Skull Crushers', presc:'3 × 10–12 · rest 90s', cue:'Strict elbow bend; keep body rigid as a plank.'},
-      {name:'Deficit Push-Ups (Myo-Reps)', presc:'1×12–15 to 1RIR → rest 15s → 3–4 mini-sets × 3–5', cue:'Deep stretch below hands; stop mini-sets when rep speed drops.'},
-      {name:'Dumbbell Lateral Raises', presc:'3 × 12–15 · rest 60s', cue:'Lean 15° forward, lead with elbows to isolate side delts.'},
-      {name:'Single-Arm Cable Flye', presc:'2 × 12–15/arm · rest 60s', variants:[{key:'straight', label:'Straight', setup:'Pulley at shoulder height \u2014 sweep straight across, parallel to the floor (mid-chest).'},{key:'lowhigh', label:'Low-to-high', setup:'Pulley at hip height \u2014 sweep up and across to shoulder height (upper chest).'}], cue:'D-handle, stand side-on in a split stance, soft elbow bend locked throughout. Alternate versions each session. Bring the hand past the middle of your body, squeeze 1–2s, take 2–3s back to a comfortable chest stretch; don\u2019t let the shoulder roll forward. Light load, finisher only.'},
+      {"name":"Scap Pull-Ups","presc":"2 \u00d7 10 \u00b7 rest 45 sec","cue":"Dead hang at full extension. Shoulder blades down and back. My elbows stay straight. Back to the hang and repeat. Only my shoulder blades move."},
+      {"name":"Arching Active Hang","presc":"2 \u00d7 3, hold 3\u20135 sec \u00b7 rest 60 sec","cue":"Start from a dead hang. Chest slightly forward and up, extending through my upper back. Hold 3\u20135 sec, then back to the hang. Arms stay long the whole time."},
+      {"name":"Bottom-Quarter Pull-Up","presc":"1 \u00d7 3 \u00b7 rest 90 sec","cue":"Dead hang. Pull to just past the bottom quarter of the range. Lower under control. Light on purpose. This block stays at maintenance volume; the top block on Card 4 is where I win reps."},
+      {"name":"Incline Dumbbell / Barbell Press","presc":"2\u20133 \u00d7 8\u201312 \u00b7 rest 2\u20133 min","cue":"Shoulder blades tucked into my back pockets. Lower in 3 sec (3-1-1-0 tempo), with a 1-sec stretch pause at the bottom. Drive up through my palms. Top reps on all sets: add 2.5\u20135 lb next time. I leave 2\u20133 reps in reserve."},
+      {"name":"Inverted Bodyweight Rows","presc":"2\u20133 \u00d7 10\u201312 \u00b7 rest 90 sec","cue":"Under the bar, body rigid as a plank. Pull my chest to the bar, with a 1-sec squeeze at the top. Lower under control. I leave 1\u20133 reps in reserve. This balances my pressing and builds my pull-up middle range."},
+      {"name":"Inverted Bodyweight Skull Crushers","presc":"2\u20133 \u00d7 10\u201312 \u00b7 rest 90 sec","cue":"Hands on the bar, body rigid as a plank. Strict elbow bend, lowering my head toward the bar. Press back out by straightening my elbows. I leave 1\u20132 reps in reserve."},
+      {"name":"Deficit Push-Ups (Myo-Reps)","presc":"myo-reps: 12\u201315, then 2\u20134 \u00d7 3\u20135","cue":"Activation set of 12\u201315, to 1 rep in reserve. Rest 15 sec. 2\u20134 mini-sets of 3\u20135, with my chest sinking below my hands each rep. I stop the mini-sets when rep speed drops."},
+      {"name":"Dumbbell Lateral Raises","presc":"2\u20133 \u00d7 12\u201315 \u00b7 rest 60 sec","cue":"Lean 15\u00b0 forward. Lead with my elbows as the bells rise out to the side. Lower under control. My side delts do the work. I leave 1\u20132 reps in reserve."},
+      {"name":"Single-Arm Cable Flye","presc":"2 \u00d7 12\u201315 / arm \u00b7 rest 60 sec","cue":"Soft elbow bend, locked the whole time. Alternate sessions: pulley at shoulder height sweeping straight across, or at hip height sweeping up to shoulder height. Hand past my midline, squeeze 1\u20132 sec, 2\u20133 sec back to a comfortable stretch. My shoulder stays back the whole rep.","variants":[{"key":"straight","label":"Straight","setup":"Pulley at shoulder height \u2014 sweep straight across, parallel to the floor (mid-chest)."},{"key":"lowhigh","label":"Low-to-high","setup":"Pulley at hip height \u2014 sweep up and across to shoulder height (upper chest)."}]},
     ]},
-  '2': {name:'Lower Body A', num:'2', focus:'Quads / Glutes / Calves', meta:'~40 min · Quad VMO & lead-leg ground force',
-    deloadable:true,
-    golden:'Spine-sparing posture throughout. Hit top reps on all sets → add 5–10 lb next time. Effort: leave 2–4 reps in reserve on squats, RDLs and the KB press — never grind a rep under a loaded spine — and 1–3 on split squats.',
+  '2': {name:"Lower Body A", num:"2", focus:"Quads \u00b7 Glutes \u00b7 Calves \u00b7 my heavy leg and hinge day", meta:"35\u201345 min \u00b7 Tuesday", deloadable:true, golden:"My heavy leg and hinge day: base 2 sets, 3rd earned. Spine-sparing posture throughout. Kettlebells progress by cycles; dumbbells add 5\u201310 lb after top reps. Reps in reserve: 2\u20134 on squats, RDLs and the press.",
     exercises:[
-      {name:'Single-Arm KB Clean & Press', presc:'3 × 6–8/side · rest 90s', cue:'Hip-drive clean to rack, press straight overhead — no rib flare or lean-back. Brace hard; resist the sideways pull.'},
-      {name:'Kettlebell Swings', presc:'3 × 10 · rest 90s', cue:'Hip-snap power, not a squat — hinge and \u2018pop\u2019 with glutes. Feet just outside shoulder-width, toes forward to slightly out.'},
-      {name:'Heel-Elevated Goblet / Safety Bar Squat', presc:'3 × 8–10 · rest 2–3 min', cue:'Full VMO knees-over-toes travel, stay vertical in torso. Feet hip-width, toes forward.'},
-      {name:'Romanian Deadlifts', presc:'3 × 8–10 · rest 2 min', cue:'Push hips back to mid-shin; lock out with glutes, never arch the low back. Feet hip-width, toes forward to very slightly out.'},
-      {name:'Dumbbell Split Squats', presc:'2 × 10–12/leg · rest 90s', cue:'Constant tension; deep hip/ankle stretch at bottom for lead-leg golf posting. Front foot toes forward, split on one rail.'},
-      {name:'Standing Calf Raises (Myo-Reps)', presc:'1 × 15 → 4 mini-sets × 4', cue:'Hold a 2-sec stretch at the bottom of every rep to remove Achilles bounce.'},
+      {"name":"Single-Arm KB Clean & Press","presc":"2\u20133 \u00d7 6\u20138 / side \u00b7 rest 90 sec","cue":"Clean to the rack with hip drive, bell close to my hips and rolling around my arm. Press overhead in a straight line, ribs down, no lean back. Brace hard against the sideways pull. Resisting it is the job. New bell: 3 \u00d7 3\u20135 up to 3 \u00d7 8, then the next bell. Setback: down a bell or two and wave back up."},
+      {"name":"Kettlebell Swings","presc":"2\u20133 \u00d7 10, two-hand / hand-to-hand","cue":"Feet just outside shoulder-width, toes straight ahead. Hinge, hips back, forearms brushing high on my inner thighs. Pop the bell with my glutes, exhale at the top. Sets alternate two-hand and hand-to-hand. New bell: 3 \u00d7 3\u20135 up to 3 \u00d7 8, then the next bell. A hip snap, not a squat."},
+      {"name":"Heel-Elevated Goblet / Safety Bar Squat","presc":"2\u20133 \u00d7 8\u201310 \u00b7 rest 2\u20133 min","cue":"Heels raised, feet hip-width, toes forward. Knees travel forward over my toes. Torso stays vertical all the way down and up. This matches the knee-forward pattern from Cards 9 and 10. I leave 2\u20134 reps in reserve."},
+      {"name":"Romanian Deadlifts","presc":"2\u20133 \u00d7 8\u201310 \u00b7 rest 2 min","cue":"Feet hip-width, toes forward to very slightly out. Hips straight back, bar tight to my shins, down to mid-shin. Lock out with my glutes, back flat the whole way. I leave 2\u20134 reps in reserve with a loaded spine."},
+      {"name":"Dumbbell Split Squats","presc":"2 \u00d7 10\u201312 / leg \u00b7 rest 90 sec","cue":"Front toes forward, feet split front-to-back on one rail, hip-width apart. Constant tension down to a deep hip and ankle stretch. Drive back up. I leave 1\u20133 reps in reserve."},
+      {"name":"Lateral Lunge","presc":"top days only \u00b7 2 \u00d7 6\u20138 / side","cue":"Feet together, a goblet bell or bodyweight. Step straight out to the side and sit back into that hip, the other leg long. Push back to standing. All reps one side, then the other. Earned, like a third set: only on good days. Toes straight ahead, knee over my toes."},
+      {"name":"Standing Calf Raises (Myo-Reps)","presc":"myo-reps: 15, then 3\u20134 \u00d7 4","cue":"Heels drop to a full stretch and hold 2 sec, so the Achilles never bounces. Drive up onto my big toe. Card 2 runs myo-reps; Card 5 runs straight sets. Every rep starts from a still stretch."},
     ]},
-  '3': {name:'Rotational Power & ATG Bulletproofing', num:'3', focus:'Joint resilience, T-spine, core & swing speed', meta:'~40 min · Swap trigger: heavy travel, golf, outdoor days',
-    deloadable:false,
-    golden:'Do the rotational throw FIRST, while fresh — power work always leads, mobility work always follows. Second half is the McGill Big Three (spinal stiffness, not spinal fatigue — holds, not reps to burn out).',
+  '3': {name:"Rotation & Stability", num:"3", focus:"Power while fresh, the get-up, side-to-side strength and my spine \u00b7 my swap card", meta:"35\u201340 min \u00b7 Wednesday", deloadable:false, golden:"Power leads, control follows. The Big Three are holds, never reps to burn out. My swap day when my joints rate below 6.",
     exercises:[
-      {name:'Standing Rotational Med Ball Throw', presc:'3 × 5/side · full recovery', cue:'Athletic stance, ball at hip. Drive from the ground — hips/legs first, torso follows, throw \u2018through the wall.\u2019 Stop the moment throws lose speed.'},
-      {name:'Half-Kneeling Med Ball Chop or Lift', presc:'2 × 6/side · rest 60s', cue:'Slow and controlled — trains anti-rotation control, a different job from the throw above.'},
-      {name:'Turkish Get-Up', presc:'2 × 3/side · by phase, shoe or lightest bell to start', cue:'Handle diagonal and deep in the palm, thumb wrapped, wrist straight, elbow locked, shoulder packed, eyes on the bell. Pick the bell up and set it down with two hands, never one. Work your current phase from the Turkish Get-Up Protocol, starting at Phase 1: roll to the elbow and back. Move up a phase only after 3 smooth reps each side, two sessions in a row.'},
-      {name:'Technical Stand-Up', presc:'2 × 3/side · slow, on a mat', cue:'Sit with one knee up. Post the opposite hand behind you and press through that hand and the planted foot to lift your hips. Sweep the free leg back under you to a kneel, then stand. Reverse it to get back down. Smooth and controlled, never fast \u2014 this is the floor-to-standing pattern the half get-up builds toward.'},
-      {name:'Tibialis Raise', presc:'3 × 20', cue:'Wall lean, pull toes to knees, hold top 1 sec.'},
-      {name:'Patrick Step-Up', presc:'3 × 15/leg', cue:'VMO & lead-knee stability.'},
-      {name:'Elephant Walk', presc:'3 × 30 total', cue:'Hamstring & lower-back relief.'},
-      {name:'T-Spine Open Books', presc:'2 × 10/side', cue:'Essential for golf swing turn.'},
-      {name:'Couch Stretch', presc:'2 × 60s/side', cue:'Hip flexor release.'},
-      {name:'McGill Curl-Up', presc:'5-3-1 pyramid · 10s holds', cue:'Hands under low back, one knee bent. Small lift only — low back never rounds off the floor.'},
-      {name:'McGill Side Plank', presc:'5-3-1 pyramid · 10s holds', cue:'Straight line shoulder to ankle — hips level, not sagging. Elbow stacked under shoulder.'},
-      {name:'McGill Bird-Dog', presc:'5-3-1 pyramid · 10s holds', cue:'Opposite arm/leg extend together, spine stays neutral — no rotation or side-bend.'},
+      {"name":"Standing Rotational Med Ball Throw","presc":"3 \u00d7 5 / side \u00b7 full recovery","cue":"Athletic stance, ball at my hip. Drive from the ground: hips and legs first, torso follows. Throw through the wall. I end the set the moment throws lose speed. Quality power only."},
+      {"name":"Skater Steps","presc":"2 \u00d7 5 / side","cue":"Step sideways onto one leg and stick the landing for a count. Then the other way. No hop at first. Later, a small hop once every landing is quiet and steady. Knee over my foot on every landing. Power work: I stop when the landings get sloppy."},
+      {"name":"Half-Kneeling Med Ball Chop or Lift","presc":"2 \u00d7 6 / side \u00b7 rest 60 sec","cue":"Half-kneeling, ball high on one side to chop, or low to lift. Slow and controlled across my body. My torso stays steady while the ball moves. The throw trains power; this trains control. Different jobs, both matter."},
+      {"name":"Turkish Get-Up","presc":"2 \u00d7 3 / side, my current phase","cue":"Grip: handle diagonal and deep in my palm, thumb wrapped, wrist straight, bell parked on the back of my forearm. Arm: elbow locked, wrist over elbow over shoulder, shoulder packed, eyes on the bell. Two hands, always: on my side, both hands bring the bell to my chest; roll to my back, press with both, then let go with the helper hand. Reverse it to set down. Work my current phase from my Turkish Get-Up Protocol."},
+      {"name":"Technical Stand-Up","presc":"2 \u00d7 3 / side, slow","cue":"Sit with one knee up. Post the opposite hand behind me and press through that hand and the planted foot to lift my hips. Sweep the free leg back under me to a kneel, then stand. Reverse it to get back down. Smooth and controlled, start to finish."},
+      {"name":"T-Spine Open Books","presc":"2 \u00d7 10 / side","cue":"Side-lying, knees bent and stacked, arms out in front, hands together. Open my top arm to the other side, eyes following my hand. Return and repeat. Knees stay together on the floor, so the turn comes from my upper back."},
+      {"name":"McGill Curl-Up","presc":"5-3-1 \u00b7 10-sec holds","cue":"Hands under my low back, one knee bent. Small lift of head and shoulders; hold 10 sec. My low back stays on the floor the whole time. Holds, not reps to burn out. Dr. McGill does these daily."},
+      {"name":"McGill Side Plank","presc":"Copenhagen 2 \u00d7 15\u201320 sec / side","cue":"McGill side plank: elbow under my shoulder, knees bent to start, then legs straight; hips up in one line; hold 10 sec. Next level: top leg lifted for 10\u201315 sec. Copenhagen, short lever: top knee on a bench, bottom leg free; my inner thigh holds me up. Hips level on every hold. I move up a level only when the one before is steady."},
+      {"name":"McGill Bird-Dog","presc":"5-3-1 \u00b7 10-sec holds","cue":"Hands and knees. Opposite arm and leg extend together; hold 10 sec. Spine stays neutral, no rotation or side-bend as my limbs move. Holds, not reps to burn out. This does the superman\u2019s job without its spine load."},
     ]},
-  '4': {name:'Upper Body B', num:'4', focus:'Back / Chest / Rear Delts / Forearms', meta:'~45 min · Back density & clubface grip control',
-    deloadable:true,
-    setup:'Pull-up setup: use the cabled-bar station you row on (the J-hook rack works too). Bar at chin height for the partials and negatives, upper-chest height for the iso hold. Bend your knees to lift your feet off the floor — no box needed.',
-    golden:'Hold a 1-sec squeeze at the top of all pulls. Hit top reps → add 2.5–5 lb next time. Pull-up Top Block gets first priority if short on time — the highest-leverage 10 minutes in this card right now. Effort: leave 1–3 reps in reserve on pulldowns, face pulls and curls, and 2–3 on the incline press, negatives and partials; end every hold well before your form breaks.',
+  '4': {name:"Upper Body B", num:"4", focus:"Back \u00b7 Chest \u00b7 Rear Delts \u00b7 Forearms \u00b7 pull-up top block first", meta:"35\u201345 min \u00b7 Thursday", deloadable:true, setup:"Cabled-bar station (or the J-hook rack): chin height for partials and negatives, upper-chest height for the iso hold.", golden:"Base 2 sets, 3rd earned. 1-sec squeeze on every pull. Top reps: add 2.5\u20135 lb. Short on time, the top block goes first.",
     exercises:[
-      {name:'Top-Quarter Partial Pull-Up (Top Block · priority)', presc:'3 × 3–5 · rest 2 min', pu:true, cue:'From the set bar height, bend your knees to hang at 3/4 up, then pull only the final quarter to chin-over, hold briefly at top before lowering. Lead with the upper sternum, not the chin; elbows slightly forward, legs together, glutes and quads tight.'},
-      {name:'Sticking-Point Negative (Middle Block)', presc:'3 × 5 · rest 2 min', pu:true, cue:'Start from chin-over, stepping up into it from the set bar height. Lower the first quarter extra slow (5–6s), then normal pace the rest — overloads your actual failure point.'},
-      {name:'Sticking-Point Iso Hold', presc:'2–3 × 15–20s · rest 90s', pu:true, cue:'Hold isometrically at your actual stall position (~3/4 up). Light band or a light toe-touch on the floor only if needed.'},
-      {name:'Med Ball Rotational Chest Pass', presc:'2 × 6/side · rest 90s', cue:'Explosive push from the chest, not the arms — the quality that correlates with club speed.'},
-      {name:'Incline Bench Press', presc:'3 × 8–10 · rest 2 min', cue:'Lower under control; drive up through palms.'},
-      {name:'Wide-Grip Cable Pulldown', presc:'3 × 10–12 · rest 90s', cue:'Loadable vertical pull independent of your pull-up ceiling. Elbows down and back, control the negative.'},
-      {name:'Cable Rope Face Pull', presc:'3 × 12–15 · rest 60s', cue:'Pull to face, finish hands wide/thumbs back — external rotation at end range is the job. High elbow throughout.'},
-      {name:'Cross-Body Hammer Curls', presc:'3 × 10–12 · rest 60s', cue:'Palms facing in, curl each dumbbell across toward the opposite chest and stop at mid-chest. Upper arm pinned to your side, torso still. 1-sec squeeze at the top, 2–3 sec lowering. Brachialis & forearm strength for clubface grip control.'},
+      {"name":"Top-Quarter Partial Pull-Up (Top Block \u00b7 priority)","presc":"2\u20133 \u00d7 3\u20135 \u00b7 rest 2 min","cue":"Bend my knees to hang 3/4 up. Pull only the final quarter to chin-over and hold briefly. Upper sternum leads, one rigid line: elbows slightly forward, legs together, glutes and quads tight. Lower under control. First when I\u2019m short on time. 2\u20133 reps in reserve.","pu":true},
+      {"name":"Sticking-Point Negative (Middle Block)","presc":"2\u20133 \u00d7 5 \u00b7 rest 2 min","cue":"Step up into chin-over from the set bar height. Lower the first quarter extra slow, 5\u20136 sec. The rest comes down at a normal pace. This loads my actual sticking point. I leave 2\u20133 reps in reserve.","pu":true},
+      {"name":"Sticking-Point Iso Hold","presc":"2\u20133 \u00d7 15\u201320 sec \u00b7 rest 90 sec","cue":"Bar at upper-chest height. Hold at my stall position, about 3/4 up. A light band or toe touch only until I can hold it unassisted. Every hold ends well before my form breaks.","pu":true},
+      {"name":"Med Ball Rotational Chest Pass","presc":"2 \u00d7 6 / side \u00b7 rest 90 sec","cue":"Side-on to the wall, ball at my chest. Explosive push from the chest, not the arms. Upper-body push power, paired with lower-body power, is what drives club speed."},
+      {"name":"Incline Bench Press","presc":"2\u20133 \u00d7 8\u201310 \u00b7 rest 2 min","cue":"Shoulder blades tucked into my back pockets. Lower in 3 sec (3-1-1-0 tempo), with a 1-sec stretch pause at the bottom. Drive up through my palms. Top reps on all sets: add 2.5\u20135 lb next time. I leave 2\u20133 reps in reserve."},
+      {"name":"Wide-Grip Cable Pulldown","presc":"2\u20133 \u00d7 10\u201312 \u00b7 rest 90 sec","cue":"Wide grip, arms long. Drive my elbows down and back. Control the negative. 1-sec squeeze at the end of every pull. I leave 1\u20133 reps in reserve."},
+      {"name":"Cable Rope Face Pull","presc":"2\u20133 \u00d7 12\u201315 \u00b7 rest 60 sec","cue":"Two rope handles, high elbows throughout. Pull to my face. Finish hands wide, thumbs back. 1-sec squeeze at the finish. I leave 1\u20133 reps in reserve."},
+      {"name":"Cross-Body Hammer Curls","presc":"2\u20133 \u00d7 10\u201312 \u00b7 rest 60 sec","cue":"Palms facing in, upper arm pinned to my side, torso still. Curl across toward the opposite chest, stopping at mid-chest. 1-sec squeeze at the top, 2\u20133 sec lowering. I leave 1\u20133 reps in reserve."},
     ]},
-  '5': {name:'Lower Body B', num:'5', focus:'Hamstrings / Glutes / Unilateral Power', meta:'~40 min · Posterior chain & unilateral power',
-    deloadable:true,
-    golden:'If knees are tender, lean on RDLs and calf work. Top reps hit → add 5–10 lb next time. Effort: leave 2–4 reps in reserve on RDLs and the KB press, and 1–3 on lunges, step-ups and bridge-curls.',
+  '5': {name:"Lower Body B", num:"5", focus:"Hamstrings \u00b7 Glutes \u00b7 Single-leg strength \u00b7 my second heavy leg and hinge day", meta:"40\u201350 min \u00b7 Friday", deloadable:true, golden:"My second heavy leg and hinge day: base 2 sets, 3rd earned. Tender knees: I lean on RDLs and calf work. Kettlebells progress by cycles; dumbbells add 5\u201310 lb after top reps. Reps in reserve: 2\u20134 on RDLs and the press; 1\u20133 on lunges, step-ups and bridge-curls.",
     exercises:[
-      {name:'Single-Arm KB Clean & Press', presc:'3 × 6–8/side · rest 90s', cue:'Hip-drive clean to rack, press straight overhead — no rib flare or lean-back. Brace hard through the midline.'},
-      {name:'Romanian Deadlifts', presc:'3 × 6–8 · rest 2–3 min', cue:'Heavy hip hinge; bar tight to shins, squeeze glutes at lockout. Feet hip-width, toes forward to slightly out.'},
-      {name:'Dumbbell Walking Lunges or Step-Ups', presc:'3 × 10/leg · rest 90s', cue:'Drive through front heel; upright posture. Toes forward, feet on one rail.'},
-      {name:'TRX / Ring Hamstring Bridge-Curl', presc:'3 × 10–12 · rest 60s', cue:'Heels in the straps, lift hips into a bridge, then curl heels toward glutes and extend back out under control without letting hips drop. Regress to double-leg if single-leg isn\u2019t clean yet.'},
-      {name:'Standing Calf Raises', presc:'3 × 12–15 · rest 60s', cue:'Full stretch at bottom, explosive drive up onto big toe.'},
+      {"name":"Single-Arm KB Clean & Press","presc":"2\u20133 \u00d7 6\u20138 / side \u00b7 rest 90 sec","cue":"Clean to the rack with hip drive, bell close to my hips and rolling around my arm. Press overhead in a straight line, ribs down, no lean back. Brace hard against the sideways pull. Resisting it is the job. New bell: 3 \u00d7 3\u20135 up to 3 \u00d7 8, then the next bell. Setback: down a bell or two and wave back up."},
+      {"name":"Romanian Deadlifts","presc":"2\u20133 \u00d7 6\u20138 \u00b7 rest 2\u20133 min","cue":"Feet hip-width, toes forward to very slightly out. Hips straight back, bar tight to my shins, down to mid-shin. Lock out with my glutes, back flat the whole way. I leave 2\u20134 reps in reserve with a loaded spine."},
+      {"name":"Dumbbell Walking Lunges or Step-Ups","presc":"alternating weeks \u00b7 2\u20133 \u00d7 10 / leg","cue":"Walking lunges: stepping forward and slightly out, front heel drives me up, upright posture. Lateral step-ups: side-on to the box, the top leg does the work, knee over my toes, slow down. Dumbbells at my sides once bodyweight is easy. I leave 1\u20133 reps in reserve. This is my heavy lunging; my daily lunges stay light.","variants":[{"key":"lunge","label":"Walking Lunges","setup":"Odd weeks: walking lunges with dumbbells, stepping forward and slightly out."},{"key":"lateral","label":"Lateral Step-Ups","setup":"Even weeks: side-on to a low box, the top leg does the work, knee over my toes."}]},
+      {"name":"ATG Split Squat","presc":"3 \u00d7 5 / leg","cue":"Front foot elevated 12\u201318\" to start. Lower 3 sec as my knee presses forward, front heel free to rise, until my front hamstring covers my calf. Hold 1 sec, press back. Pain-free depth, 0/10. Weaker leg first."},
+      {"name":"TRX / Ring Hamstring Bridge-Curl","presc":"2\u20133 \u00d7 10\u201312 \u00b7 rest 60 sec","cue":"Heels in the straps, lying on my back. Lift my hips into a bridge. Curl my heels toward my glutes, then extend back out under control. Hips stay up the whole set. Double-leg until it\u2019s clean, then single-leg."},
+      {"name":"Standing Calf Raises","presc":"2\u20133 \u00d7 12\u201315 \u00b7 rest 60 sec","cue":"Heels drop to a full stretch and hold 2 sec, so the Achilles never bounces. Drive up onto my big toe. Card 2 runs myo-reps; Card 5 runs straight sets. Every rep starts from a still stretch."},
     ]},
-  '6': {name:'Zone 2 Aerobic & Active Recovery', num:'6', focus:'Cardiovascular base & golf movement', meta:'40+ min · Weekly floor 150–180 min total',
-    deloadable:false,
-    golden:'Your daily vest walks (Card 0) likely already cover this. Log total cardio minutes for the week — 150–180 min is the target regardless of which days it comes from.',
+  '6': {name:"Zone 2 Aerobic & Active Recovery", num:"6", focus:"Cardiovascular base & golf movement \u00b7 weekly floor 150\u2013180 min", meta:"40\u201360 min \u00b7 Saturday", deloadable:false, golden:"I log my total cardio minutes for the week: 150\u2013180 min, whichever days they come from. The skill touch stays light; negatives and inverted rows stay on Cards 1 and 4.",
     exercises:[
-      {name:'60-Min Weighted Vest Walk OR Golf Round', presc:'Steady pace', cue:'Nose-breathing effort — you should be able to hold a conversation the whole time.'},
-      {name:'McGill Big Three, Endurance Dose', presc:'10s holds, 5-3-1 pyramid/side', cue:'Same form as Card 3\u2019s back panel — quality of the hold still matters more than getting through it.'},
-      {name:'Light Mobility', presc:'Elephant Walk 30 total + Couch Stretch 60s/side', cue:'Keep it easy — this slot is recovery, not more training.'},
-      {name:'Optional — Pull-Up Skill Touch', presc:'2 easy sets each, well short of failure', cue:'Top-Quarter Partials + Chin-Over Holds. A third light exposure, not a third training session — skip if it isn\u2019t easy today.'},
+      {"name":"60-Min Weighted Vest Walk OR Golf Round","presc":"60 min easy, or my weekly 4\u00d74","cue":"Every day I walk at conversation pace. The 20 lb vest goes on Mon, Wed, Thu, Sat, Sun. Tue and Fri, my heavy hinge days, I walk without it. Once a week, a 4\u00d74 on the rower or bike, no vest: 4 \u00d7 4 min hard, 3 min easy between. Vest snug and high. Tight back: vest off. 4\u00d74 on Saturday, never the day before Card 2 or 5."},
+      {"name":"McGill Big Three, Endurance Dose","presc":"quality of the hold first","cue":"Curl-up, side plank, bird-dog. Quality of the hold first."},
+      {"name":"Elephant Walk","presc":"30 total","cue":"Hinge forward, hands down. Extend one knee to full lock, flexing that quad to deepen the hamstring stretch. Alternate legs, easy rhythm. Hamstring and lower-back relief, in an easy rhythm."},
+      {"name":"Couch Stretch","presc":"60 sec / side","cue":"Back knee in the wall corner, shin flush to the wall. Front leg out at 90\u00b0. Squeeze my back glute and bring my torso upright. A deep hip flexor and quad release."},
+      {"name":"Optional \u2014 Pull-Up Skill Touch","presc":"2 easy sets each, well short of failure","cue":"Top-quarter partials and chin-over holds. A light extra touch, only if fresh."},
     ]},
-  '7': {name:'Full Rest & Spinal Decompression', num:'7', focus:'Total nervous system reset', meta:'15–20 min · Full rest, travel, or post-competition',
-    deloadable:false,
-    golden:'Rate joints 1–10 before this session (10 = fresh). Below a 6 for two days in a row means the next lifting day should be a Card 3 swap, not a push.',
+  '7': {name:"Full Rest & Spinal Decompression", num:"7", focus:"A real rest day \u00b7 walk, hang, breathe", meta:"15\u201320 min \u00b7 Sunday", deloadable:false, golden:"A real rest day: no kettlebells, no lunges. Joints below 6 for two days in a row: my next lifting day becomes a Card 3 swap.",
     exercises:[
-      {name:'Passive Hanging / Decompression', presc:'2–3 min total, accumulated', cue:'Let shoulders relax, spine lengthen — grip only as hard as needed to hang, don\u2019t actively pull or shrug.'},
-      {name:'Couch Stretch', presc:'2 min/side', cue:'Deep hip flexor & quad release.'},
-      {name:'McGill Big Three (light)', presc:'1 round, 3 reps each, 10s holds', cue:'Curl-Up, Side Plank, Bird-Dog. Baseline spinal stiffness only, nothing hard today.'},
+      {"name":"Passive Hanging / Decompression","presc":"2\u20133 min total","cue":"Hang from the bar, accumulating 2\u20133 min total. Shoulders relax and my spine lengthens. Grip only as hard as I need. No pulling, no shrugging. A reset day: nothing hard, just length."},
+      {"name":"Couch Stretch","presc":"2 min / side","cue":"Back knee in the wall corner, shin flush to the wall. Front leg out at 90\u00b0. Squeeze my back glute and bring my torso upright. A deep hip flexor and quad release."},
+      {"name":"McGill Big Three (light)","presc":"1 round, 3 each, 10-sec holds","cue":"Curl-up, side plank, bird-dog. Light today: baseline spinal stiffness only."},
     ]},
-  '9': {name:'ATG Knee Ability Zero — Part 1', num:'9', focus:'Ankle, shin & calf', meta:'3x/week (e.g. Mon/Wed/Fri) · Ben Patrick program',
-    deloadable:false, pairKey:'10',
-    golden:'Never push into joint pain — scale depth/elevation to 0/10 pain. 3-1-1 tempo throughout. Weaker leg always goes first, match reps on the strong side.',
+  '9': {name:"ATG Knee Ability Zero \u00b7 Part 1", num:"9", focus:"Ankle, shin, calf & balance \u00b7 Ben Patrick program", meta:"~15 min \u00b7 Mon \u00b7 Wed", deloadable:false, pairKey:"10", golden:"Monday and Wednesday. Pain stays at 0/10: I scale depth and elevation to stay there. 3-1-1 tempo throughout. Weaker leg first, matching reps on the strong side.",
     exercises:[
-      {name:'Warm-Up: Backward Walking', presc:'5–10 min continuous', cue:'Drives blood into the patellar tendons without impact. Usually already covered by the backward KB carry lap on Card 0.'},
-      {name:'Single-Leg Balance', presc:'2 × 30s/leg', cue:'Stand next to the rack or a wall for a fingertip safety touch. Progress: eyes open → eyes closed → foam pad → balance board. Weaker leg first. Soft knee, tall posture — the same lead-leg control you post on in the swing.'},
-      {name:'Tibialis Raise', presc:'1 × 25', cue:'Heels 1–2 ft from wall. Pull forefeet up toward shins, hold 1s, lower 3s. Start at 6" from wall, progress to 18"+.'},
-      {name:'FHL Calf Raise', presc:'1 × 25', cue:'Toes up on a slant block, heels on floor. Press through the big toe joint to a full peak raise, pause 1s.'},
-      {name:'KOT Calf Raise', presc:'1 × 25', cue:'Slight knee bend (20–30°) locked in place throughout. Push through the balls of the feet; heels rise while the knee angle holds.'},
-      {name:'Patrick Step', presc:'1 × 25/leg', cue:'Working knee drives forward over toes; other leg reaches forward to tap heel, then drive back up through quad/VMO. Weaker leg first.'},
+      {"name":"Warm-Up: Backward Walking","presc":"5\u201310 min","cue":"Flat ground, or the treadmill switched off and pushed by my feet. Walk backward continuously, 5\u201310 min. My backward loop on Card 0 counts. If I skip a separate warm-up, I extend that loop. Warm knees before the first ATG move."},
+      {"name":"Single-Leg Balance","presc":"2 \u00d7 30 sec / leg","cue":"Fingertip safety touch on the rack or wall. Soft knee, tall posture, weaker leg first. Progress: eyes open \u2192 eyes closed \u2192 foam pad \u2192 wood board side to side \u2192 foam pad with head turns. The same lead-leg control I post on in my swing; my daily clock steps and lean-and-step add the moving balance."},
+      {"name":"Tibialis Raise","presc":"1 \u00d7 25 \u00b7 lower 3 sec","cue":"Back on the wall, heels 1\u20132 ft out. I start at 6\" and build to 18\"+. Pull my forefeet up toward my shins. Hold 1 sec at the top, lower 3 sec. Pain-free, 0/10, every rep."},
+      {"name":"FHL Calf Raise","presc":"1 \u00d7 25","cue":"Toes up on the slant block, heels on the floor. Press through my big toe joint to a full raise; pause 1 sec. Start double-leg with wall support. 3-1-1 tempo, pain-free."},
+      {"name":"KOT Calf Raise","presc":"1 \u00d7 25","cue":"Slight knee bend, 20\u201330\u00b0, locked in place. Push through the balls of my feet; heels rise while the knee angle holds. 3-1-1 tempo, pain-free."},
+      {"name":"Patrick Step","presc":"1 \u00d7 25 / leg","cue":"Working foot on a low box, weaker leg first. Working knee drives forward over my toes as I lower. Other leg reaches forward and taps the heel lightly. Drive back up through my quad. I set the box height to stay at 0/10 pain. Matching reps on the strong side."},
     ]},
-  '10': {name:'ATG Knee Ability Zero — Part 2', num:'10', focus:'Hip, posterior chain & core', meta:'Same days as Part 1',
-    deloadable:false, pairKey:'9',
-    golden:'Drink Shake 1 (already on your nutrition schedule) within 60 min after this session.',
+  '10': {name:"ATG Knee Ability Zero \u00b7 Part 2", num:"10", focus:"Hip, posterior chain & core \u00b7 same days as Part 1", meta:"~15 min \u00b7 Mon \u00b7 Wed", deloadable:false, pairKey:"9", golden:"Monday and Wednesday; Friday\u2019s ATG split squats live on Card 5. Shake 1, already on my nutrition schedule, within 60 min after this session.",
     exercises:[
-      {name:'ATG Split Squat', presc:'5 × 5/leg', alt:{with:'5', presc:'3 × 5/leg'}, cue:'On Card 5 days: 3 × 5/leg, since the lunges already loaded the knees. Front heel free to rise as the knee presses forward. Lower 3s until the front hamstring covers the calf, hold 1s, press back. Toes forward throughout.'},
-      {name:'Elephant Walk', presc:'1 × 30/leg', cue:'Hinge forward, hands down. Alternately extend one knee to full lock, flexing the quad on the other side to deepen the stretch.'},
-      {name:'L-Sit (Pike Progression)', presc:'3 × 15s holds', cue:'Palms down beside hips, press to lift hips/legs, pull toes toward you. Start with seated pike leg lifts.'},
-      {name:'Couch Stretch', presc:'60s/leg', cue:'Back knee in wall corner, shin flush to wall, front leg out at 90°. Squeeze back glute, torso upright.'},
+      {"name":"ATG Split Squat","presc":"3\u20135 \u00d7 5 / leg","cue":"Front foot elevated 12\u201318\" to start. Lower 3 sec as my knee presses forward, front heel free to rise, until my front hamstring covers my calf. Hold 1 sec, press back. Pain-free depth, 0/10. Weaker leg first."},
+      {"name":"Elephant Walk","presc":"1 \u00d7 30 / leg","cue":"Hinge forward, hands down. Extend one knee to full lock, flexing that quad to deepen the hamstring stretch. Alternate legs, easy rhythm. Hamstring and lower-back relief, in an easy rhythm."},
+      {"name":"L-Sit (Pike Progression)","presc":"3 \u00d7 15-sec holds","cue":"Palms down beside my hips. Press down to lift my hips and legs; pull my toes toward me. Seated pike leg lifts, one leg at a time, come before a full hold. Each hold ends with good form."},
+      {"name":"Couch Stretch","presc":"60 sec / leg","cue":"Back knee in the wall corner, shin flush to the wall. Front leg out at 90\u00b0. Squeeze my back glute and bring my torso upright. A deep hip flexor and quad release."},
     ]},
 };
 const CARD_ORDER = ['1','2','3','4','5','6','7','9','10'];
@@ -296,7 +279,7 @@ async function loadState(){
   try{ const s = localStorage.getItem(SESS_KEY); sessions = s? JSON.parse(s):[]; }catch(e){ sessions=[]; }
   try{ const d = localStorage.getItem(DAILY_KEY); dailyLogs = d? JSON.parse(d):[]; }catch(e){ dailyLogs=[]; }
   { const byDate={}; dailyLogs.forEach(x=>{ if(!byDate[x.date] || x.ts>byDate[x.date].ts) byDate[x.date]=x; }); const n0=dailyLogs.length; dailyLogs=Object.values(byDate); if(dailyLogs.length!==n0){ try{ localStorage.setItem(DAILY_KEY, JSON.stringify(dailyLogs)); }catch(e){} } }
-  try{ const sc = localStorage.getItem(SCHED_KEY); schedule = sanitizeSchedule(sc? JSON.parse(sc):null); }catch(e){ schedule = sanitizeSchedule(null); }
+  try{ const sc = localStorage.getItem(SCHED_KEY); let scv = sc? JSON.parse(sc):null; if(scv && scv[5] && scv[5].join()==='5,9,10' && !localStorage.getItem('training_plan_2026_11')){ scv[5]=['5']; localStorage.setItem(SCHED_KEY, JSON.stringify(scv)); } try{ localStorage.setItem('training_plan_2026_11','1'); }catch(e){} schedule = sanitizeSchedule(scv); }catch(e){ schedule = sanitizeSchedule(null); }
   try{ const p = localStorage.getItem(PREF_KEY); if(p) prefs = Object.assign({guided:true}, JSON.parse(p)); else prefs={guided:true}; }catch(e){}
   try{
     const g = localStorage.getItem(PROG_KEY);
@@ -361,7 +344,7 @@ function pOf(ce){
   }
   return ce.presc;
 }
-const PREV_NAMES = {'Cross-Body Hammer Curls':['Dumbbell Hammer Curls'], 'Turkish Get-Up':['Turkish Get-Up (Half)']};
+const PREV_NAMES = {'Cross-Body Hammer Curls':['Dumbbell Hammer Curls'], 'Turkish Get-Up':['Turkish Get-Up (Half)'], 'Patrick Step':['Patrick Step-Up']};
 function lastLoggedSets(exName, cardKey, deload, variant){
   const names=[exName].concat(PREV_NAMES[exName]||[]);
   // Cross-card: a repeated exercise (e.g. Single-Arm KB Clean & Press on Cards 2 & 5)
@@ -614,7 +597,7 @@ function intervalAdvice(dateStr, editingDate){
 function dailyFor(date){ return dailyLogs.filter(x=>x.date===date).sort((a,b)=>b.ts-a.ts)[0] || null; }
 function openDaily(){
   const ex=dailyFor(todayStr());
-  window._dailyDraft = ex ? {date:ex.date, items:[...ex.items], zone2Min:ex.zone2Min||'', cardio:ex.cardio||(ex.items[0]?'vest':'')} : {date:todayStr(), items:[false,false,false,false], zone2Min:'', cardio:''};
+  window._dailyDraft = ex ? {date:ex.date, items:[...ex.items], zone2Min:ex.zone2Min||'', cardio:ex.cardio||(ex.items[0]?'vest':'')} : {date:todayStr(), items:CARD0.map(()=>false), zone2Min:'', cardio:''};
   goto('daily');
 }
 function setCardio(k){
@@ -627,7 +610,7 @@ function setCardio(k){
 }
 function renderDaily(){
   const today = todayStr();
-  window._dailyDraft = window._dailyDraft || {date:today, items:[false,false,false,false], zone2Min:'', cardio:''};
+  window._dailyDraft = window._dailyDraft || {date:today, items:CARD0.map(()=>false), zone2Min:'', cardio:''};
   const d = window._dailyDraft;
   const existing = dailyFor((d.date||'').trim());
   let html = `<div class="brand"><h1>Daily Foundation</h1>${themeToggleBtn()}</div>`;
@@ -663,7 +646,7 @@ async function saveDailyEntry(){
   const had = dailyLogs.some(x=>x.date===date);
   dailyLogs = dailyLogs.filter(x=>x.date!==date);
   dailyLogs.push(entry);
-  flash = '\u2713 Daily Foundation '+(had?'updated':'saved')+' for '+date+' at '+clock(entry.ts)+' ('+entry.items.filter(Boolean).length+'/4).';
+  flash = '\u2713 Daily Foundation '+(had?'updated':'saved')+' for '+date+' at '+clock(entry.ts)+' ('+entry.items.filter(Boolean).length+'/'+CARD0.length+').';
   window._dailyDraft = null;
   await saveDaily();
   goto('home');
@@ -723,12 +706,12 @@ function renderHelp(){
 }
 
 /* ================= Version, schedule & preferences ================= */
-const APP_VERSION = 'v2026-10-03b';
+const APP_VERSION = 'v2026-11-02';
 const SCHED_KEY='training_schedule_v1', PREF_KEY='training_prefs_v1', PROG_KEY='training_inprogress_v1';
 const DAY_NAMES=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const DAY_ORDER=[1,2,3,4,5,6,0];
 const LIFT_CARDS=['1','2','4','5'];
-const DEFAULT_SCHEDULE={0:['7'],1:['1','9','10'],2:['2'],3:['3','9','10'],4:['4'],5:['5','9','10'],6:['6']};
+const DEFAULT_SCHEDULE={0:['7'],1:['1','9','10'],2:['2'],3:['3','9','10'],4:['4'],5:['5'],6:['6']};
 let schedule=null, prefs={guided:true}, resumeData=null;
 let swapToday=false, todayDeload=null, schedDraft=null;
 
@@ -958,13 +941,13 @@ const LOG_TYPES = {
   'Bottom-Quarter Pull-Up':'bw', 'Sticking-Point Negative (Middle Block)':'bw',
   'Top-Quarter Partial Pull-Up (Top Block \u00b7 priority)':'bw',
   'Inverted Bodyweight Skull Crushers':'bw', 'Turkish Get-Up':'bw', 'Deficit Push-Ups (Myo-Reps)':'bw', 'Inverted Bodyweight Rows':'bw',
-  'Tibialis Raise':'bw', 'Patrick Step-Up':'bw', 'Patrick Step':'bw', 'FHL Calf Raise':'bw', 'KOT Calf Raise':'bw',
+  'Tibialis Raise':'bw', 'Patrick Step-Up':'bw', 'Skater Steps':'bw', 'Patrick Step':'bw', 'FHL Calf Raise':'bw', 'KOT Calf Raise':'bw',
   'Sticking-Point Iso Hold':'secs', 'Single-Leg Balance':'secs', 'L-Sit (Pike Progression)':'secs',
   'Passive Hanging / Decompression':'mins', 'Warm-Up: Backward Walking':'mins',
   '60-Min Weighted Vest Walk OR Golf Round':'none',
   'Elephant Walk':'none', 'T-Spine Open Books':'none', 'Couch Stretch':'none', 'Technical Stand-Up':'none',
   'McGill Curl-Up':'none', 'McGill Side Plank':'none', 'McGill Bird-Dog':'none',
-  'McGill Big Three, Endurance Dose':'none', 'Light Mobility':'none', 'McGill Big Three (light)':'none'
+  'McGill Big Three, Endurance Dose':'none', 'Elephant Walk':'none', 'Light Mobility':'none', 'McGill Big Three (light)':'none'
 };
 function logType(name){ return LOG_TYPES[name] || 'load'; } // load = weight + reps; bw = reps + optional added weight; reps; secs; mins; none
 function blankDraft(){ return {weight:'', reps:'', time:''}; }
