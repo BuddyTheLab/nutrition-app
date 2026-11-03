@@ -167,7 +167,7 @@
 const CARD0 = [
   {key:'vest', name:'Cardio: 20 lb Vest Walk or 4×4 Intervals', presc:'Mon · Wed · Thu intervals: 3 min fast, 3 min easy, 3–5 rounds · Tue · Fri · Sun easy · Saturday 4×4, no vest'},
   {key:'crossover', name:'Crossover Symmetry', presc:'Pre-workout chart daily, first · Iron Scap after Mon · Thu and golf · TORQ activation Mon · Wed · Fri and before golf'},
-  {key:'halo', name:'KB Alternating Halo + Clean', presc:'Mon · Thu front-to-back, 30–40 lb · Wed · Sat outside clean, 20–30 lb or my club · Tue · Fri halos only · Sun off'},
+  {key:'halo', name:'KB Alternating Halo + Clean', presc:'Two hands, bell upside down, stop at my chest · Mon · Thu medium 30–40 lb · other days light 20–30 lb · Sun off'},
   {key:'carry', name:'Kettlebell Track Loops', presc:'Mon · Thu two bells after the card · Wed · Sat one bell, light lunges · Tue · Fri one light bell, no lunges'},
   {key:'balance', name:'Balance: Band Walk · Clock Steps · Lean and Step', presc:'10 steps each way · 1 round per leg · 3 each way'},
   {key:'mcgill', name:'McGill Big Three, base', presc:'1 round, 3 each, 10-sec holds'},
@@ -700,7 +700,7 @@ function renderHelp(){
 }
 
 /* ================= Version, schedule & preferences ================= */
-const APP_VERSION = 'v2026-11-03';
+const APP_VERSION = 'v2026-11-03b';
 const SCHED_KEY='training_schedule_v1', PREF_KEY='training_prefs_v1', PROG_KEY='training_inprogress_v1';
 const DAY_NAMES=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const DAY_ORDER=[1,2,3,4,5,6,0];
@@ -935,13 +935,13 @@ const LOG_TYPES = {
   'Bottom-Quarter Pull-Up':'bw', 'Sticking-Point Negative (Middle Block)':'bw',
   'Top-Quarter Partial Pull-Up (Top Block \u00b7 priority)':'bw',
   'Inverted Bodyweight Skull Crushers':'bw', 'Turkish Get-Up':'bw', 'Deficit Push-Ups (Myo-Reps)':'bw', 'Inverted Bodyweight Rows':'bw',
-  'Tibialis Raise':'bw', 'Patrick Step-Up':'bw', 'Skater Steps':'bw', 'Skater Steps':'bw', 'Skater Steps':'bw', 'Patrick Step':'bw', 'FHL Calf Raise':'bw', 'KOT Calf Raise':'bw',
+  'Tibialis Raise':'bw', 'Patrick Step-Up':'bw', 'Skater Steps':'bw', 'Skater Steps':'bw', 'Skater Steps':'bw', 'Skater Steps':'bw', 'Patrick Step':'bw', 'FHL Calf Raise':'bw', 'KOT Calf Raise':'bw',
   'Sticking-Point Iso Hold':'secs', 'Single-Leg Balance':'secs', 'L-Sit (Pike Progression)':'secs',
   'Passive Hanging / Decompression':'mins', 'Warm-Up: Backward Walking':'mins',
   '60-Min Weighted Vest Walk OR Golf Round':'none',
   'Elephant Walk':'none', 'T-Spine Open Books':'none', 'Couch Stretch':'none', 'Technical Stand-Up':'none',
   'McGill Curl-Up':'none', 'McGill Side Plank':'none', 'McGill Bird-Dog':'none',
-  'McGill Big Three, Endurance Dose':'none', 'Elephant Walk':'none', 'Elephant Walk':'none', 'Elephant Walk':'none', 'Light Mobility':'none', 'McGill Big Three (light)':'none'
+  'McGill Big Three, Endurance Dose':'none', 'Elephant Walk':'none', 'Elephant Walk':'none', 'Elephant Walk':'none', 'Elephant Walk':'none', 'Light Mobility':'none', 'McGill Big Three (light)':'none'
 };
 function logType(name){ return LOG_TYPES[name] || 'load'; } // load = weight + reps; bw = reps + optional added weight; reps; secs; mins; none
 function blankDraft(){ return {weight:'', reps:'', time:''}; }
