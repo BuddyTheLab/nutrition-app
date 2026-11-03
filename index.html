@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Nutrition & Workout">
-<title>Nutrition & Workout Log — Dwight Clarke — v2026-11-02</title>
+<title>Nutrition & Workout Log — Dwight Clarke — v2026-11-03</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -90,7 +90,7 @@
 /* Uses the browser's own localStorage — this file runs standalone in Safari,
    outside Claude's environment. Same pattern as the other companion apps. */
 
-const APP_VERSION = 'v2026-11-02';
+const APP_VERSION = 'v2026-11-03';
 const HEIGHT_IN = 70; // 5'10", from the protocol doc
 const FLUID_TARGET = [120,150];
 const WEIGHT_TARGET = [170,175];
@@ -121,12 +121,12 @@ const TRAINING_CARDS = [
 // My weekly rotation, from my Training Cards. Indexed by Date.getDay(): 0=Sun ... 6=Sat.
 const WEEKLY_ROTATION = [
   { cards:["7"], note:"Rest & Decompression \u2014 Walk, Crossover, hang, McGill light. No kettlebells." },
-  { cards:["1","9-10"], note:"Upper Body A + ATG Zero \u2014 Vest on \u00b7 medium halo + clean \u00b7 two-bell loops after the card." },
+  { cards:["1","9-10"], note:"Upper Body A + ATG Zero \u2014 Interval walk \u00b7 medium halo + clean \u00b7 two-bell loops after the card." },
   { cards:["2"], note:"Lower Body A \u2014 Heavy legs and hinge \u00b7 no vest \u00b7 halos only \u00b7 no lunges." },
-  { cards:["3","9-10"], note:"Rotation & Stability + ATG Zero \u2014 Vest on \u00b7 outside clean or club \u00b7 light lunges." },
-  { cards:["4"], note:"Upper Body B \u2014 Vest on \u00b7 medium halo + clean \u00b7 two-bell loops after the card." },
+  { cards:["3","9-10"], note:"Rotation & Stability + ATG Zero \u2014 Interval walk \u00b7 outside clean or club \u00b7 light lunges." },
+  { cards:["4"], note:"Upper Body B \u2014 Interval walk \u00b7 medium halo + clean \u00b7 two-bell loops after the card." },
   { cards:["5"], note:"Lower Body B \u2014 Heavy legs and hinge \u00b7 no vest \u00b7 halos only \u00b7 no lunges." },
-  { cards:["6"], note:"Zone 2, 4\u00d74 or golf \u2014 Vest on \u00b7 outside clean or club \u00b7 light lunges." },
+  { cards:["6"], note:"Zone 2, 4\u00d74 or golf \u2014 4\u00d74 or vest walk \u00b7 outside clean or club \u00b7 light lunges." },
 ];
 function todayStr(){ const d=new Date(), p=n=>String(n).padStart(2,'0'); return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); } // local date, not UTC
 function todaysRotation(dateStr){
