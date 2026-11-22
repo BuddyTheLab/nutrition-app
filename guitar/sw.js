@@ -1,5 +1,5 @@
 // Fretboard Practice: keeps the page working offline. Pages load fresh when online.
-const CACHE = "fretboard-v1";
+const CACHE = "fretboard-v4";
 const CORE = ["./", "./index.html", "./manifest.json", "./icon-180.png", "./icon-512.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
