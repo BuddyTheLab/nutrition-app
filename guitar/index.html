@@ -118,6 +118,23 @@ footer{margin-top:18px;color:var(--muted);font-size:14px}
 .how ol{margin:6px 0 4px;padding-left:22px}
 .how li{margin:3px 0}
 @media (prefers-color-scheme:dark){.btn.primary,.btn.good{color:#131816}}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+a.btn{display:inline-flex;align-items:center;text-decoration:none;color:var(--ink)}
+a.btn.mine{border-color:var(--accent);font-weight:600}
+.offline{background:var(--chip-on);color:var(--chip-on-ink);border-radius:12px;padding:10px 14px;margin:0 0 12px;font-size:15px}
+.songbook{margin:0 0 12px}
+.songbook>summary{cursor:pointer;font-family:var(--display);font-size:19px;font-weight:600;min-height:40px;display:flex;align-items:center;gap:8px;list-style:none}
+.songbook>summary::-webkit-details-marker{display:none}
+.songbook>summary::before{content:"▸";display:inline-block;transition:transform .15s}
+.songbook[open]>summary::before{transform:rotate(90deg)}
+.cls h3{font-family:var(--display);font-size:22px;margin:10px 0 2px}
+.cls .when{color:var(--muted);font-size:15px;margin:0 0 8px}
+.songrow{border-top:1px solid var(--line);padding:10px 0;display:grid;gap:6px}
+.songrow .t{font-weight:600;font-size:18px}
+.songrow .t span{color:var(--muted);font-weight:400}
+.songrow ul{margin:0;padding-left:20px;font-size:16px}
+.ready{border-top:1px solid var(--line);margin-top:10px;padding-top:8px}
+.ready h4{font-family:var(--display);font-size:18px;margin:0 0 4px}
 </style>
 </head>
 <body>
@@ -137,8 +154,13 @@ footer{margin-top:18px;color:var(--muted);font-size:14px}
       <li><b>Focus 10:</b> tap Today, then Start, and follow Today's order. My book's day page says why.</li>
       <li><b>Play 10:</b> my player of the week, below. I learn the song by ear, then check it in Songsterr.</li>
       <li><b>Done:</b> tap Mark this day done. Today then opens the next day.</li>
+      <li><b>Song buttons:</b> Songsterr is the standard tab, My Version is my own Songsterr tab, Lesson opens the song's folder in my Google Drive Lessons.</li>
+      <li><b>Class:</b> I play and mark up my class pages in forScore. My class songs, below, holds my cues and links for each one.</li>
+      <li><b>Always the icon:</b> I open this app from my Fretboard Home Screen icon, not a Safari tab, so my progress stays in one place and it works offline.</li>
     </ol>
   </details>
+
+  <div class="offline hidden" id="offline" role="status">Offline. My app works as usual. For songs I use the Songsterr app (songs I've opened before), forScore, and my Drive offline copies.</div>
 
   <div class="plan">
     <button class="btn primary" id="todayBtn">Today</button>
@@ -153,9 +175,14 @@ footer{margin-top:18px;color:var(--muted);font-size:14px}
       <div class="song" id="wkSong"></div>
       <div class="gtr" id="wkGtr"></div>
     </div>
-    <a class="btn" id="wkLink" target="_blank" rel="noopener">Open in Songsterr</a>
+    <div class="links" id="wkLinks"></div>
     <button class="btn" id="wkNext" aria-label="Next week">›</button>
   </div>
+
+  <details class="songbook panel" id="songbook">
+    <summary>My class songs</summary>
+    <div id="classes"></div>
+  </details>
 
   <div class="tabs" role="group" aria-label="Practice mode">
     <button class="tab" data-mode="shapes">Shapes &amp; scales</button>
@@ -302,7 +329,7 @@ footer{margin-top:18px;color:var(--muted);font-size:14px}
     </div>
   </div>
 
-  <footer>Strings are drawn as tab: the highest string on top. In standard tuning, shapes are named for the open chord they come from (C-A-G-E-D); in other tunings I pick fret positions instead. No sound? I check that Silent Mode is off and the volume is up. <strong>Version 11-22-2026</strong></footer>
+  <footer>Strings are drawn as tab: the highest string on top. In standard tuning, shapes are named for the open chord they come from (C-A-G-E-D); in other tunings I pick fret positions instead. No sound? I check that Silent Mode is off and the volume is up. <strong>Version 11-22-2026b</strong></footer>
 </div>
 <div class="toast" id="toast" role="status"></div>
 
@@ -621,18 +648,18 @@ function init(){
   syncUI();
 }
 const PLAYERS=[
- {p:"Elizabeth Cotten",c:"US",song:"Freight Train (S)",g:"Pre-War 000-28",what:"Thumb-and-finger fingerpicking",url:"https://www.songsterr.com/a/wsa/elizabeth-cotten-tabs-a7433"},
- {p:"Richard Thompson",c:"England",song:"1952 Vincent Black Lightning, simplified version first (S)",g:"Strat or Creston into The Amp for the electric songs",what:"Hybrid picking",url:"https://www.songsterr.com/a/wsa/richard-thompson-tabs-a16763"},
- {p:"Mississippi John Hurt",c:"US",song:"Candy Man (S)",g:"Bourgeois OM",what:"Steady alternating thumb",url:"https://www.songsterr.com/a/wsa/mississippi-john-hurt-tabs-a122"},
- {p:"Doc Watson",c:"US",song:"Deep River Blues (S)",g:"Martin D-18V or Collings D2H",what:"Clean flatpicking",url:"https://www.songsterr.com/a/wsa/doc-watson-tabs-a5804"},
- {p:"Bert Jansch",c:"Scotland",song:"Angie (S), then Blackwaterside (S, DADGAD)",g:"Bourgeois OM or Collings 0001",what:"Driving thumb, darker chords",url:"https://www.songsterr.com/a/wsa/bert-jansch-tabs-a3130"},
- {p:"Julian Lage",c:"US",song:"Ryland (S)",g:"Collings OM1 JL; Hahn 228 or I-30 LC with JL pickups",what:"Clarity and touch",url:"https://www.songsterr.com/a/wsa/julian-lage-ryland-tab-s1593621"},
- {p:"Hermanos Gutiérrez",c:"Ecuador and Switzerland",song:"Tres Hermanos (S)",g:"Strat or Creston into EC-1 and 1978; Takamine for nylon parts",what:"Melody, echo and space",url:"https://www.songsterr.com/a/wsa/hermanos-gutierrez-tabs-a141159"},
- {p:"Molly Tuttle",c:"US",song:"Take the Journey (S), later Crooked Tree (T)",g:"Collings D2H",what:"Crosspicking",url:"https://www.songsterr.com/a/wsa/molly-tuttle-tabs-a33898"},
- {p:"Carl Miner",c:"US",song:"Collings I-35 LC demo, from the tab in my folder",g:"Collings I-30 LC",what:"Double-stop slides over a steady thumb",url:""},
- {p:"Carl Miner, week 2",c:"US",song:"Meriwether (DADGAD), from the tab in my folder",g:"Collings 0001 or D2H in DADGAD",what:"Open-tuning melody and drone",url:""},
- {p:"Ali Farka Touré",c:"Mali",song:"Savane (S), later Diaraby (T)",g:"Strat clean into The Amp, or D-18V",what:"Desert-blues phrases over a drone",url:"https://www.songsterr.com/a/wsa/ali-farka-toure-tabs-a381290"},
- {p:"Twanguero (Diego García)",c:"Spain",song:"Minor Rag, from the score in my Reference folder",g:"Takamine C132S nylon",what:"Rag and classical touch with twang",url:""}];
+ {p:"Elizabeth Cotten",c:"US",song:"Freight Train (S)",g:"Pre-War 000-28",what:"Thumb-and-finger fingerpicking",url:"https://www.songsterr.com/a/wsa/elizabeth-cotten-tabs-a7433",mine:"",lesson:""},
+ {p:"Richard Thompson",c:"England",song:"1952 Vincent Black Lightning, simplified version first (S)",g:"Strat or Creston into The Amp for the electric songs",what:"Hybrid picking",url:"https://www.songsterr.com/a/wsa/richard-thompson-tabs-a16763",mine:"",lesson:""},
+ {p:"Mississippi John Hurt",c:"US",song:"Candy Man (S)",g:"Bourgeois OM",what:"Steady alternating thumb",url:"https://www.songsterr.com/a/wsa/mississippi-john-hurt-tabs-a122",mine:"",lesson:""},
+ {p:"Doc Watson",c:"US",song:"Deep River Blues (S)",g:"Martin D-18V or Collings D2H",what:"Clean flatpicking",url:"https://www.songsterr.com/a/wsa/doc-watson-tabs-a5804",mine:"",lesson:""},
+ {p:"Bert Jansch",c:"Scotland",song:"Angie (S), then Blackwaterside (S, DADGAD)",g:"Bourgeois OM or Collings 0001",what:"Driving thumb, darker chords",url:"https://www.songsterr.com/a/wsa/bert-jansch-tabs-a3130",mine:"",lesson:""},
+ {p:"Julian Lage",c:"US",song:"Ryland (S)",g:"Collings OM1 JL; Hahn 228 or I-30 LC with JL pickups",what:"Clarity and touch",url:"https://www.songsterr.com/a/wsa/julian-lage-ryland-tab-s1593621",mine:"",lesson:""},
+ {p:"Hermanos Gutiérrez",c:"Ecuador and Switzerland",song:"Tres Hermanos (S)",g:"Strat or Creston into EC-1 and 1978; Takamine for nylon parts",what:"Melody, echo and space",url:"https://www.songsterr.com/a/wsa/hermanos-gutierrez-tabs-a141159",mine:"",lesson:""},
+ {p:"Molly Tuttle",c:"US",song:"Take the Journey (S), later Crooked Tree (T)",g:"Collings D2H",what:"Crosspicking",url:"https://www.songsterr.com/a/wsa/molly-tuttle-tabs-a33898",mine:"",lesson:""},
+ {p:"Carl Miner",c:"US",song:"Collings I-35 LC demo, from the tab in my folder",g:"Collings I-30 LC",what:"Double-stop slides over a steady thumb",url:"",mine:"",lesson:""},
+ {p:"Carl Miner, week 2",c:"US",song:"Meriwether (DADGAD), from the tab in my folder",g:"Collings 0001 or D2H in DADGAD",what:"Open-tuning melody and drone",url:"",mine:"",lesson:""},
+ {p:"Ali Farka Touré",c:"Mali",song:"Savane (S), later Diaraby (T)",g:"Strat clean into The Amp, or D-18V",what:"Desert-blues phrases over a drone",url:"https://www.songsterr.com/a/wsa/ali-farka-toure-tabs-a381290",mine:"",lesson:""},
+ {p:"Twanguero (Diego García)",c:"Spain",song:"Minor Rag, from the score in my Reference folder",g:"Takamine C132S nylon",what:"Rag and classical touch with twang",url:"",mine:"",lesson:""}];
 function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 function daysSince(iso){const a=new Date(iso+"T12:00:00"),b=new Date(todayStr()+"T12:00:00");return Math.round((b-a)/86400000);}
 function curWeek(){if(!S.wk){S.wk=1;S.wkSet=todayStr();save();}const w=S.wk+Math.floor(Math.max(0,daysSince(S.wkSet))/7);return Math.max(1,Math.min(PLAYERS.length,w));}
@@ -640,10 +667,40 @@ function setWeek(w){S.wk=Math.max(1,Math.min(PLAYERS.length,w));S.wkSet=todayStr
 function showWeek(){const w=curWeek(),P=PLAYERS[w-1];
   $("wkNum").textContent=`This week · Week ${w} of ${PLAYERS.length} · ${P.what}`;
   $("wkWho").textContent=`${P.p} (${P.c})`;$("wkSong").textContent=P.song;$("wkGtr").textContent=P.g?`Guitar: ${P.g}`:"";
-  const a=$("wkLink");if(P.url){a.href=P.url;a.classList.remove("hidden");}else a.classList.add("hidden");
+  $("wkLinks").replaceChildren(...songLinks(P));
   $("wkPrev").disabled=w<=1;$("wkNext").disabled=w>=PLAYERS.length;}
 function initWeek(){$("wkPrev").onclick=()=>setWeek(curWeek()-1);$("wkNext").onclick=()=>setWeek(curWeek()+1);
-  if(firstRun)$("how").open=true;showWeek();}
+  if(firstRun)$("how").open=true;showWeek();showClasses();initOffline();}
+/* Song buttons: Songsterr (standard tab), My Version (my own Songsterr tab), Lesson (the song's Google Drive Lessons folder). Only the ones with a link show. */
+function songLinks(o){const out=[];
+  [["url","Songsterr",""],["mine","My Version","mine"],["lesson","Lesson",""]].forEach(([k,label,cls])=>{
+    if(!o[k])return;const a=document.createElement("a");a.className="btn"+(cls?" "+cls:"");a.href=o[k];a.target="_blank";a.rel="noopener";a.textContent=label;out.push(a);});
+  return out;}
+/* My class songs: one entry per class, songs in the order the teacher hands them out. Pages live in forScore; this holds my cues and links. */
+const CLASSES=[
+ {name:"Winter 2027 · Dan Fulkerson",when:"Starts the week of January 7.",
+  folder:"",
+  songs:[
+   /* {t:"Song",a:"Artist",cues:["one or two cues"],url:"Songsterr link",mine:"my Songsterr version",lesson:"Drive folder link"} */
+  ]}];
+const READY=["Each of tonight's songs opened once in the Songsterr app","Tonight's setlist ready in forScore","My class folder set to Available offline in Google Drive","iPad and Apple Pencil charged","This app opened from my Fretboard icon"];
+function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e;}
+function showClasses(){const box=$("classes");box.replaceChildren();
+  CLASSES.forEach(C=>{const d=el("div","cls");d.appendChild(el("h3","",C.name));d.appendChild(el("p","when",C.when));
+    if(C.folder){const l=el("div","links");const a=el("a","btn","Class folder");a.href=C.folder;a.target="_blank";a.rel="noopener";l.appendChild(a);d.appendChild(l);}
+    if(!C.songs.length)d.appendChild(el("p","note","My songs go here after the first class. I scan the pages into this class's Inbox folder in Lessons and tell Claude."));
+    C.songs.forEach(g=>{const r=el("div","songrow");const t=el("div","t",g.t+" ");if(g.a)t.appendChild(el("span","","· "+g.a));r.appendChild(t);
+      if(g.cues&&g.cues.length){const u=el("ul");g.cues.forEach(c=>u.appendChild(el("li","",c)));r.appendChild(u);}
+      const l=el("div","links");songLinks(g).forEach(a=>l.appendChild(a));if(l.children.length)r.appendChild(l);d.appendChild(r);});
+    box.appendChild(d);});
+  const rd=el("div","ready");rd.appendChild(el("h4","","Get ready for class"));
+  if(!Array.isArray(S.ready))S.ready=[];
+  READY.forEach((txt,i)=>{const lab=el("label","check");const cb=document.createElement("input");cb.type="checkbox";cb.checked=!!S.ready[i];
+    cb.onchange=()=>{S.ready[i]=cb.checked;save();};lab.appendChild(cb);lab.appendChild(document.createTextNode(" "+txt));rd.appendChild(lab);});
+  const clr=el("button","btn","Clear for next class");clr.onclick=()=>{S.ready=[];save();showClasses();toast("Ready list cleared");};rd.appendChild(clr);
+  box.appendChild(rd);}
+function initOffline(){const f=()=>$("offline").classList.toggle("hidden",navigator.onLine!==false);
+  window.addEventListener("online",f);window.addEventListener("offline",f);f();}
 function copyLog(){const txt="My fretboard practice log\n"+S.log.map(l=>`${l.d}  ${l.label}  ${l.min} min  up to ${l.bpm} bpm`).join("\n")+`\nPlan days done: ${S.done.join(", ")||"none yet"}`;
   const ok=()=>toast("Practice log copied");
   const fallback=()=>{const ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();let good=false;try{good=document.execCommand("copy");}catch(e){}ta.remove();toast(good?"Practice log copied":"Couldn't copy here");};
