@@ -329,7 +329,7 @@ a.btn.mine{border-color:var(--accent);font-weight:600}
     </div>
   </div>
 
-  <footer>Strings are drawn as tab: the highest string on top. In standard tuning, shapes are named for the open chord they come from (C-A-G-E-D); in other tunings I pick fret positions instead. No sound? I check that Silent Mode is off and the volume is up. <strong>Version 11-22-2026b</strong></footer>
+  <footer>Strings are drawn as tab: the highest string on top. In standard tuning, shapes are named for the open chord they come from (C-A-G-E-D); in other tunings I pick fret positions instead. No sound? I check that Silent Mode is off and the volume is up. <strong>Version 11-22-2026c</strong></footer>
 </div>
 <div class="toast" id="toast" role="status"></div>
 
@@ -674,7 +674,9 @@ function initWeek(){$("wkPrev").onclick=()=>setWeek(curWeek()-1);$("wkNext").onc
 /* Song buttons: Songsterr (standard tab), My Version (my own Songsterr tab), Lesson (the song's Google Drive Lessons folder). Only the ones with a link show. */
 function songLinks(o){const out=[];
   [["url","Songsterr",""],["mine","My Version","mine"],["lesson","Lesson",""]].forEach(([k,label,cls])=>{
-    if(!o[k])return;const a=document.createElement("a");a.className="btn"+(cls?" "+cls:"");a.href=o[k];a.target="_blank";a.rel="noopener";a.textContent=label;out.push(a);});
+    if(!o[k])return;const a=document.createElement("a");a.className="btn"+(cls?" "+cls:"");a.href=o[k];a.target="_blank";a.rel="noopener";a.textContent=label;
+    a.onclick=e=>{if(navigator.onLine===false){e.preventDefault();toast(k==="lesson"?"Offline: I open this song's pages in forScore or my Drive offline copies.":"Offline: I open this song in the Songsterr app (songs I've opened before).");}};
+    out.push(a);});
   return out;}
 /* My class songs: one entry per class, songs in the order the teacher hands them out. Pages live in forScore; this holds my cues and links. */
 const CLASSES=[
