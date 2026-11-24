@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-180.png">
 <link rel="manifest" href="manifest.json">
-<title>Golf Practice · Dwight Clarke · v2026-11-24e</title>
+<title>Golf Practice · Dwight Clarke · v2026-11-24f</title>
 <style>
 :root{--bg:#f6f3ec;--card:#fffdf8;--ink:#17202b;--muted:#5b6675;--line:#e2dccd;--navy:#1f3a5f;--good:#3f7a3a;--soft:#efe9dc;--warn:#9c6b14;--rust:#B4532A;--golf:#2d5f46;--four:#f3ece0}
 @media (prefers-color-scheme:dark){:root{--bg:#14181e;--card:#1d232b;--ink:#eef1f4;--muted:#9aa5b2;--line:#2e3742;--navy:#8fb3e0;--good:#7cc072;--soft:#252d37;--warn:#e0b25c;--rust:#e58a5f;--golf:#3f7d5e;--four:#2a2520}}
@@ -106,7 +106,7 @@ a{color:var(--navy)}
 <nav id="nav"></nav>
 <script>
 'use strict';
-const VERSION = 'v2026-11-24e';
+const VERSION = 'v2026-11-24f';
 const KEY = 'golfPractice.v1';
 
 // ================= MY DRILLS =================
@@ -345,7 +345,7 @@ const PLACES = {
 };
 const CUE = 'Hinge it, throw it: the clubhead through the ball to my channel.';
 // One color per mix, the same on my Home Golf Board: home A, B, C; dome D1, D2, D3; range R1–R4.
-const MIXC = {A:'#2F6DB5', B:'#C27C0E', C:'#7A4FA3', D1:'#1F7A7A', D2:'#B23A62', D3:'#5E7D1F', R1:'#2F6DB5', R2:'#C27C0E', R3:'#7A4FA3', R4:'#1F7A7A'};
+const MIXC = {A:'#2F6DB5', B:'#A8650A', C:'#7A4FA3', D1:'#1F7A7A', D2:'#B23A62', D3:'#5E7D1F', R1:'#2F6DB5', R2:'#A8650A', R3:'#7A4FA3', R4:'#1F7A7A'};
 const mb = (id, big) => `<span class="mb${big?' big':''}" style="background:${MIXC[id]||'#5b6675'}">${esc(id)}</span>`;
 const short = M => M.name.replace(/^(Mix [ABC]|D\d|R\d) · /,'');
 const mixLabel = (M, big) => `${mb(M.id, big)} ${esc(short(M))}`;
