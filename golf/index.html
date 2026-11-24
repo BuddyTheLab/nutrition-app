@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-180.png">
 <link rel="manifest" href="manifest.json">
-<title>Golf Practice · Dwight Clarke · v2026-11-24d</title>
+<title>Golf Practice · Dwight Clarke · v2026-11-24e</title>
 <style>
 :root{--bg:#f6f3ec;--card:#fffdf8;--ink:#17202b;--muted:#5b6675;--line:#e2dccd;--navy:#1f3a5f;--good:#3f7a3a;--soft:#efe9dc;--warn:#9c6b14;--rust:#B4532A;--golf:#2d5f46;--four:#f3ece0}
 @media (prefers-color-scheme:dark){:root{--bg:#14181e;--card:#1d232b;--ink:#eef1f4;--muted:#9aa5b2;--line:#2e3742;--navy:#8fb3e0;--good:#7cc072;--soft:#252d37;--warn:#e0b25c;--rust:#e58a5f;--golf:#3f7d5e;--four:#2a2520}}
@@ -63,6 +63,11 @@ figure{margin:10px 0 4px}figure img{width:100%;border-radius:10px;display:block;
 .grades button{width:100%}.grades .n{font-size:12px;color:var(--muted);text-align:center}
 .holes{display:grid;grid-template-columns:repeat(9,1fr);gap:4px;margin-top:6px}.holes input{padding:8px 0}
 .tot{margin-top:8px;font-weight:700}
+.mb{display:inline-block;color:#fff;font-weight:800;font-size:.78em;line-height:1;padding:4px 8px;border-radius:7px;letter-spacing:.02em;vertical-align:2px}
+.mb.big{font-size:1em;padding:5px 10px;border-radius:9px;margin-right:4px;vertical-align:3px}
+.drill.mixed{border-left:6px solid var(--mc)}
+.choices button.mix{border:2px solid var(--mc);color:var(--mc);background:var(--card);font-weight:800}
+.choices button.mix.on{background:var(--mc);color:#fff}
 .donebar{display:flex;align-items:center;gap:10px;margin-top:12px}
 .tickbtn{background:var(--soft);color:var(--ink);min-width:120px}
 .tickbtn.on{background:var(--good);color:#fff}
@@ -101,7 +106,7 @@ a{color:var(--navy)}
 <nav id="nav"></nav>
 <script>
 'use strict';
-const VERSION = 'v2026-11-24d';
+const VERSION = 'v2026-11-24e';
 const KEY = 'golfPractice.v1';
 
 // ================= MY DRILLS =================
@@ -339,6 +344,11 @@ const PLACES = {
   ]}
 };
 const CUE = 'Hinge it, throw it: the clubhead through the ball to my channel.';
+// One color per mix, the same on my Home Golf Board: home A, B, C; dome D1, D2, D3; range R1–R4.
+const MIXC = {A:'#2F6DB5', B:'#C27C0E', C:'#7A4FA3', D1:'#1F7A7A', D2:'#B23A62', D3:'#5E7D1F', R1:'#2F6DB5', R2:'#C27C0E', R3:'#7A4FA3', R4:'#1F7A7A'};
+const mb = (id, big) => `<span class="mb${big?' big':''}" style="background:${MIXC[id]||'#5b6675'}">${esc(id)}</span>`;
+const short = M => M.name.replace(/^(Mix [ABC]|D\d|R\d) · /,'');
+const mixLabel = (M, big) => `${mb(M.id, big)} ${esc(short(M))}`;
 // My week: 0 = Monday
 const PLAN = [
   {p:'home', l:'Home'}, {p:'dome', l:'Dome'}, {p:'home', l:'Home'}, {p:'rest', l:'Rest · imagery'},
@@ -377,7 +387,7 @@ function drillsFor(cur){
   const out = [];
   out.push({grp:'Anchor · every time'}); P.anchor.forEach(id => out.push({id}));
   if(easy){ out.push({grp:'Build'}); out.push({easy:true}); }
-  else { out.push({grp:'Build · two drills'}); M.build.forEach(id => out.push({id, contrast:!!M.contrast})); }
+  else { out.push({grp:'Build · two drills'}); M.build.forEach(id => out.push({id, contrast:!!M.contrast, mix:M.id})); }
   if(P.putt){ out.push({grp:'Putting · 4 minutes'}); out.push({id:PUTT[S.putt % PUTT.length]}); }
   out.push({grp:'Play it · every shot different'}); if(P.see) out.push({id:'see30'}); out.push({id:M.play});
   if(cur.place === 'dome' && !M.sunday && dow(cur.date) === 4){ out.push({grp:'Friday · short game to close'}); out.push({id:'par18'}); }
@@ -412,17 +422,17 @@ function today(){
   h += fourBox(CUE, 'Point A · anchor · two drills · putting at home · see it · play it · log it.', pl.p==='dome'?PLACES.dome.start:PLACES.home.start);
   if(S.cur){
     const P = PLACES[S.cur.place], M = P.mixes[S.cur.mix];
-    h += `<div class="card"><h2>In progress</h2><div class="sub">${esc(P.name)} · ${esc(M.name)} · ${fmt(S.cur.date)}</div><button class="big" onclick="go('session')">Pick up where I left off</button><button class="small ghost wide" onclick="dropCur()">Set it aside</button></div>`;
+    h += `<div class="card"><h2>In progress</h2><div class="sub">${esc(P.name)} · ${mixLabel(M)} · ${fmt(S.cur.date)}</div><button class="big" onclick="go('session')">Pick up where I left off</button><button class="small ghost wide" onclick="dropCur()">Set it aside</button></div>`;
   }
   if(easy) h += `<div class="note easy">Easy week: anchor, putting and play it. The learning settles while I rest it.</div>`;
   if(pl.p === 'rest'){
     h += `<div class="card"><h2>Today: rest · imagery</h2><div class="sub">2 minutes, standing at address, club in hand</div><button class="big" onclick="go('drill',{id:'imagery', log:true})">Two minutes of imagery</button></div>`;
   } else if(!S.cur){
     const i = nextMix(pl.p, k), M = PLACES[pl.p].mixes[i];
-    h += `<div class="card"><h2>Today: ${esc(PLACES[pl.p].name)} · ${esc(M.name)}</h2><div class="sub">${esc(PLACES[pl.p].sub)}</div><button class="big" onclick="startSession('${pl.p}',${i})">Start</button></div>`;
+    h += `<div class="card"><h2>Today: ${esc(PLACES[pl.p].name)} · ${mixLabel(M)}</h2><div class="sub">${esc(PLACES[pl.p].sub)}</div><button class="big" onclick="startSession('${pl.p}',${i})">Start</button></div>`;
   }
   h += `<div class="card"><h2>Somewhere else today?</h2><div class="sub">My next mix waits for each place.</div><div class="places">`
-    + Object.keys(PLACES).map(p => `<button onclick="startSession('${p}',${nextMix(p,k)})">${PLACES[p].name}<br><span style="font-size:13px;opacity:.75">${esc(PLACES[p].mixes[nextMix(p,k)].id)}</span></button>`).join('')
+    + Object.keys(PLACES).map(p => `<button onclick="startSession('${p}',${nextMix(p,k)})">${PLACES[p].name}<br>${mb(PLACES[p].mixes[nextMix(p,k)].id)}</button>`).join('')
     + `</div><button class="small ghost wide" onclick="go('drill',{id:'imagery', log:true})">Imagery · 2 minutes</button></div>`;
   h += `<div class="note">A missed day changes nothing. My next mix waits for me.</div>`;
   return h;
@@ -468,7 +478,7 @@ function logRows(id, d, cur){
 function drillCard(id, opts){
   opts = opts || {};
   const d = DR[id], cur = S.cur, on = cur && cur.ticks[id], live = cur && !opts.preview;
-  let h = `<div class="card drill"><h2>${esc(d.name)}</h2>`;
+  let h = `<div class="card drill${opts.mix?' mixed':''}"${opts.mix?` style="--mc:${MIXC[opts.mix]}"`:''}><h2>${opts.mix?mb(opts.mix)+' ':''}${esc(d.name)}</h2>`;
   h += `<div class="cue">${esc(d.cue)}</div>`;
   h += `<div class="ff"><b>Feel</b><span>${esc(d.feel)}</span></div><div class="ff"><b>Feedback</b><span>${esc(d.feedback)}</span></div>`;
   h += `<div class="ff"><b>Dose</b><span class="dose">${esc(d.dose)}${d.coach?' · '+esc(d.coach):''}</span></div>`;
@@ -500,15 +510,15 @@ function setVideo(v){ S.cur.video = v; render(); }
 function session(){
   const cur = S.cur; if(!cur) return today();
   const P = PLACES[cur.place], M = P.mixes[cur.mix];
-  let h = `<div class="top"><button class="back" onclick="go('today')">‹ Today</button></div><div class="band"><h1>${esc(M.name)}</h1><div class="sub">${esc(P.name)} · ${esc(P.sub)}${isEasy(cur.date)?' · easy week':''}</div></div>`;
+  let h = `<div class="top"><button class="back" onclick="go('today')">‹ Today</button></div><div class="band"><h1>${mb(M.id, true)}${esc(short(M))}</h1><div class="sub">${esc(P.name)} · ${esc(P.sub)}${isEasy(cur.date)?' · easy week':''}</div></div>`;
   const items = drillsFor(cur).filter(x => x.id).map(x => DR[x.id].name.replace(/^Play It · /,'Play it: '));
   h += fourBox(CUE, items.join(' → '), P.start);
-  h += `<div class="choices">${P.mixes.map((m,i)=>`<button class="${i===cur.mix?'on':''}" onclick="swapMix(${i})">${esc(m.id)}</button>`).join('')}</div>`;
+  h += `<div class="choices">${P.mixes.map((m,i)=>`<button class="mix ${i===cur.mix?'on':''}" style="--mc:${MIXC[m.id]}" onclick="swapMix(${i})">${esc(m.id)}</button>`).join('')}</div>`;
   let grid = false;
   drillsFor(cur).forEach(x => {
-    if(x.grp){ if(grid){ h += '</div>'; } h += `<div class="grp">${esc(x.grp)}</div><div class="drillgrid">`; grid = true; return; }
+    if(x.grp){ if(grid){ h += '</div>'; } h += `<div class="grp">${esc(x.grp)}${x.grp.startsWith('Build')?' · '+mb(M.id):''}</div><div class="drillgrid">`; grid = true; return; }
     if(x.easy){ h += `<div class="card"><div class="note easy">Easy week: no build drills. Anchor, putting and play it, then I let it settle.</div></div>`; return; }
-    h += drillCard(x.id, {contrast:x.contrast});
+    h += drillCard(x.id, {contrast:x.contrast, mix:x.mix});
   });
   if(grid) h += '</div>';
   h += `<div class="grp">Log it · 30 seconds</div><div class="card"><h2>Flow 1–10</h2><div class="sub">How smooth and whole it felt with my attention on the feel.</div><div class="scale">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button class="${cur.flow===n?'on':''}" onclick="setFlow(${n})">${n}</button>`).join('')}</div>
@@ -550,11 +560,11 @@ function planWeek(mon){
   if(S.cur && S.cur.place !== 'range') { /* in progress counts as today's */ }
   for(let i=0;i<7;i++){
     const d = addDays(mon,i), pl = PLAN[i];
-    let label = pl.l;
+    let label = esc(pl.l);
     if(d >= k && pl.p !== 'rest'){
-      if(pl.p === 'home'){ const M = PLACES.home.mixes[nx.home % 3]; label = `Home · ${M.name}`; nx.home++; }
-      else if(dow(d) === 6) label = `Dome · ${PLACES.dome.mixes[2].name}`;
-      else { label = `Dome · ${PLACES.dome.mixes[nx.dome % 2].name}${dow(d)===4?' + Par 18':''}`; nx.dome++; }
+      if(pl.p === 'home'){ const M = PLACES.home.mixes[nx.home % 3]; label = `Home · ${mixLabel(M)}`; nx.home++; }
+      else if(dow(d) === 6) label = `Dome · ${mixLabel(PLACES.dome.mixes[2])}`;
+      else { label = `Dome · ${mixLabel(PLACES.dome.mixes[nx.dome % 2])}${dow(d)===4?' + Par 18':''}`; nx.dome++; }
     }
     out.push(label);
   }
@@ -568,12 +578,12 @@ function week(){
   for(let i=0;i<7;i++){
     const d = addDays(mon,i), ss = by[d] || [];
     ss.forEach(s => { if(s.place==='home') home++; if(s.place==='dome') dome++; });
-    const did = ss.map(s => s.place==='rest' ? 'Rest · imagery' : `${PLACES[s.place].name} · ${s.mixName||s.mix}`);
+    const did = ss.map(s => s.place==='rest' ? 'Rest · imagery' : `${PLACES[s.place].name} · ${mb(s.mix)} ${esc((s.mixName||'').replace(/^(Mix [ABC]|D\d|R\d) · /,''))}`);
     const how = ss.map(s => s.flow ? 'flow '+s.flow : (s.partial ? 'not closed' : 'done')).join(' · ');
-    h += `<div class="wk ${d===k?'today':''}"><span class="d">${DAYN[i]}</span><span><span class="t">${esc(did.length ? did.join(' + ') : labels[i])}</span>${did.length?`<br><span class="ok">✓ ${esc(how)}</span>`:''}</span></div>`;
+    h += `<div class="wk ${d===k?'today':''}"><span class="d">${DAYN[i]}</span><span><span class="t">${did.length ? did.join(' + ') : labels[i]}</span>${did.length?`<br><span class="ok">✓ ${esc(how)}</span>`:''}</span></div>`;
   }
   h += `</div><div class="card"><h2>My floor</h2><div>Home ${home} of 3 · Dome ${dome} of 2</div><div class="sub">My plan: 3 home, 3 dome, imagery Thursday. The floor still works.</div></div>`;
-  h += `<div class="card"><h2>Up next</h2><div>Home: <b>${esc(PLACES.home.mixes[S.next.home%3].name)}</b></div><div>Dome, Tue and Fri (Fri + Par 18): <b>${esc(PLACES.dome.mixes[S.next.dome%2].name)}</b> · Sunday: <b>D3</b></div><div>Range: <b>${esc(PLACES.range.mixes[S.next.range%4].name)}</b></div><div class="sub" style="margin-top:6px">Home putting next: ${esc(DR[PUTT[S.putt%PUTT.length]].name.replace('Putting · ',''))} · Distance Log next: ${esc(DIST[S.dist%DIST.length].name)}</div></div>`;
+  h += `<div class="card"><h2>Up next</h2><div>Home: <b>${mixLabel(PLACES.home.mixes[S.next.home%3])}</b></div><div>Dome, Tue and Fri (Fri + Par 18): <b>${mixLabel(PLACES.dome.mixes[S.next.dome%2])}</b> · Sunday: ${mb('D3')}</div><div>Range: <b>${mixLabel(PLACES.range.mixes[S.next.range%4])}</b></div><div class="sub" style="margin-top:6px">Home putting next: ${esc(DR[PUTT[S.putt%PUTT.length]].name.replace('Putting · ',''))} · Distance Log next: ${esc(DIST[S.dist%DIST.length].name)}</div></div>`;
   h += noteCard();
   return h;
 }
@@ -589,9 +599,9 @@ function logView(){
   const L = S.sessions.slice().reverse();
   if(!L.length) h += `<div class="sub">My first session shows here.</div>`;
   L.slice(0,60).forEach(s => {
-    const where = s.place==='rest' ? 'Rest · imagery' : `${PLACES[s.place].name} · ${s.mixName||s.mix}`;
+    const where = s.place==='rest' ? 'Rest · imagery' : `${PLACES[s.place].name} · ${mb(s.mix)} ${esc((s.mixName||'').replace(/^(Mix [ABC]|D\d|R\d) · /,''))}`;
     const nums = s.counts ? Object.keys(s.counts).map(n => `${n}: ${s.counts[n]}`).join('<br>') : '';
-    h += `<div class="lg"><b>${fmt(s.date)}</b> · ${esc(where)}${s.easy?' · easy':''}${s.partial?' · not closed':''}<div class="m">${s.flow?'Flow '+s.flow:''}${s.word?' · “'+esc(s.word)+'”':''}${nums?'<br>'+nums.split('<br>').map(esc).join('<br>'):''}${s.best?'<br>Best feel: '+esc(s.best):''}</div></div>`;
+    h += `<div class="lg"><b>${fmt(s.date)}</b> · ${where}${s.easy?' · easy':''}${s.partial?' · not closed':''}<div class="m">${s.flow?'Flow '+s.flow:''}${s.word?' · “'+esc(s.word)+'”':''}${nums?'<br>'+nums.split('<br>').map(esc).join('<br>'):''}${s.best?'<br>Best feel: '+esc(s.best):''}</div></div>`;
   });
   return h + `</div>`;
 }
@@ -635,7 +645,7 @@ function drills(){
       .forEach(id => h += `<div class="mrow" onclick="go('drill',{id:'${id}'})"><span class="sp"><b>${esc(DR[id].name)}</b><br><span class="sub">${esc(DR[id].cue)}</span></span><span class="arr">›</span></div>`);
     h += `</div>`;
   });
-  h += `<div class="card"><h2>My mixes</h2>${Object.keys(PLACES).map(p => PLACES[p].mixes.map(m => `<div class="sub" style="margin:4px 0"><b style="color:var(--ink)">${esc(m.name)}</b>: ${esc(m.build.map(id=>DR[id].name).join(' + '))} → ${esc(DR[m.play].name.replace('Play It · ',''))}${m.contrast?' · contrast reps':''}</div>`).join('')).join('')}</div>`;
+  h += `<div class="card"><h2>My mixes</h2>${Object.keys(PLACES).map(p => PLACES[p].mixes.map(m => `<div class="sub" style="margin:4px 0"><b style="color:var(--ink)">${mixLabel(m)}</b>: ${esc(m.build.map(id=>DR[id].name).join(' + '))} → ${esc(DR[m.play].name.replace('Play It · ',''))}${m.contrast?' · contrast reps':''}</div>`).join('')).join('')}</div>`;
   return h;
 }
 
