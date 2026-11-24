@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-180.png">
 <link rel="manifest" href="manifest.json">
-<title>Golf Practice · Dwight Clarke · v2026-11-24</title>
+<title>Golf Practice · Dwight Clarke · v2026-11-24b</title>
 <style>
 :root{--bg:#f6f3ec;--card:#fffdf8;--ink:#17202b;--muted:#5b6675;--line:#e2dccd;--navy:#1f3a5f;--accent:#c2562b;--good:#3f7a3a;--soft:#efe9dc;--warn:#9c6b14;--rust:#B4532A;--four:#f3ece0}
 @media (prefers-color-scheme:dark){:root{--bg:#14181e;--card:#1d232b;--ink:#eef1f4;--muted:#9aa5b2;--line:#2e3742;--navy:#8fb3e0;--accent:#e58a5f;--good:#7cc072;--soft:#252d37;--warn:#e0b25c;--rust:#e58a5f;--four:#2a2520}}
@@ -88,7 +88,7 @@ a{color:var(--navy)}
 <nav id="nav"></nav>
 <script>
 'use strict';
-const VERSION = 'v2026-11-24';
+const VERSION = 'v2026-11-24b';
 const KEY = 'golfPractice.v1';
 
 // ================= MY DRILLS =================
@@ -351,7 +351,7 @@ function toast(t){ const el = document.getElementById('toast'); el.textContent =
 
 function today(){
   const k = todayKey(), pl = PLAN[dow(k)], easy = isEasy(k);
-  let h = `<div class="row"><h1 class="sp">Golf Practice</h1><a class="chip" href="../Training_Cards_App.html">Training ›</a></div>
+  let h = `<h1>Golf Practice</h1>
   <div class="sub">${fmt(k)} · week ${Math.max(1,weekNo(k))}${easy?' · <span class="chip easy">Easy week</span>':''}</div>`;
   h += `<div class="four"><div><b>Cue</b> Hinge it, throw it: the clubhead through the ball to my channel.</div><div><b>Steps</b> Point A · anchor · two drills · play it · log it.</div><div><b>Recall</b> From memory, then I check.</div><div><b>Start</b> When I pick up my rope, my session has started.</div></div>`;
   if(S.cur){
