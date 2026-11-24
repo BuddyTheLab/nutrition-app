@@ -1,5 +1,5 @@
 // Golf Practice: keeps the app working at the dome without signal. When online, it checks GitHub for the newest version.
-const CACHE = "golf-practice-v2026-11-24c";
+const CACHE = "golf-practice-v2026-11-24d";
 const IMGS = ["rope3d","hinge3d","load3d","balance3d","towel3d","towel_top","setup3d","impact3d","finish3d","onehand3d","carpet","dots","10ball","toptracer","par18_top","p_gate","p_ladder","p_speed"].map(n => "./img/" + n + ".png");
 const CORE = ["./", "./index.html", "./manifest.json", "./icon-180.png", "./icon-512.png", ...IMGS];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });

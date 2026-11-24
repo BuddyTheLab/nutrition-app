@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-180.png">
 <link rel="manifest" href="manifest.json">
-<title>Golf Practice · Dwight Clarke · v2026-11-24c</title>
+<title>Golf Practice · Dwight Clarke · v2026-11-24d</title>
 <style>
 :root{--bg:#f6f3ec;--card:#fffdf8;--ink:#17202b;--muted:#5b6675;--line:#e2dccd;--navy:#1f3a5f;--good:#3f7a3a;--soft:#efe9dc;--warn:#9c6b14;--rust:#B4532A;--golf:#2d5f46;--four:#f3ece0}
 @media (prefers-color-scheme:dark){:root{--bg:#14181e;--card:#1d232b;--ink:#eef1f4;--muted:#9aa5b2;--line:#2e3742;--navy:#8fb3e0;--good:#7cc072;--soft:#252d37;--warn:#e0b25c;--rust:#e58a5f;--golf:#3f7d5e;--four:#2a2520}}
@@ -101,7 +101,7 @@ a{color:var(--navy)}
 <nav id="nav"></nav>
 <script>
 'use strict';
-const VERSION = 'v2026-11-24c';
+const VERSION = 'v2026-11-24d';
 const KEY = 'golfPractice.v1';
 
 // ================= MY DRILLS =================
@@ -380,6 +380,7 @@ function drillsFor(cur){
   else { out.push({grp:'Build · two drills'}); M.build.forEach(id => out.push({id, contrast:!!M.contrast})); }
   if(P.putt){ out.push({grp:'Putting · 4 minutes'}); out.push({id:PUTT[S.putt % PUTT.length]}); }
   out.push({grp:'Play it · every shot different'}); if(P.see) out.push({id:'see30'}); out.push({id:M.play});
+  if(cur.place === 'dome' && !M.sunday && dow(cur.date) === 4){ out.push({grp:'Friday · short game to close'}); out.push({id:'par18'}); }
   return out;
 }
 
@@ -553,7 +554,7 @@ function planWeek(mon){
     if(d >= k && pl.p !== 'rest'){
       if(pl.p === 'home'){ const M = PLACES.home.mixes[nx.home % 3]; label = `Home · ${M.name}`; nx.home++; }
       else if(dow(d) === 6) label = `Dome · ${PLACES.dome.mixes[2].name}`;
-      else { label = `Dome · ${PLACES.dome.mixes[nx.dome % 2].name}`; nx.dome++; }
+      else { label = `Dome · ${PLACES.dome.mixes[nx.dome % 2].name}${dow(d)===4?' + Par 18':''}`; nx.dome++; }
     }
     out.push(label);
   }
@@ -572,7 +573,7 @@ function week(){
     h += `<div class="wk ${d===k?'today':''}"><span class="d">${DAYN[i]}</span><span><span class="t">${esc(did.length ? did.join(' + ') : labels[i])}</span>${did.length?`<br><span class="ok">✓ ${esc(how)}</span>`:''}</span></div>`;
   }
   h += `</div><div class="card"><h2>My floor</h2><div>Home ${home} of 3 · Dome ${dome} of 2</div><div class="sub">My plan: 3 home, 3 dome, imagery Thursday. The floor still works.</div></div>`;
-  h += `<div class="card"><h2>Up next</h2><div>Home: <b>${esc(PLACES.home.mixes[S.next.home%3].name)}</b></div><div>Dome, Tue and Fri: <b>${esc(PLACES.dome.mixes[S.next.dome%2].name)}</b> · Sunday: <b>D3</b></div><div>Range: <b>${esc(PLACES.range.mixes[S.next.range%4].name)}</b></div><div class="sub" style="margin-top:6px">Home putting next: ${esc(DR[PUTT[S.putt%PUTT.length]].name.replace('Putting · ',''))} · Distance Log next: ${esc(DIST[S.dist%DIST.length].name)}</div></div>`;
+  h += `<div class="card"><h2>Up next</h2><div>Home: <b>${esc(PLACES.home.mixes[S.next.home%3].name)}</b></div><div>Dome, Tue and Fri (Fri + Par 18): <b>${esc(PLACES.dome.mixes[S.next.dome%2].name)}</b> · Sunday: <b>D3</b></div><div>Range: <b>${esc(PLACES.range.mixes[S.next.range%4].name)}</b></div><div class="sub" style="margin-top:6px">Home putting next: ${esc(DR[PUTT[S.putt%PUTT.length]].name.replace('Putting · ',''))} · Distance Log next: ${esc(DIST[S.dist%DIST.length].name)}</div></div>`;
   h += noteCard();
   return h;
 }
