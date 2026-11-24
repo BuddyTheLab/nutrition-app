@@ -1,5 +1,5 @@
 // Training Cards: keeps my app working at the gym without signal. When online, it checks GitHub for the newest version.
-const CACHE = "training-cards-v2026-11-24f";
+const CACHE = "training-cards-v2026-11-24g";
 const CORE = ["./Training_Cards_App.html", "./training-icon.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k.startsWith("training-cards-") && k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
