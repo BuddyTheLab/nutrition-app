@@ -1,6 +1,6 @@
 // Fretboard Practice: keeps my app and its fonts working offline. When online, the page always checks GitHub for the newest version.
 // Only my own files: Songsterr, forScore, Drive, YouTube and other sites go straight to the browser.
-const CACHE = "fretboard-v9";
+const CACHE = "fretboard-v10";
 const FONTS = ["barlow-condensed-latin-600-normal","barlow-condensed-latin-700-normal","source-sans-3-latin-400-normal","source-sans-3-latin-400-italic","source-sans-3-latin-600-normal","source-sans-3-latin-700-normal","ibm-plex-mono-latin-400-normal","ibm-plex-mono-latin-600-normal"].map(n => "./fonts/" + n + ".woff2");
 const CORE = ["./", "./index.html", "./library.js", "./manifest.json", "./icon-180.png", "./icon-512.png", ...FONTS];
 self.addEventListener("install", e => {

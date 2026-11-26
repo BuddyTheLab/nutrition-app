@@ -201,7 +201,7 @@ a.btn.mine,a.btn.fs{border-color:var(--accent);font-weight:600}
       <li><b>Play 10:</b> my player of the week, below the fretboard. I learn the song by ear, then tap Open to check it.</li>
       <li><b>Done:</b> tap Mark this day done. Today then opens the next day.</li>
       <li><b>Open:</b> one button for each piece. It opens my own copy in forScore when I have one, otherwise My Version, otherwise Songsterr. Video, when there is one, is the lesson.</li>
-      <li><b>My music:</b> my Library and class songs sit at the bottom. I search or filter; Drive is the backup copy if forScore is missing a piece.</li>
+      <li><b>My music:</b> my Library and class songs sit at the bottom. I search or filter, then tap Open. My master copies live in my Library folder in iCloud and Drive.</li>
       <li><b>Class:</b> I play and mark up my class pages in forScore. My class songs, below, holds my cues and links for each one.</li>
       <li><b>Always the icon:</b> I open this app from my Fretboard Home Screen icon, not a Safari tab, so my progress stays in one place and it works offline.</li>
     </ol>
@@ -407,7 +407,7 @@ a.btn.mine,a.btn.fs{border-color:var(--accent);font-weight:600}
   </details>
 
 
-  <footer>Strings are drawn as tab: the highest string on top. In standard tuning, shapes are named for the open chord they come from (C-A-G-E-D); in other tunings I pick fret positions instead. No sound? I check that Silent Mode is off and the volume is up. <strong>Version <span class="mono">11-29-2026</span></strong></footer>
+  <footer>Strings are drawn as tab: the highest string on top. In standard tuning, shapes are named for the open chord they come from (C-A-G-E-D); in other tunings I pick fret positions instead. No sound? I check that Silent Mode is off and the volume is up. <strong>Version <span class="mono">11-29-2026b</span></strong></footer>
 </div>
 <div class="toast" id="toast" role="status"></div>
 
@@ -796,10 +796,9 @@ const LF={all:"All",warm:"Warm-ups",bg:"Bluegrass",pow:"Player of the week",clas
 function linkBtn(label,href,cls,offMsg){const a=el("a","btn"+(cls?" "+cls:""),label);a.href=href;
   if(!/^forscore:/.test(href)){a.target="_blank";a.rel="noopener";}
   if(offMsg)a.onclick=e=>{if(navigator.onLine===false){e.preventDefault();toast(offMsg);}};return a;}
-function pieceLinks(x,withDrive){const out=[];
+function pieceLinks(x){const out=[];
   const op=x.s?FSC(x.s):(x.mine||x.ss);if(op)out.push(linkBtn("Open",op,"open"));
   (x.v||[]).forEach((u,i)=>out.push(linkBtn(x.v.length>1?`Video ${i+1}`:"Video",u,"","Offline: my forScore copy plays from here; videos wait for Wi-Fi.")));
-  if(withDrive&&x.d)out.push(linkBtn("Drive",DRV(x.d),"","Offline: forScore has my copy."));
   return out;}
 function showLibrary(){
   const q=(S.libQ||"").trim().toLowerCase(),f=S.libF||"all",wk=curWeek();
@@ -812,7 +811,7 @@ function showLibrary(){
   if(!list.length){box.appendChild(el("p","note","Nothing matches. I try a shorter word, or All."));return;}
   list.forEach(x=>{const r=el("div","lib-row"+(f==="pow"&&x.w===wk?" this":""));const i=el("div","info");i.appendChild(el("div","t",x.t));
     i.appendChild(el("div","m",[x.a,x.k].filter(Boolean).join(" · ")));r.appendChild(i);
-    const l=el("div","links");pieceLinks(x,true).forEach(a=>l.appendChild(a));r.appendChild(l);
+    const l=el("div","links");pieceLinks(x).forEach(a=>l.appendChild(a));r.appendChild(l);
     const w=x.f.includes("warm")&&WARM.find(z=>z.t===x.s);
     if(w){const e=el("div","ex");e.appendChild(el("div","cue",w.cue));const a=el("div");a.appendChild(el("b","","Feel"));a.appendChild(document.createTextNode(w.feel));e.appendChild(a);
       const b=el("div");b.appendChild(el("b","","Feedback"));b.appendChild(document.createTextNode(w.fb));e.appendChild(b);r.appendChild(e);}
