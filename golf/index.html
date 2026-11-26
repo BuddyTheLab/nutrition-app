@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-180.png">
 <link rel="manifest" href="manifest.json">
-<title>Golf Practice · Dwight Clarke · v2026-11-25b</title>
+<title>Golf Practice · Dwight Clarke · v2026-11-26</title>
 <style>
 :root{--bg:#f6f3ec;--card:#fffdf8;--ink:#1D2421;--muted:#5b6675;--line:#e2dccd;--navy:#1F3864;--good:#3f7a3a;--soft:#efe9dc;--warn:#9c6b14;--rust:#B4532A;--rustText:#A34A25;--golf:#2F6B3F;--four:#f3ece0}
 @media (prefers-color-scheme:dark){:root{--bg:#14181e;--card:#1d232b;--ink:#eef1f4;--muted:#9aa5b2;--line:#2e3742;--navy:#8fb3e0;--good:#7cc072;--soft:#252d37;--warn:#e0b25c;--rust:#e58a5f;--rustText:#e58a5f;--golf:#3f7d5e;--four:#2a2520}}
@@ -122,7 +122,7 @@ a{color:var(--navy)}
 <nav id="nav"></nav>
 <script>
 'use strict';
-const VERSION = 'v2026-11-25b';
+const VERSION = 'v2026-11-26';
 const KEY = 'golfPractice.v1';
 
 // ================= MY DRILLS =================
@@ -237,7 +237,7 @@ const DR = {
     q:'Where did the dots meet?', log:[R('m','Mid-face marks · goal 7',10)]},
   distLog:{name:'Distance Log', coach:'Toptracer My Practice', dose:'8–10 shots a club · today’s group below', img:'toptracer', type:'carry',
     cue:'Smooth, committed swings; the bay keeps the score.',
-    steps:['Toptracer My Practice, Distance session.','8–10 shots a club, mishits too.','I type each club’s average carry and offline here; a screenshot for Sunday.'],
+    steps:['Toptracer My Practice, Distance session.','8–10 shots a club, mishits too.','I type each club’s average carry and offline here; a screenshot for my week text.'],
     start:'When I change clubs, one easy swing, then the shots count.',
     feel:'My normal swing, not my best one.', feedback:'Carry averages for my Distance Log; dome numbers are baselines I confirm on grass.',
     q:'Which club surprised me today?'},
@@ -410,7 +410,7 @@ function drillsFor(cur){
   return out;
 }
 
-// ---- what a drill logged, in words (for my log and my Sunday text) ----
+// ---- what a drill logged, in words (for my log and my week text) ----
 function distGroup(cur){ return DIST[(cur && cur.distIdx != null ? cur.distIdx : S.dist) % DIST.length]; }
 function gradeTotal(g){ return (g||[]).reduce((a,b)=>a+(+b||0),0); }
 function summary(id, L, cur){
@@ -603,11 +603,11 @@ function week(){
   h += noteCard();
   return h;
 }
-function noteCard(){ return `<div class="card"><h2>My note for Sunday</h2><div class="sub">Ideas from practice; it rides along in my week text.</div><textarea style="margin-top:8px" placeholder="What I noticed, what to ask Randy…" oninput="S.note=this.value;save()">${esc(S.note)}</textarea>${S.note?`<button class="small ghost wide" onclick="if(confirm('Clear my note?')){S.note='';render();}">Clear after Sunday</button>`:''}</div>`; }
+function noteCard(){ return `<div class="card"><h2>My note</h2><div class="sub">Ideas from practice; it rides along in my week text.</div><textarea style="margin-top:8px" placeholder="What I noticed, what to ask Randy…" oninput="S.note=this.value;save()">${esc(S.note)}</textarea>${S.note?`<button class="small ghost wide" onclick="if(confirm('Clear my note?')){S.note='';render();}">Clear my note</button>`:''}</div>`; }
 
 function logView(){
   let h = `<div class="band"><h1>My log</h1><div class="sub">Newest first</div></div>`;
-  h += `<div class="card"><button class="wide" onclick="shareWeek()">Send my week to Claude</button><div class="sub" style="margin-top:6px">Sunday: this text goes to Claude in Golf for my Running Log.</div>
+  h += `<div class="card"><button class="wide" onclick="shareWeek()">Send my week to Claude</button><div class="sub" style="margin-top:6px">Any day: this text goes to Claude in Golf for my Running Log.</div>
     <div class="row" style="margin-top:10px"><button class="small ghost" onclick="exportData()">Back up</button><label class="small ghost" style="background:var(--soft);border-radius:10px;padding:7px 12px;font-size:0.9412rem;font-weight:600;cursor:pointer">Restore<input type="file" accept="application/json,.json" style="display:none" onchange="importData(this.files[0])"></label></div>
     <div class="sub" style="margin-top:6px">My iPhone runs my rotation. To carry it to my iPad: Back up to iCloud Drive on my iPhone, then Restore on my iPad.</div></div>`;
   h += noteCard();
@@ -642,7 +642,7 @@ function weekText(){
 async function shareWeek(){
   const t = weekText();
   try{ if(navigator.share){ await navigator.share({text:t, title:'Golf Practice week'}); return; } }catch(e){ if(e && e.name==='AbortError') return; }
-  try{ await navigator.clipboard.writeText(t); toast('Copied. Paste it into Golf on Sunday.'); }catch(e){ alert(t); }
+  try{ await navigator.clipboard.writeText(t); toast('Copied. Paste it into Golf.'); }catch(e){ alert(t); }
 }
 async function exportData(){
   const name = 'Golf_Practice_Backup_'+todayKey()+'.json', blob = new Blob([JSON.stringify(S,null,1)],{type:'application/json'});
