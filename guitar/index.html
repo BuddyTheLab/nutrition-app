@@ -8,133 +8,172 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Fretboard">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#4b2d22">
+<meta name="theme-color" content="#1F3864">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-180.png">
 <link rel="manifest" href="manifest.json">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+/* My House Style 11/25/26f: Barlow Condensed headings, Source Sans 3 for reading, IBM Plex Mono for bpm, frets and dates.
+   Fonts ride inside the app (fonts/), sizes in rem follow the iPad's Text Size, chord-tone colours carry meaning. */
+@font-face{font-family:"HS Head";src:url(fonts/barlow-condensed-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
+@font-face{font-family:"HS Head";src:url(fonts/barlow-condensed-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap}
+@font-face{font-family:"HS Body";src:url(fonts/source-sans-3-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap;size-adjust:108%}
+@font-face{font-family:"HS Body";src:url(fonts/source-sans-3-latin-400-italic.woff2) format("woff2");font-weight:400;font-style:italic;font-display:swap;size-adjust:108%}
+@font-face{font-family:"HS Body";src:url(fonts/source-sans-3-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap;size-adjust:108%}
+@font-face{font-family:"HS Body";src:url(fonts/source-sans-3-latin-700-normal.woff2) format("woff2");font-weight:700;font-display:swap;size-adjust:108%}
+@font-face{font-family:"HS Mono";src:url(fonts/ibm-plex-mono-latin-400-normal.woff2) format("woff2");font-weight:400;font-display:swap}
+@font-face{font-family:"HS Mono";src:url(fonts/ibm-plex-mono-latin-600-normal.woff2) format("woff2");font-weight:600;font-display:swap}
+@supports (font:-apple-system-body){@media (hover:none){html{font:-apple-system-body}}}
 :root{
-  --paper:#eef1ec; --panel:#f8faf7; --ink:#1d2421; --muted:#56635d; --line:#cbd3cd; --accent:#9c6d1c; --good:#2f7d4f;
+  --paper:#F5F3EE; --panel:#FAFBFB; --ink:#1D2421; --muted:#56635D; --line:#C9D1CB; --navy:#1F3864;
+  --accent:#8A5D14; --accent-ink:#ffffff; --cue:#B4532A; --cue-small:#A34A25; --four:#F3ECE0; --good:#2F7D4F;
   --board:#4b2d22; --fret:#cfc8b8; --string:#e3dccd; --inlay:#d9cdb0;
   --root:#d4433a; --third:#e3a233; --fifth:#3d7cc4; --seventh:#8657c0; --scale:#efe9dc; --scale-ink:#2a221d;
-  --on:#ffffff; --chip:#e2e8e3; --chip-on:#1d2421; --chip-on-ink:#f3f5f2;
-  --display:"Barlow Condensed","Arial Narrow",sans-serif; --body:"Barlow","Helvetica Neue",Arial,sans-serif;
+  --on:#ffffff; --chip:#E6E9E6; --chip-on:#1F3864; --chip-on-ink:#ffffff;
+  --display:"HS Head","Barlow Condensed","Arial Narrow",sans-serif; --body:"HS Body","Source Sans 3",-apple-system,"Helvetica Neue",Arial,sans-serif; --mono:"HS Mono","IBM Plex Mono",ui-monospace,monospace;
   color-scheme:light;
 }
 @media (prefers-color-scheme:dark){
-  :root{--paper:#131816;--panel:#1b2220;--ink:#e7ece9;--muted:#9fb0a8;--line:#33403b;--accent:#d9a443;--good:#5fbf87;
-    --chip:#25302c;--chip-on:#e7ece9;--chip-on-ink:#131816;color-scheme:dark;}
+  :root{--paper:#131816;--panel:#1b2220;--ink:#e7ece9;--muted:#9fb0a8;--line:#33403b;--navy:#8fb3e0;
+    --accent:#C2913C;--accent-ink:#131816;--cue:#e58a5f;--cue-small:#e58a5f;--four:#2a2520;--good:#5fbf87;
+    --chip:#25302c;--chip-on:#8fb3e0;--chip-on-ink:#131816;color-scheme:dark;}
 }
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.45;-webkit-tap-highlight-color:transparent}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:1.0625rem;line-height:1.45;-webkit-tap-highlight-color:transparent;text-align:left}
 .wrap{max-width:1180px;margin:0 auto;padding:max(14px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(40px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
-header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 18px;margin-bottom:10px}
-h1{font-family:var(--display);font-weight:700;font-size:32px;letter-spacing:.3px;margin:0}
-.sub{color:var(--muted);margin:0;font-size:15px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:.5rem 1.1rem;margin-bottom:.75rem;border-bottom:4px solid var(--accent);padding-bottom:.4rem}
+h1{font-family:var(--display);font-weight:700;font-size:2rem;letter-spacing:.3px;margin:0;color:var(--navy);line-height:1.05}
+h2,h3,h4{color:var(--navy)}
+.sub{color:var(--muted);margin:0;font-size:.95rem}
+.num,.mono{font-family:var(--mono)}
 button,select,input{font:inherit;color:inherit}
-.tab,.chip,.btn{border:1px solid var(--line);background:var(--chip);border-radius:10px;min-height:44px;padding:8px 14px;cursor:pointer;touch-action:manipulation}
-.tab{font-family:var(--display);font-size:20px;font-weight:600}
+.tab,.chip,.btn{border:1px solid var(--line);background:var(--chip);border-radius:10px;min-height:44px;padding:.5rem .875rem;cursor:pointer;touch-action:manipulation}
+.tab{font-family:var(--display);font-size:1.25rem;font-weight:600}
 .tab[aria-pressed="true"],.chip[aria-pressed="true"]{background:var(--chip-on);color:var(--chip-on-ink);border-color:var(--chip-on)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
 .btn.good{background:var(--good);border-color:var(--good);color:#fff;font-weight:600}
+@media (prefers-color-scheme:dark){.btn.good{color:#131816}}
 .btn:disabled{opacity:.5;cursor:default}
-button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}
-.row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
-.lbl{font-family:var(--display);font-size:16px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);min-width:78px}
-.chip{min-width:48px;font-weight:600;padding:8px 10px}
-select{border:1px solid var(--line);background:var(--panel);border-radius:10px;min-height:44px;padding:6px 10px;max-width:100%}
-input[type=number]{border:1px solid var(--line);background:var(--panel);border-radius:10px;min-height:44px;padding:6px 8px;width:76px}
+button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:.875rem}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem}
+.lbl{font-family:var(--display);font-size:1rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);min-width:5em}
+.chip{min-width:48px;font-weight:600;padding:.5rem .625rem}
+select{border:1px solid var(--line);background:var(--panel);border-radius:10px;min-height:44px;padding:.375rem .625rem;max-width:100%}
+input[type=number],input[type=search]{border:1px solid var(--line);background:var(--panel);border-radius:10px;min-height:44px;padding:.375rem .5rem}
+input[type=number]{width:5em;font-family:var(--mono)}
 .hidden{display:none!important}
-.plan{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.four{background:var(--four);border-radius:14px;padding:.75rem 1rem;margin:0 0 .75rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:.25rem 1.5rem;font-size:1.0625rem;line-height:1.35}
+.four b{font-family:var(--display);font-weight:700;color:var(--cue-small);text-transform:uppercase;letter-spacing:.6px;margin-right:.4rem}
+.four .c{font-weight:700;color:var(--cue)}
+.plan{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin-bottom:.625rem}
 .plan select{flex:1 1 260px}
-#todayBtn{font-family:var(--display);font-size:20px;min-width:120px}
-.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
-.main{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:14px}
+#todayBtn{font-family:var(--display);font-size:1.25rem;min-width:120px}
+.tabs{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 .75rem}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 20rem;gap:.875rem}
 @media (max-width:900px){.main{grid-template-columns:minmax(0,1fr)}}
 .main>*{min-width:0}
 .boardbox{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;background:var(--panel);border:1px solid var(--line);padding:10px 6px 4px}
 svg text{font-family:var(--body)}
-.now{display:flex;flex-wrap:wrap;gap:6px 22px;align-items:baseline;margin:10px 2px 0}
-.now .big{font-family:var(--display);font-size:38px;font-weight:700;line-height:1.05}
-.now .next{color:var(--muted);font-size:18px}
-.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:8px 2px 12px;font-size:15px;color:var(--muted)}
-.sw{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;margin-right:6px;border:1px solid rgba(0,0,0,.25)}
-.controls{display:grid;gap:12px}
-details.more summary{cursor:pointer;font-family:var(--display);font-size:18px;font-weight:600;color:var(--muted);min-height:36px;list-style:none;display:flex;align-items:center;gap:6px}
+svg text.fn{font-family:var(--mono)}
+.now{display:flex;flex-wrap:wrap;gap:.375rem 1.375rem;align-items:baseline;margin:.625rem 2px 0}
+.now .big{font-family:var(--display);font-size:2.375rem;font-weight:700;line-height:1.05;color:var(--navy)}
+.now .next{color:var(--muted);font-size:1.125rem}
+.legend{display:flex;flex-wrap:wrap;gap:.375rem 1rem;margin:.5rem 2px .75rem;font-size:.95rem;color:var(--muted)}
+.sw{display:inline-block;width:.875rem;height:.875rem;border-radius:50%;vertical-align:-2px;margin-right:6px;border:1px solid rgba(0,0,0,.25)}
+.controls{display:grid;gap:.75rem}
+details.more summary{cursor:pointer;font-family:var(--display);font-size:1.125rem;font-weight:600;color:var(--muted);min-height:36px;list-style:none;display:flex;align-items:center;gap:6px}
 details.more summary::-webkit-details-marker{display:none}
 details.more summary::before{content:"▸";display:inline-block;transition:transform .15s}
 details.more[open] summary::before{transform:rotate(90deg)}
-details.more .controls{margin-top:8px}
-.side{display:grid;gap:14px;align-content:start}
-.side h2{font-family:var(--display);font-size:22px;margin:0 0 8px}
-ol.steps{margin:0;padding-left:22px}
+details.more .controls{margin-top:.5rem}
+.side{display:grid;gap:.875rem;align-content:start}
+.side h2{font-family:var(--display);font-size:1.375rem;margin:0 0 .5rem}
+ol.steps{margin:0;padding-left:1.375rem}
 ol.steps li{padding:3px 6px;border-radius:8px}
 ol.steps li.cur{background:var(--chip-on);color:var(--chip-on-ink)}
-.tempo{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.tempo output{font-family:var(--display);font-size:44px;font-weight:700;min-width:84px;text-align:center;font-variant-numeric:tabular-nums;line-height:1}
-.tempo .bpm{color:var(--muted);font-size:14px;margin-left:-6px}
+.ff{margin:.5rem 0 0;font-size:1rem;line-height:1.35}
+.ff div{margin:.2rem 0}
+.ff b,.wu b.k{font-family:var(--display);font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-right:.35rem}
+.tempo{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap}
+.tempo output{font-family:var(--mono);font-size:2.5rem;font-weight:600;min-width:3ch;text-align:center;font-variant-numeric:tabular-nums;line-height:1}
+.tempo .bpm{color:var(--muted);font-size:.95rem;margin-left:-6px}
 input[type=range]{width:100%;accent-color:var(--accent);margin:10px 0 4px}
-#play{width:100%;min-height:64px;font-family:var(--display);font-size:28px;letter-spacing:.5px;margin-top:6px}
+#play{width:100%;min-height:64px;font-family:var(--display);font-size:1.75rem;letter-spacing:.5px;margin-top:6px}
 .beats{display:flex;gap:10px;justify-content:center;margin:10px 0 2px}
 .beats span{width:22px;height:22px;border-radius:50%;background:var(--chip);border:1px solid var(--line)}
 .beats span.hit{background:var(--accent);border-color:var(--accent)}
 .beats.silent span.hit{background:transparent;border:2px dashed var(--accent)}
-.status{min-height:22px;font-size:15px;color:var(--muted);text-align:center;margin:2px 0 6px}
+.status{min-height:22px;font-size:.95rem;color:var(--muted);text-align:center;margin:2px 0 6px}
 .check{display:flex;align-items:center;gap:10px;min-height:38px;cursor:pointer}
 .check input{width:22px;height:22px;accent-color:var(--accent)}
 .sub-box{border-top:1px solid var(--line);margin-top:10px;padding-top:10px}
-.timer{font-family:var(--display);font-size:44px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
-.note{font-size:15px;color:var(--muted);margin:6px 0 0}
+.timer{font-family:var(--mono);font-size:2.5rem;font-weight:600;font-variant-numeric:tabular-nums;line-height:1}
+.note{font-size:.95rem;color:var(--muted);margin:6px 0 0}
 .seq4{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .seq4 span{min-width:44px;text-align:center;padding:4px 6px;border-radius:8px;background:var(--chip);font-weight:600}
-.seq4 span.cur{background:var(--accent);color:#fff}
+.seq4 span.cur{background:var(--accent);color:var(--accent-ink)}
 .dot.on circle{stroke:var(--on);stroke-width:4}
 .progressbar{height:14px;border-radius:7px;background:var(--chip);border:1px solid var(--line);overflow:hidden;margin:6px 0 4px}
 .progressbar i{display:block;height:100%;background:var(--good);width:0}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
-.stat{background:var(--chip);border-radius:10px;padding:8px 10px}
-.stat b{display:block;font-family:var(--display);font-size:28px;line-height:1}
-.stat span{font-size:14px;color:var(--muted)}
-ul.log{list-style:none;margin:6px 0 10px;padding:0;font-size:15px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin:.625rem 0}
+.stat{background:var(--chip);border-radius:10px;padding:.5rem .625rem}
+.stat b{display:block;font-family:var(--mono);font-weight:600;font-size:1.625rem;line-height:1.1}
+.stat span{font-size:.95rem;color:var(--muted)}
+ul.log{list-style:none;margin:6px 0 10px;padding:0;font-size:.95rem}
 ul.log li{padding:4px 0;border-bottom:1px solid var(--line)}
-.toast{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--chip-on);color:var(--chip-on-ink);padding:10px 18px;border-radius:12px;font-weight:600;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
+ul.log .mono{font-size:.9rem}
+.toast{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--chip-on);color:var(--chip-on-ink);padding:.625rem 1.125rem;border-radius:12px;font-weight:600;opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
 .toast.show{opacity:1}
-footer{margin-top:18px;color:var(--muted);font-size:14px}
-.week{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:0 0 12px;padding:12px 14px}
-.week .wk{font-family:var(--display);font-size:16px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
-.week .who{font-family:var(--display);font-size:26px;font-weight:700;line-height:1.1}
-.week .song{font-size:16px}
-.week .gtr{color:var(--muted);font-size:15px}
+footer{margin-top:1.125rem;color:var(--muted);font-size:.95rem}
+footer .mono{font-size:.9rem}
+.week{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .875rem;margin:0 0 .75rem;padding:.75rem .875rem}
+h2.blk{font-family:var(--display);font-weight:700;font-size:1.375rem;color:var(--navy);margin:1.125rem 0 .5rem;padding-bottom:.2rem;border-bottom:2px solid var(--accent)}
+.lib-row .ex{flex-basis:100%;font-size:1rem;line-height:1.35;display:grid;gap:.15rem}
+.lib-row .ex .cue{font-weight:700;color:var(--cue)}
+.lib-row .ex b{font-family:var(--display);font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-right:.35rem}
+a.btn.open{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700;min-width:5.5rem;justify-content:center}
+.week .wk{font-family:var(--display);font-size:1rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
+.week .who{font-family:var(--display);font-size:1.625rem;font-weight:700;line-height:1.1;color:var(--navy)}
+.week .song{font-size:1rem}
+.week .gtr{color:var(--muted);font-size:.95rem}
 .week .grow{flex:1 1 260px;min-width:0}
-.week a.btn{display:inline-flex;align-items:center;text-decoration:none;color:var(--ink)}
-.how{margin:0 0 12px}
-.how summary{cursor:pointer;font-family:var(--display);font-size:19px;font-weight:600;min-height:40px;display:flex;align-items:center;list-style:none}
-.how summary::-webkit-details-marker{display:none}
-.how ol{margin:6px 0 4px;padding-left:22px}
+.how{margin:0 0 .75rem}
+.how summary,.songbook>summary{cursor:pointer;font-family:var(--display);font-size:1.25rem;font-weight:600;min-height:44px;display:flex;align-items:center;gap:8px;list-style:none;color:var(--navy)}
+.how summary::-webkit-details-marker,.songbook>summary::-webkit-details-marker{display:none}
+.how summary::before,.songbook>summary::before{content:"▸";display:inline-block;transition:transform .15s}
+.how[open] summary::before,.songbook[open]>summary::before{transform:rotate(90deg)}
+.how ol{margin:6px 0 4px;padding-left:1.375rem}
 .how li{margin:3px 0}
-@media (prefers-color-scheme:dark){.btn.primary,.btn.good{color:#131816}}
-.links{display:flex;flex-wrap:wrap;gap:8px}
+.links{display:flex;flex-wrap:wrap;gap:.5rem}
 a.btn{display:inline-flex;align-items:center;text-decoration:none;color:var(--ink)}
-a.btn.mine{border-color:var(--accent);font-weight:600}
-.offline{background:var(--chip-on);color:var(--chip-on-ink);border-radius:12px;padding:10px 14px;margin:0 0 12px;font-size:15px}
-.songbook{margin:0 0 12px}
-.songbook>summary{cursor:pointer;font-family:var(--display);font-size:19px;font-weight:600;min-height:40px;display:flex;align-items:center;gap:8px;list-style:none}
-.songbook>summary::-webkit-details-marker{display:none}
-.songbook>summary::before{content:"▸";display:inline-block;transition:transform .15s}
-.songbook[open]>summary::before{transform:rotate(90deg)}
-.cls h3{font-family:var(--display);font-size:22px;margin:10px 0 2px}
-.cls .when{color:var(--muted);font-size:15px;margin:0 0 8px}
-.songrow{border-top:1px solid var(--line);padding:10px 0;display:grid;gap:6px}
-.songrow .t{font-weight:600;font-size:18px}
+a.btn.mine,a.btn.fs{border-color:var(--accent);font-weight:600}
+.offline{background:var(--chip-on);color:var(--chip-on-ink);border-radius:12px;padding:.625rem .875rem;margin:0 0 .75rem;font-size:.95rem}
+.songbook{margin:0 0 .75rem}
+.songbook .cnt{font-family:var(--mono);font-size:.9rem;color:var(--muted);font-weight:400}
+.cls h3{font-family:var(--display);font-size:1.375rem;margin:.625rem 0 2px}
+.cls .when{color:var(--muted);font-size:.95rem;margin:0 0 .5rem}
+.songrow{border-top:1px solid var(--line);padding:.625rem 0;display:grid;gap:6px}
+.songrow .t{font-weight:600;font-size:1.125rem}
 .songrow .t span{color:var(--muted);font-weight:400}
-.songrow ul{margin:0;padding-left:20px;font-size:16px}
+.songrow ul{margin:0;padding-left:1.25rem;font-size:1rem}
 .ready{border-top:1px solid var(--line);margin-top:10px;padding-top:8px}
-.ready h4{font-family:var(--display);font-size:18px;margin:0 0 4px}
+.ready h4{font-family:var(--display);font-size:1.125rem;margin:0 0 4px}
+.wu{margin:0 0 .75rem;display:grid;gap:.375rem}
+.wu .hd{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem .875rem}
+.wu .lb{font-family:var(--display);font-size:1rem;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--muted)}
+.wu .ti{font-family:var(--display);font-size:1.5rem;font-weight:700;color:var(--navy);line-height:1.1;flex:1 1 14rem}
+.wu .cue{font-weight:700;color:var(--cue);font-size:1.125rem}
+.wu div.l{line-height:1.35}
+.lib-tools{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.5rem 0}
+.lib-tools input[type=search]{flex:1 1 16rem;min-width:0}
+.lib-list{display:grid}
+.lib-row{border-top:1px solid var(--line);padding:.5rem 0;display:flex;flex-wrap:wrap;gap:.375rem .875rem;align-items:center}
+.lib-row .info{flex:1 1 16rem;min-width:0}
+.lib-row .t{font-weight:600;font-size:1.0625rem}
+.lib-row .m{color:var(--muted);font-size:.95rem}
+.lib-row.this .t::after{content:"This week";margin-left:.5rem;font-family:var(--display);font-size:.95rem;font-weight:600;color:var(--accent-ink);background:var(--accent);border-radius:6px;padding:0 .4rem}
 </style>
 </head>
 <body>
@@ -146,43 +185,44 @@ a.btn.mine{border-color:var(--accent);font-weight:600}
     </div>
   </header>
 
+  <section class="four" aria-label="My four lines">
+    <div><b>Cue</b><span class="c">Every note clean, every note named.</span></div>
+    <div><b>Steps</b>Warm-up 5, then Fretboard 5, then Focus 10, then Play 10.</div>
+    <div><b>Recall</b>From memory, then I check.</div>
+    <div><b>Start</b>When I sit at my stand, I tune up and open my Fretboard app. Three clean runs: +5 bpm. Messy: back 10.</div>
+  </section>
+
   <details class="how panel" id="how">
     <summary>How this works</summary>
     <ol>
       <li><b>Warm-up 5:</b> start the 30-minute timer, then Breakfast of Champions.</li>
       <li><b>Fretboard 5:</b> odd days Notes in 4ths, even days two Shape Bank items, through the keys in 4ths.</li>
       <li><b>Focus 10:</b> tap Today, then Start, and follow Today's order. My book's day page says why.</li>
-      <li><b>Play 10:</b> my player of the week, below. I learn the song by ear, then check it in Songsterr.</li>
+      <li><b>Play 10:</b> my player of the week, below the fretboard. I learn the song by ear, then tap Open to check it.</li>
       <li><b>Done:</b> tap Mark this day done. Today then opens the next day.</li>
-      <li><b>Song buttons:</b> Songsterr is the standard tab, My Version is my own Songsterr tab, Lesson opens the song's folder in my Google Drive Lessons.</li>
+      <li><b>Open:</b> one button for each piece. It opens my own copy in forScore when I have one, otherwise My Version, otherwise Songsterr. Video, when there is one, is the lesson.</li>
+      <li><b>My music:</b> my Library and class songs sit at the bottom. I search or filter; Drive is the backup copy if forScore is missing a piece.</li>
       <li><b>Class:</b> I play and mark up my class pages in forScore. My class songs, below, holds my cues and links for each one.</li>
       <li><b>Always the icon:</b> I open this app from my Fretboard Home Screen icon, not a Safari tab, so my progress stays in one place and it works offline.</li>
     </ol>
   </details>
 
-  <div class="offline hidden" id="offline" role="status">Offline. My app works as usual. Songsterr buttons open the Songsterr app, where songs I've opened before still play. Class pages are in forScore.</div>
+  <div class="offline hidden" id="offline" role="status">Offline. My app works as usual. forScore buttons open my own copies; Songsterr buttons open the Songsterr app, where songs I've opened before still play. Class pages are in forScore.</div>
 
+  <h2 class="blk">Warm-up 5</h2>
+  <section class="wu panel" aria-label="Warm-up 5">
+    <div class="hd"><span class="ti">Breakfast of Champions</span></div>
+    <div class="cue">Close to the frets, every note clear.</div>
+    <div class="l"><b class="k">Feel</b>Fingertips light, just behind the fret; my thumb and shoulders loose.</div>
+    <div class="l"><b class="k">Feedback</b>Every note rings, every pick the same volume. Not clean: metronome to 50.</div>
+    <div class="l">5th fret, one finger per fret · metronome <span class="mono">60</span> · two picks a click · I say each note. From Day <span class="mono">21</span>: + <span class="mono">1</span> min bends and vibrato.</div>
+  </section>
+
+  <h2 class="blk">Fretboard 5 · Focus 10</h2>
   <div class="plan">
     <button class="btn primary" id="todayBtn">Today</button>
     <select id="preset" aria-label="Plan day"></select>
   </div>
-
-  <div class="week panel" aria-live="polite">
-    <button class="btn" id="wkPrev" aria-label="Previous week">‹</button>
-    <div class="grow">
-      <div class="wk" id="wkNum">This week</div>
-      <div class="who" id="wkWho"></div>
-      <div class="song" id="wkSong"></div>
-      <div class="gtr" id="wkGtr"></div>
-    </div>
-    <div class="links" id="wkLinks"></div>
-    <button class="btn" id="wkNext" aria-label="Next week">›</button>
-  </div>
-
-  <details class="songbook panel" id="songbook">
-    <summary>My class songs</summary>
-    <div id="classes"></div>
-  </details>
 
   <div class="tabs" role="group" aria-label="Practice mode">
     <button class="tab" data-mode="shapes">Shapes &amp; scales</button>
@@ -211,7 +251,7 @@ a.btn.mine{border-color:var(--accent);font-weight:600}
           <div class="row" id="row-key">
             <span class="lbl">Key</span>
             <div class="row" id="keys" role="group" aria-label="Key, in circle of 4ths order"></div>
-            <button class="btn" id="nextKey">Next key in 4ths →</button>
+            <button class="btn" id="nextKey">Next key in 4ths</button>
           </div>
           <div class="row" id="row-mat"><span class="lbl">Play</span><select id="mat" aria-label="What to play"></select></div>
           <div class="row" id="row-tri"><span class="lbl">Triads</span>
@@ -295,6 +335,7 @@ a.btn.mine{border-color:var(--accent);font-weight:600}
         <h2 id="stepsTitle">Today's order</h2>
         <ol class="steps" id="steps"></ol>
         <div class="seq4 hidden" id="seq4"></div>
+        <div class="ff"><div><b>Feel</b><span id="ffFeel"></span></div><div><b>Feedback</b><span id="ffFb"></span></div></div>
       </div>
 
       <div class="panel">
@@ -312,7 +353,7 @@ a.btn.mine{border-color:var(--accent);font-weight:600}
 
       <div class="panel">
         <h2>My progress</h2>
-        <div><span id="daysDone">0</span> of 40 plan days done</div>
+        <div><span id="daysDone" class="mono">0</span> of <span class="mono">40</span> plan days done</div>
         <div class="progressbar"><i id="daysBar"></i></div>
         <div class="stats">
           <div class="stat"><b id="streak">0</b><span>days in a row</span></div>
@@ -329,10 +370,48 @@ a.btn.mine{border-color:var(--accent);font-weight:600}
     </div>
   </div>
 
-  <footer>Strings are drawn as tab: the highest string on top. In standard tuning, shapes are named for the open chord they come from (C-A-G-E-D); in other tunings I pick fret positions instead. No sound? I check that Silent Mode is off and the volume is up. <strong>Version 11-22-2026e</strong></footer>
+  <h2 class="blk">Play 10 · my player of the week</h2>
+  <div class="week panel" aria-live="polite" id="week">
+    <button class="btn" id="wkPrev" aria-label="Previous week">‹</button>
+    <div class="grow">
+      <div class="wk" id="wkNum">This week</div>
+      <div class="who" id="wkWho"></div>
+      <div class="song" id="wkSong"></div>
+      <div class="gtr" id="wkGtr"></div>
+    </div>
+    <div class="links" id="wkLinks"></div>
+    <button class="btn" id="wkNext" aria-label="Next week">›</button>
+  </div>
+
+
+  <h2 class="blk">My music</h2>
+  <details class="songbook panel" id="library">
+    <summary>My Library <span class="cnt" id="libCount"></span></summary>
+    <p class="note">My exercises come first, each with its cue, Feel and Feedback, for extra time or a day something feels stuck.</p>
+    <div class="lib-tools">
+      <input type="search" id="libQ" placeholder="Search a title, artist, key or guitar" aria-label="Search my Library" autocomplete="off" autocorrect="off" spellcheck="false">
+    </div>
+    <div class="row" role="group" aria-label="Library filter" id="libF">
+      <button class="chip" data-lf="all">All</button>
+      <button class="chip" data-lf="warm">Warm-ups</button>
+      <button class="chip" data-lf="bg">Bluegrass</button>
+      <button class="chip" data-lf="pow">Player of the week</button>
+      <button class="chip" data-lf="class">Class</button>
+    </div>
+    <div class="lib-list" id="libList"></div>
+  </details>
+
+  <details class="songbook panel" id="songbook">
+    <summary>My class songs</summary>
+    <div id="classes"></div>
+  </details>
+
+
+  <footer>Strings are drawn as tab: the highest string on top. In standard tuning, shapes are named for the open chord they come from (C-A-G-E-D); in other tunings I pick fret positions instead. No sound? I check that Silent Mode is off and the volume is up. <strong>Version <span class="mono">11-29-2026</span></strong></footer>
 </div>
 <div class="toast" id="toast" role="status"></div>
 
+<script src="library.js"></script>
 <script>
 (function(){
 "use strict";
@@ -488,7 +567,7 @@ function drawBoard(dots,lines,range){
   if(12>=lo&&12<=hi){h+=`<circle cx="${X(12)}" cy="${PT+SH*1.5}" r="7" fill="var(--inlay)" opacity=".75"/><circle cx="${X(12)}" cy="${PT+SH*3.5}" r="7" fill="var(--inlay)" opacity=".75"/>`}
   for(let f=lo;f<=hi+1;f++){const x=PL+(f-lo)*W;const nut=(f===1&&lo===0);h+=`<line x1="${x}" y1="${PT-12}" x2="${x}" y2="${PT+SH*5+12}" stroke="${nut?"#f2ece0":"var(--fret)"}" stroke-width="${nut?7:(f===lo||f===hi+1?1:3)}"/>`}
   for(let s=0;s<6;s++){h+=`<line x1="${PL}" y1="${Y(s)}" x2="${PL+n*W}" y2="${Y(s)}" stroke="var(--string)" stroke-width="${(3.2-s*.4).toFixed(1)}"/>`;h+=`<text x="${PL-4}" y="${Y(s)+5}" text-anchor="end" font-size="13" fill="var(--muted)">${STRL[s]}</text>`}
-  for(let f=lo;f<=hi;f++)h+=`<text x="${X(f)}" y="${PT+SH*5+30}" text-anchor="middle" font-size="15" font-weight="600" fill="var(--muted)">${f}</text>`;
+  for(let f=lo;f<=hi;f++)h+=`<text class="fn" x="${X(f)}" y="${PT+SH*5+30}" text-anchor="middle" font-size="15" font-weight="600" fill="var(--muted)">${f}</text>`;
   (lines||[]).forEach(l=>{const pts=l.map(n=>`${X(n.f)},${Y(n.s)}`).join(" ");h+=`<polyline points="${pts}" fill="none" stroke="#f2ece0" stroke-opacity=".55" stroke-width="5" stroke-linejoin="round"/>`});
   dots.forEach(d=>{const fill=d.fill;const dim=d.dim?' opacity=".45"':"";const ink=(fill==="var(--scale)"||fill==="var(--third)")?"var(--scale-ink)":"#fff";
     h+=`<g class="dot" id="n-${d.s}-${d.f}"${dim}><circle cx="${X(d.f)}" cy="${Y(d.s)}" r="${d.big?15:13}" fill="${fill}" stroke="rgba(0,0,0,.35)" stroke-width="1"/>${d.label?`<text x="${X(d.f)}" y="${Y(d.s)+5}" text-anchor="middle" font-size="${d.label.length>2?12:14}" font-weight="700" fill="${ink}">${d.label}</text>`:""}</g>`});
@@ -511,7 +590,7 @@ function build(){
       list.forEach(({sh,w})=>{const v=isStd()?voicing(fam,sh):grip(mat.ints,w);v.forEach(n=>dots.push({s:n.s,f:n.f,fill:roleColor(n.iv,true),label:label(n,S.key)}));const up=v.slice().sort((a,b)=>a.midi-b.midi);up.forEach(n=>SEQ.push({notes:[n],stage:0,name:nmW(sh)}));SEQ.push({notes:up,strum:true,stage:1,name:nmW(sh)});SEQ.push({notes:[],stage:1,name:nmW(sh)});});
       range=ws?rangeFor(ws):[0,MAXF];
       steps=["Find the root in each shape first","Play each chord tone low to high","Strum the shape, then move to the next"];
-      next=ws?`${isStd()?"Shapes":"Frets"}: ${ws.map(w=>w.sh).join(" → ")}`:(isStd()?"All five shapes":"All positions");
+      next=ws?`${isStd()?"Shapes":"Frets"}: ${ws.map(w=>w.sh).join(", then ")}`:(isStd()?"All five shapes":"All positions");
     }else{
       const ct=mat.kind==="arp"?mat.ints:mat.ct;const all=notesIn(mat.ints,S.key,null);
       const inAny=n=>!ws||ws.some(w=>n.f>=w.w[0]&&n.f<=w.w[1]);
@@ -523,7 +602,7 @@ function build(){
         else{path.forEach(n=>SEQ.push({notes:[n],stage:0,name:g.name}));path.slice(0,-1).reverse().forEach(n=>SEQ.push({notes:[n],stage:1,name:g.name}));}
         SEQ.push({notes:[],stage:2,name:g.name});});
       steps=mat.kind==="scale"?["Chord tones up and down (the colored dots)","Whole scale up and down","Make up a 3-note phrase that lands on R, 3 or 5"]:(S.mat==="root"?["Find every root on the neck","Say the note name as I play it","Use the octave shapes: 2 strings over, 2 frets up (3 from the G or B string)"]:["Arpeggio up, saying the degrees","Arpeggio down","Play it over the chord and land on the 3rd"]);
-      next=ws?`${isStd()?"Shapes":"Frets"}: ${ws.map(w=>w.sh).join(" → ")}`:"Whole neck";
+      next=ws?`${isStd()?"Shapes":"Frets"}: ${ws.map(w=>w.sh).join(", then ")}`:"Whole neck";
     }
   }else if(m==="triads"){
     const tri=triads();const qn=S.triQ==="min"?" minor":" major";title=`${nm(S.key)}${qn} triads · ${setLabel(S.triSet)}`+tunTag();
@@ -550,7 +629,15 @@ function build(){
   drawBoard(dots,lines,range);$("nowBig").textContent=title;$("nowNext").textContent=next;
   $("steps").innerHTML=steps.map((t,i)=>`<li id="st-${i}">${t}</li>`).join("");
   $("stepsTitle").textContent=m==="notes4"?"The drill":"Today's order";
+  const ff=FF[m]||FF.shapes;$("ffFeel").textContent=ff[0];$("ffFb").textContent=ff[1];
 }
+
+/* Feel and Feedback for each kind of drill: both hands, arriving together */
+const FF={
+  shapes:["My fretting hand stays in the shape, each finger landing just behind the fret as my pick strikes.","Every note rings clean and in time, and I say its name or degree as I play it."],
+  triads:["Three fingers land together while my picking hand rolls across three strings; the other strings stay muted.","All three notes ring in time, and I can name which one is on the bottom."],
+  targets:["My hand heads for the next chord's 3rd a beat before the change.","I hear the 3rd land on beat one of each new chord."],
+  notes4:["My eyes lead and my hand finds the note without searching.","Every note named before I play it. Three clean runs: +5 bpm. Messy: back 10."]};
 
 /* ---------- plan days and progress ---------- */
 const dayNum=id=>{const m=/^d(\d+)$/.exec(id||"");return m?Number(m[1]):null;};
@@ -566,7 +653,7 @@ function showProgress(){
   $("weekMin").textContent=S.log.filter(l=>l.d>=wkS).reduce((a,l)=>a+l.min,0);
   $("totalMin").textContent=S.log.reduce((a,l)=>a+l.min,0);
   const b=S.best[S.preset||S.mode];$("bestBpm").textContent=b?b:"–";
-  $("logList").innerHTML=S.log.slice(-5).reverse().map(l=>`<li>${l.d.slice(5).replace("-","/")} · ${l.label} · ${l.min} min · up to ${l.bpm} bpm</li>`).join("")||"<li>No sessions yet. Tap Start and play.</li>";
+  $("logList").innerHTML=S.log.slice(-5).reverse().map(l=>`<li><span class="mono">${l.d.slice(5).replace("-","/")}</span> · ${l.label} · <span class="mono">${l.min}</span> min · up to <span class="mono">${l.bpm}</span> bpm</li>`).join("")||"<li>No sessions yet. Tap Start and play.</li>";
   const dn=dayNum(S.preset),mb=$("markDone");
   if(dn){mb.disabled=false;mb.textContent=S.done.includes(dn)?`Day ${dn} done ✓ (tap to undo)`:`Mark Day ${dn} done ✓`;}
   else{mb.disabled=true;mb.textContent="Pick a plan day to mark it done";}
@@ -656,27 +743,26 @@ const PLAYERS=[
  {p:"Julian Lage",c:"US",song:"Ryland (S)",g:"Collings OM1 JL; Hahn 228 or I-30 LC with JL pickups",what:"Clarity and touch",url:"https://www.songsterr.com/a/wsa/julian-lage-ryland-tab-s1593621",mine:"",lesson:""},
  {p:"Hermanos Gutiérrez",c:"Ecuador and Switzerland",song:"Tres Hermanos (S)",g:"Strat or Creston into EC-1 and 1978; Takamine for nylon parts",what:"Melody, echo and space",url:"https://www.songsterr.com/a/wsa/hermanos-gutierrez-tabs-a141159",mine:"",lesson:""},
  {p:"Molly Tuttle",c:"US",song:"Take the Journey (S), later Crooked Tree (T)",g:"Collings D2H",what:"Crosspicking",url:"https://www.songsterr.com/a/wsa/molly-tuttle-tabs-a33898",mine:"",lesson:""},
- {p:"Carl Miner",c:"US",song:"Collings I-35 LC demo, from the tab in my folder",g:"Collings I-30 LC",what:"Double-stop slides over a steady thumb",url:"",mine:"",lesson:""},
- {p:"Carl Miner, week 2",c:"US",song:"Meriwether (DADGAD), from the tab in my folder",g:"Collings 0001 or D2H in DADGAD",what:"Open-tuning melody and drone",url:"",mine:"",lesson:""},
+ {p:"Carl Miner",c:"US",song:"Collings I-35 LC demo, from the tab in my Library",g:"Collings I-30 LC",what:"Double-stop slides over a steady thumb",url:"",mine:"",lesson:"",fs:"Collings I-35 LC Demo (2025)"},
+ {p:"Carl Miner, week 2",c:"US",song:"Meriwether (DADGAD), from the tab in my Library",g:"Collings 0001 or D2H in DADGAD",what:"Open-tuning melody and drone",url:"",mine:"",lesson:"",fs:"Meriwether"},
  {p:"Ali Farka Touré",c:"Mali",song:"Savane (S), later Diaraby (T)",g:"Strat clean into The Amp, or D-18V",what:"Desert-blues phrases over a drone",url:"https://www.songsterr.com/a/wsa/ali-farka-toure-tabs-a381290",mine:"",lesson:""},
- {p:"Twanguero (Diego García)",c:"Spain",song:"Minor Rag, from the score in my Reference folder",g:"Takamine C132S nylon",what:"Rag and classical touch with twang",url:"",mine:"",lesson:""}];
+ {p:"Twanguero (Diego García)",c:"Spain",song:"Minor Rag, from the score in my Library",g:"Takamine C132S nylon",what:"Rag and classical touch with twang",url:"",mine:"",lesson:"",fs:"Minor Rag"}];
 function todayStr(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
 function daysSince(iso){const a=new Date(iso+"T12:00:00"),b=new Date(todayStr()+"T12:00:00");return Math.round((b-a)/86400000);}
 function curWeek(){if(!S.wk){S.wk=1;S.wkSet=todayStr();save();}const w=S.wk+Math.floor(Math.max(0,daysSince(S.wkSet))/7);return Math.max(1,Math.min(PLAYERS.length,w));}
-function setWeek(w){S.wk=Math.max(1,Math.min(PLAYERS.length,w));S.wkSet=todayStr();save();showWeek();}
+function setWeek(w){S.wk=Math.max(1,Math.min(PLAYERS.length,w));S.wkSet=todayStr();save();showWeek();if($("libList"))showLibrary();}
 function showWeek(){const w=curWeek(),P=PLAYERS[w-1];
   $("wkNum").textContent=`This week · Week ${w} of ${PLAYERS.length} · ${P.what}`;
   $("wkWho").textContent=`${P.p} (${P.c})`;$("wkSong").textContent=P.song;$("wkGtr").textContent=P.g?`Guitar: ${P.g}`:"";
   $("wkLinks").replaceChildren(...songLinks(P));
   $("wkPrev").disabled=w<=1;$("wkNext").disabled=w>=PLAYERS.length;}
 function initWeek(){$("wkPrev").onclick=()=>setWeek(curWeek()-1);$("wkNext").onclick=()=>setWeek(curWeek()+1);
-  if(firstRun)$("how").open=true;showWeek();showClasses();initOffline();}
-/* Song buttons: Songsterr (standard tab), My Version (my own Songsterr tab), Lesson (the song's Google Drive Lessons folder). Only the ones with a link show. */
-function songLinks(o){const out=[];
-  [["url","Songsterr",""],["mine","My Version","mine"],["lesson","Lesson",""]].forEach(([k,label,cls])=>{
-    if(!o[k])return;const a=document.createElement("a");a.className="btn"+(cls?" "+cls:"");a.href=o[k];a.target="_blank";a.rel="noopener";a.textContent=label;
-    if(k==="lesson")a.onclick=e=>{if(navigator.onLine===false){e.preventDefault();toast("Offline: I open this song's pages in forScore or my Drive offline copies.");}};
-    out.push(a);});
+  if(firstRun)$("how").open=true;showWeek();showClasses();initLibrary();initOffline();}
+/* One Open button: my forScore copy when I have one, otherwise My Version, otherwise Songsterr. Lesson is the song's Drive Lessons folder. */
+function songLinks(o){const out=[];const op=o.fs?"forscore://open?score="+encodeURIComponent(o.fs):(o.mine||o.url);
+  if(op){const a=document.createElement("a");a.className="btn open";a.href=op;if(!o.fs){a.target="_blank";a.rel="noopener";}a.textContent="Open";out.push(a);}
+  if(o.lesson){const a=document.createElement("a");a.className="btn";a.href=o.lesson;a.target="_blank";a.rel="noopener";a.textContent="Lesson";
+    a.onclick=e=>{if(navigator.onLine===false){e.preventDefault();toast("Offline: I open this song's pages in forScore or my Drive offline copies.");}};out.push(a);}
   return out;}
 /* My class songs: one entry per class, songs in the order the teacher hands them out. Pages live in forScore; this holds my cues and links. */
 const CLASSES=[
@@ -701,6 +787,44 @@ function showClasses(){const box=$("classes");box.replaceChildren();
     cb.onchange=()=>{S.ready[i]=cb.checked;save();};lab.appendChild(cb);lab.appendChild(document.createTextNode(" "+txt));rd.appendChild(lab);});
   const clr=el("button","btn","Clear for next class");clr.onclick=()=>{S.ready=[];save();showClasses();toast("Ready list cleared");};rd.appendChild(clr);
   box.appendChild(rd);}
+
+/* ---------- my Library: every tab and exercise in Guitar & Music › Library ----------
+   t title shown · s forScore title (the PDF's own title) · a artist · g genre · k key, capo, tuning · f filters · d Drive file · v videos · ss Songsterr · w player week */
+const FSC=s=>"forscore://open?score="+encodeURIComponent(s);
+const DRV=id=>"https://drive.google.com/file/d/"+id+"/view";
+const LF={all:"All",warm:"Warm-ups",bg:"Bluegrass",pow:"Player of the week",class:"Class"};
+function linkBtn(label,href,cls,offMsg){const a=el("a","btn"+(cls?" "+cls:""),label);a.href=href;
+  if(!/^forscore:/.test(href)){a.target="_blank";a.rel="noopener";}
+  if(offMsg)a.onclick=e=>{if(navigator.onLine===false){e.preventDefault();toast(offMsg);}};return a;}
+function pieceLinks(x,withDrive){const out=[];
+  const op=x.s?FSC(x.s):(x.mine||x.ss);if(op)out.push(linkBtn("Open",op,"open"));
+  (x.v||[]).forEach((u,i)=>out.push(linkBtn(x.v.length>1?`Video ${i+1}`:"Video",u,"","Offline: my forScore copy plays from here; videos wait for Wi-Fi.")));
+  if(withDrive&&x.d)out.push(linkBtn("Drive",DRV(x.d),"","Offline: forScore has my copy."));
+  return out;}
+function showLibrary(){
+  const q=(S.libQ||"").trim().toLowerCase(),f=S.libF||"all",wk=curWeek();
+  document.querySelectorAll("[data-lf]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lf===f)));
+  let list=LIB.filter(x=>(f==="all"||x.f.includes(f))&&(!q||(x.t+" "+x.a+" "+x.k+" "+x.g).toLowerCase().includes(q)));
+  list=list.slice().sort((a,b)=>(b.f.includes("warm")-a.f.includes("warm")));
+  if(f==="pow")list.sort((a,b)=>(b.w===wk)-(a.w===wk));
+  $("libCount").textContent=`· ${LIB.length}`;
+  const box=$("libList");box.replaceChildren();
+  if(!list.length){box.appendChild(el("p","note","Nothing matches. I try a shorter word, or All."));return;}
+  list.forEach(x=>{const r=el("div","lib-row"+(f==="pow"&&x.w===wk?" this":""));const i=el("div","info");i.appendChild(el("div","t",x.t));
+    i.appendChild(el("div","m",[x.a,x.k].filter(Boolean).join(" · ")));r.appendChild(i);
+    const l=el("div","links");pieceLinks(x,true).forEach(a=>l.appendChild(a));r.appendChild(l);
+    const w=x.f.includes("warm")&&WARM.find(z=>z.t===x.s);
+    if(w){const e=el("div","ex");e.appendChild(el("div","cue",w.cue));const a=el("div");a.appendChild(el("b","","Feel"));a.appendChild(document.createTextNode(w.feel));e.appendChild(a);
+      const b=el("div");b.appendChild(el("b","","Feedback"));b.appendChild(document.createTextNode(w.fb));e.appendChild(b);r.appendChild(e);}
+    box.appendChild(r);});}
+function initLibrary(){
+  $("libQ").value=S.libQ||"";
+  $("libQ").oninput=e=>{S.libQ=e.target.value;save();showLibrary();};
+  $("libF").onclick=e=>{const b=e.target.closest("[data-lf]");if(!b)return;e.stopPropagation();S.libF=b.dataset.lf;save();showLibrary();};
+  showLibrary();}
+
+/* ---------- my nine exercises: cue, Feel and Feedback. Groove first, touch, ear, and keep it fun ---------- */
+
 function initOffline(){const f=()=>$("offline").classList.toggle("hidden",navigator.onLine!==false);
   window.addEventListener("online",f);window.addEventListener("offline",f);f();}
 function copyLog(){const txt="My fretboard practice log\n"+S.log.map(l=>`${l.d}  ${l.label}  ${l.min} min  up to ${l.bpm} bpm`).join("\n")+`\nPlan days done: ${S.done.join(", ")||"none yet"}`;
