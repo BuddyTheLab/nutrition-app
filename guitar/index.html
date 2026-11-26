@@ -199,6 +199,8 @@ a.btn.mine,a.btn.fs{border-color:var(--accent);font-weight:600}
 .done-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(18rem,1fr));gap:.875rem}
 .done-wrap h2{font-family:var(--display);font-size:1.375rem;margin:0 0 .5rem}
 #markDone{min-height:56px;font-family:var(--display);font-size:1.375rem}
+.panel.order{margin-top:.875rem}
+.panel.order h2{font-family:var(--display);font-size:1.375rem;margin:0 0 .5rem}
 a.btn.plain,button.btn.plain{background:transparent}
 /* Add my own piece, and its Edit */
 .ownform{border:1px solid var(--line);border-radius:12px;padding:.75rem;margin:.25rem 0 .75rem;display:grid;gap:.5rem}
@@ -325,6 +327,13 @@ button.btn.again{background:transparent;border:2px solid var(--navy);color:var(-
           </div>
         </details>
       </div>
+      <div class="panel order">
+        <h2 id="stepsTitle">Today's order</h2>
+        <ol class="steps" id="steps"></ol>
+        <div class="seq4 hidden" id="seq4"></div>
+        <div class="ff"><div><b>Feel</b><span id="ffFeel"></span></div><div><b>Feedback</b><span id="ffFb"></span></div></div>
+        <div class="drill-add" id="drillAdd"></div>
+      </div>
     </div>
 
     <div class="side">
@@ -370,13 +379,6 @@ button.btn.again{background:transparent;border:2px solid var(--navy);color:var(-
         </div>
       </div>
 
-      <div class="panel">
-        <h2 id="stepsTitle">Today's order</h2>
-        <ol class="steps" id="steps"></ol>
-        <div class="seq4 hidden" id="seq4"></div>
-        <div class="ff"><div><b>Feel</b><span id="ffFeel"></span></div><div><b>Feedback</b><span id="ffFb"></span></div></div>
-        <div class="drill-add" id="drillAdd"></div>
-      </div>
 
       <div class="panel">
         <h2>Timer</h2>
@@ -457,7 +459,7 @@ button.btn.again{background:transparent;border:2px solid var(--navy);color:var(-
   </details>
 
 
-  <footer>Strings are drawn as tab: the highest string on top. In standard tuning, shapes are named for the open chord they come from (C-A-G-E-D); in other tunings I pick fret positions instead. No sound? I check that Silent Mode is off and the volume is up. <strong>Version <span class="mono">11-26-2026c</span></strong></footer>
+  <footer>Strings are drawn as tab: the highest string on top. In standard tuning, shapes are named for the open chord they come from (C-A-G-E-D); in other tunings I pick fret positions instead. No sound? I check that Silent Mode is off and the volume is up. <strong>Version <span class="mono">11-26-2026d</span></strong></footer>
 </div>
 <div class="toast" id="toast" role="status"></div>
 
