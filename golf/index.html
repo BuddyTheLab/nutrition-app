@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-180.png">
 <link rel="manifest" href="manifest.json">
-<title>Golf Practice · Dwight Clarke · v2026-11-26</title>
+<title>Golf Practice · Dwight Clarke · v2026-11-27</title>
 <style>
 :root{--bg:#f6f3ec;--card:#fffdf8;--ink:#1D2421;--muted:#5b6675;--line:#e2dccd;--navy:#1F3864;--good:#3f7a3a;--soft:#efe9dc;--warn:#9c6b14;--rust:#B4532A;--rustText:#A34A25;--golf:#2F6B3F;--four:#f3ece0}
 @media (prefers-color-scheme:dark){:root{--bg:#14181e;--card:#1d232b;--ink:#eef1f4;--muted:#9aa5b2;--line:#2e3742;--navy:#8fb3e0;--good:#7cc072;--soft:#252d37;--warn:#e0b25c;--rust:#e58a5f;--rustText:#e58a5f;--golf:#3f7d5e;--four:#2a2520}}
@@ -122,7 +122,7 @@ a{color:var(--navy)}
 <nav id="nav"></nav>
 <script>
 'use strict';
-const VERSION = 'v2026-11-26';
+const VERSION = 'v2026-11-27';
 const KEY = 'golfPractice.v1';
 
 // ================= MY DRILLS =================
@@ -135,12 +135,12 @@ const DR = {
     start:'When I pick up my rope, my session has started.',
     feel:'My shoulders drop and my mind settles on the club.', feedback:'I feel the same standing here as I will over the ball.',
     q:'Where is my attention right now?'},
-  rope:{name:'Rope First', coach:'Dr. Kwon', dose:'2 min · about a minute, then a few step-and-throws', img:'rope3d', cue:'Let the rope swing me.',
+  rope:{name:'1 · Rope First', coach:'Dr. Kwon', dose:'2 min · about a minute, then a few step-and-throws', img:'rope3d', cue:'Let the rope swing me.',
     steps:['Continuous swings back and through, without stopping.','A few step-and-throws to finish.'],
     start:'When the rope feels heavy at the bottom, I let it carry me through.',
     feel:'The rope’s weight carries me around, unhurried.', feedback:'It wraps under my right armpit going back and my left at the finish.',
     q:'Did the rope swing me, or did I swing the rope?'},
-  loadSteps:{name:'Load steps · three', coach:'Mike Malaska', dose:'30 seconds · 3 step drills', img:'load3d', cue:'Load, then let it go.',
+  loadSteps:{name:'3 · Load Before Shift · three steps', coach:'Mike Malaska', dose:'30 seconds · 3 step drills', img:'load3d', cue:'Load, then let it go.',
     steps:['Feet together; my trail foot steps out as I start back.','My lead foot steps in as I start down. Three, smooth.'],
     start:'When I fall off my heels, three dead-stop loads, then the next swing.',
     feel:'Pressure builds in my trail foot as I turn; nothing slides.', feedback:'My weight ends on my lead heel, chest to the target.',
@@ -150,7 +150,7 @@ const DR = {
     start:'When the tape touches my index-finger pad, I hinge it.',
     feel:'The club’s weight rests on my index-finger pad at the top.', feedback:'The club brushes the mat just past the tee.',
     q:'Did the clubhead pass the tee, or did my body get there first?', log:[R('f','Finishes held',3)]},
-  hinge:{name:'Hinge & Throw, half speed', coach:'Randy Joyner', dose:'3–4 min · 5 right hand · 5 two hands · 5 land the plane', img:'hinge3d',
+  hinge:{name:'2 · Hinge & Throw, half speed', coach:'Randy Joyner', dose:'3–4 min · 5 right hand · 5 two hands · 5 land the plane', img:'hinge3d',
     cue:'Hinge it, throw it: the clubhead brushes the mat just past my tee.',
     steps:['5 swings, right hand only: wrist hinges, elbow folds, a pitcher’s throw.','5 swings with two hands, the same throw; my left arm hangs like a rope.','5 swings landing the plane: both wheels down just past the tee.','A 3-count finish on every one.'],
     start:'When the tape touches my index-finger pad, I hinge it.',
@@ -166,7 +166,7 @@ const DR = {
     q:'Which club made the throw feel easiest, and what did the club do there?', logHead:'Finishes held',
     log:[R('w','Wedge',5),R('8','8-iron',5),R('6','6-iron',5)],
     contrast:'With the 8-iron: 2 too early, 2 too late, then the middle.'},
-  setup:{name:'Setup Station', coach:'Setup Checklist', dose:'2 min · my checklist once, in order', img:'setup3d', cue:'Face to my spot, then my feet.',
+  setup:{name:'5 · Setup Station', coach:'Setup Checklist', dose:'2 min · my checklist once, in order', img:'setup3d', cue:'Face to my spot, then my feet.',
     steps:['Align the face, then my feet; lead foot flared a touch.','Hands at the inside of my left thigh; grip it up, set it down at 6–7/10.','Tall, butt back a fist; weight mid-foot, toes relaxed; right shoulder a touch lower.'],
     start:'When I sole the club, the face goes first.',
     feel:'Weight mid-foot, toes relaxed, arms hang.', feedback:'Hands inside my left thigh; armpits over the balls of my feet.',
@@ -177,7 +177,7 @@ const DR = {
     start:'When I fall off my heels, three dead-stop loads, then the next swing.',
     feel:'Pressure builds in my trail foot as I turn; nothing slides.', feedback:'The chair: my right side keeps contact going back, my left takes over coming through.',
     q:'Did the club swinging load me, or did I push into it?', log:[R('c','Contact held',3)]},
-  balance:{name:'Balance & Finish', coach:'Shawn Clement · Pete Cowen', dose:'2 min · 5 feet together, half then ¾ · 3 full', img:'balance3d',
+  balance:{name:'4 · Balance & Finish', coach:'Shawn Clement · Pete Cowen', dose:'2 min · 5 feet together, half then ¾ · 3 full', img:'balance3d',
     cue:'Swing in balance: the club carries me to a tall finish.',
     steps:['5 feet-together swings, half then ¾.','3 swings in my normal stance with the same steady center.'],
     start:'When I wobble, shorter and slower until it holds for 3.',
@@ -197,19 +197,19 @@ const DR = {
     feel:'One clear picture, then the throw; nothing in the middle.', feedback:'A held finish on every swing, and a word that’s honest.',
     q:'Did I play the shot, or check my swing?', log:[R('f','Finishes held',5)]},
   // ---- putting (home), rotates ----
-  puttGate:{name:'Putting · gate + quiet eye', coach:'No Doubt Putt · Joan Vickers', dose:'4 min · 10 gate putts from about 5 ft', img:'carpet',
+  puttGate:{name:'6 · Putting · gate + quiet eye', coach:'No Doubt Putt · Joan Vickers', dose:'4 min · 10 gate putts from about 5 ft', img:'carpet',
     cue:'Roll it firmly over my spot.',
     steps:['Two tees a little more than a ball apart, 10 inches ahead: my No Doubt spot.','Quiet eye: my eyes settle on the back of the ball for about 2 seconds, then I roll it.','Pull it back and let it go; my eyes stay quiet until the ball is gone.'],
     start:'When my eyes are still on the ball, I go.',
     feel:'A still look, then a smooth throw of the putter.', feedback:'Clean through the gate; I count how many.',
     q:'Did I roll it over my spot, or steer it?', log:[R('g','Clean through',10)]},
-  puttLadder:{name:'Putting · ladder + quiet eye', coach:'Gary Christian', dose:'4 min · 4 ft to 10 ft on the carpet', img:'p_ladder',
+  puttLadder:{name:'6 · Putting · ladder + quiet eye', coach:'Gary Christian', dose:'4 min · 4 ft to 10 ft on the carpet', img:'p_ladder',
     cue:'Each ball just past the last.',
     steps:['First ball just past a tee at 4 ft.','Each next ball just past the one before, all short of a club at 10 ft.','Quiet eye on every putt: a still look at the ball, then roll it.'],
     start:'When a ball goes past the club, I start the ladder again.',
     feel:'The stroke grows a touch longer each time; same rhythm.', feedback:'I count how many fit between 4 and 10 ft.',
     q:'Did the length of my stroke set the speed, or did my hands hit at it?', log:[R('n','How many fit',0)]},
-  puttEyes:{name:'Putting · eyes on target', coach:'Putting Card', dose:'4 min · 3 balls × 3 rounds to a tee at 10–15 ft', img:'p_speed',
+  puttEyes:{name:'6 · Putting · eyes on target', coach:'Putting Card', dose:'4 min · 3 balls × 3 rounds to a tee at 10–15 ft', img:'p_speed',
     cue:'The ball rolls to my target.',
     steps:['Ball 1: eyes on the target as I stroke.','Ball 2: I take the target, then close my eyes and roll it.','Ball 3: my normal rhythm with quiet eye.'],
     start:'When I’ve taken the target, I trust it and go.',
@@ -222,14 +222,14 @@ const DR = {
     start:'When I reach my bay, rope first.',
     feel:'Unhurried; the club feels heavy.', feedback:'Soft, centered strikes; every finish holds.',
     q:'What have I got today?', log:[R('w','Easy wedges, finish held',5)]},
-  hingeFull:{name:'Hinge & Throw, full speed', coach:'Randy Joyner', dose:'10 balls · 7-iron or 8-iron', img:'impact3d', ver:['7-iron','8-iron'],
+  hingeFull:{name:'7 · Hinge & Throw, full speed', coach:'Randy Joyner', dose:'10 balls · 7-iron or 8-iron', img:'impact3d', ver:['7-iron','8-iron'],
     cue:'The ball starts on my line.',
     steps:['I pick a target on the bay screen as my start line.','Hinge it, throw it, hold the finish.','A word after each ball, then the next one from Point A.'],
     start:'When I see my line, I set the face to it first.',
     feel:'The throw sends the clubhead through the ball to my channel.', feedback:'The ball starts on my line; every finish holds.',
     q:'Did the ball start where I threw it?', log:[R('l','On my start line',10)],
     contrast:'3 balls throwing early, 3 throwing late, then the rest in the middle. The start line tells me which was which.'},
-  dots:{name:'Join the Dots', coach:'Karl Morris', dose:'10 balls · same club · sticker or foot powder', img:'dots',
+  dots:{name:'8 · Join the Dots', coach:'Karl Morris', dose:'10 balls · same club · sticker or foot powder', img:'dots',
     cue:'Join the dot on the face to the circle on the ball.',
     steps:['A circle on the back of the ball, facing the club; a dot in the middle of the face.','My only task is to join them, then hold the finish.'],
     start:'When I see the circle, I join it.',
@@ -241,20 +241,20 @@ const DR = {
     start:'When I change clubs, one easy swing, then the shots count.',
     feel:'My normal swing, not my best one.', feedback:'Carry averages for my Distance Log; dome numbers are baselines I confirm on grass.',
     q:'Which club surprised me today?'},
-  tenBall:{name:'Play It · 10-Ball Test', coach:'Karl Morris & Marcus Bell', dose:'10 balls · 10 clubs · 10 calls', img:'10ball', type:'grades',
+  tenBall:{name:'Play It · 9 · 10-Ball Test', coach:'Karl Morris & Marcus Bell', dose:'10 balls · 10 clubs · 10 calls', img:'10ball', type:'grades',
     cue:'I say the shot, then I play it.',
     steps:['I say it out loud: club, spot, shape.','Hit it and grade it: 1 for a middle strike, my start line and a held finish; 2 for two of the three; 3 for one or none.','No second ball.'],
     start:'When I say the shot, my routine starts.',
     feel:'One shot at a time, each from Point A.', feedback:'Lower is better, 10 is perfect; my weakest clubs go below.',
     q:'Which shot did I play best, and what did I see before it?'},
-  towel:{name:'Towel Landing', coach:'Short game', dose:'about 16 balls · my 56° · a dome mat', img:'towel3d',
+  towel:{name:'10 · Towel Landing', coach:'Short game', dose:'about 16 balls · my 56° · a dome mat', img:'towel3d',
     cue:'Land the plane past the towel.',
     steps:['A folded hand towel across my line, near edge 4 inches behind the ball.','5 to observe, naming each landing out loud.','3 crashes on purpose, 3 aborts on purpose.','5 to observe again; I let my body sort it out.'],
     start:'When I touch the towel, I call it a crash and move on.',
     feel:'The sole brushes the mat at the ball or just past it, and the club keeps going.', feedback:'The towel tells the truth: it moved, or it didn’t. Smooth sounds like a soft brush and a click.',
     q:'Crash, abort or smooth: what did the sole tell me?', logHead:'Smooth landings',
     log:[R('a','First 5',5),R('b','Last 5',5)]},
-  par18:{name:'Play It · Par 18', coach:'Karl Morris', dose:'9 holes, par 2 each · one gamer ball · about 15 min', img:'par18_top', type:'holes',
+  par18:{name:'Play It · 11 · Par 18', coach:'Karl Morris', dose:'9 holes, par 2 each · one gamer ball · about 15 min', img:'par18_top', type:'holes',
     cue:'It counts, like the course.',
     steps:['9 spots: 3 easy, 3 medium, 3 hard, in random order.','My full routine, glove on; chip to a target, then putt out from the same distance.','I play it as it lies; no do-overs.'],
     start:'When I drop the ball, it counts.',
