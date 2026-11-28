@@ -11,7 +11,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" href="icon-180.png">
 <link rel="manifest" href="manifest.json">
-<title>Golf Practice · Dwight Clarke · v2026-11-27</title>
+<title>Golf Practice · Dwight Clarke · v2026-11-27b</title>
 <style>
 :root{--bg:#f6f3ec;--card:#fffdf8;--ink:#1D2421;--muted:#5b6675;--line:#e2dccd;--navy:#1F3864;--good:#3f7a3a;--soft:#efe9dc;--warn:#9c6b14;--rust:#B4532A;--rustText:#A34A25;--golf:#2F6B3F;--four:#f3ece0}
 @media (prefers-color-scheme:dark){:root{--bg:#14181e;--card:#1d232b;--ink:#eef1f4;--muted:#9aa5b2;--line:#2e3742;--navy:#8fb3e0;--good:#7cc072;--soft:#252d37;--warn:#e0b25c;--rust:#e58a5f;--rustText:#e58a5f;--golf:#3f7d5e;--four:#2a2520}}
@@ -122,7 +122,7 @@ a{color:var(--navy)}
 <nav id="nav"></nav>
 <script>
 'use strict';
-const VERSION = 'v2026-11-27';
+const VERSION = 'v2026-11-27b';
 const KEY = 'golfPractice.v1';
 
 // ================= MY DRILLS =================
@@ -138,14 +138,14 @@ const DR = {
   rope:{name:'1 · Rope First', coach:'Dr. Kwon', dose:'2 min · about a minute, then a few step-and-throws', img:'rope3d', cue:'Let the rope swing me.',
     steps:['Continuous swings back and through, without stopping.','A few step-and-throws to finish.'],
     start:'When the rope feels heavy at the bottom, I let it carry me through.',
-    feel:'The rope’s weight carries me around, unhurried.', feedback:'It wraps under my right armpit going back and my left at the finish.',
+    feel:'The rope’s weight carries me around, unhurried.', feedback:'It wraps under my right armpit at the top and my left at the finish.',
     q:'Did the rope swing me, or did I swing the rope?'},
   loadSteps:{name:'3 · Load Before Shift · three steps', coach:'Mike Malaska', dose:'30 seconds · 3 step drills', img:'load3d', cue:'Load, then let it go.',
     steps:['Feet together; my trail foot steps out as I start back.','My lead foot steps in as I start down. Three, smooth.'],
     start:'When I fall off my heels, three dead-stop loads, then the next swing.',
     feel:'Pressure builds in my trail foot as I turn; nothing slides.', feedback:'My weight ends on my lead heel, chest to the target.',
     q:'Did the club swinging load me, or did I push into it?'},
-  feel1:{name:'My one feel · three slow throws', coach:'Randy Joyner', dose:'3 slow swings, no ball', img:'hinge3d', cue:'Hinge it, throw it: the clubhead through the ball to my channel.',
+  feel1:{name:'My one feel · three slow throws', coach:'Randy Joyner', dose:'3 slow swings, no ball', img:'hinge3d', cue:'Hinge it, throw it: the clubhead brushes the mat just past my tee.',
     steps:['Three slow swings with my 7-iron, a tee flat on the mat as my ball.','Each one ends in a finish I hold for 3.'],
     start:'When the tape touches my index-finger pad, I hinge it.',
     feel:'The club’s weight rests on my index-finger pad at the top.', feedback:'The club brushes the mat just past the tee.',
@@ -181,7 +181,7 @@ const DR = {
     cue:'Swing in balance: the club carries me to a tall finish.',
     steps:['5 feet-together swings, half then ¾.','3 swings in my normal stance with the same steady center.'],
     start:'When I wobble, shorter and slower until it holds for 3.',
-    feel:'The club carries me around a steady center.', feedback:'A still 3-count: weight on my lead heel, trail foot on its toe, chest to the target.',
+    feel:'The club carries me to the finish around a steady center.', feedback:'A still 3-count: weight in my lead heel, trail foot up on its toe, chest to the target.',
     q:'What did the club do to carry me to a held finish?', logHead:'3-count holds',
     log:[R('ft','Feet together',5),R('full','Normal stance',3)]},
   see30:{name:'See it first · 30 seconds', coach:'Karl Morris', dose:'30 seconds · standing at address, club in hand', img:'setup3d',
@@ -216,7 +216,7 @@ const DR = {
     feel:'The target stays in my mind; the stroke just happens.', feedback:'All three finish together.',
     q:'Which ball felt most connected to the target?', log:[R('r','Rounds all three together',3)]},
   // ---- dome ----
-  domeWarm:{name:'Dome warm-up', coach:'Warm-Up Card', dose:'5 min · rope, setup, 5 easy wedges', img:'rope3d',
+  domeWarm:{name:'Dome warm-up', coach:'my Pre-Round warm-up', dose:'5 min · rope, setup, 5 easy wedges', img:'rope3d',
     cue:'Let the rope swing me, then soft wedges.',
     steps:['Rope First, about a minute.','My setup checklist once.','5 easy wedges, finish held.'],
     start:'When I reach my bay, rope first.',
